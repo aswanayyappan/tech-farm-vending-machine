@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Automated Diaper Collection Unit — Touch Kiosk</title>
+  <style>
+    /* ==========================================================================
+       SDDS Professional Collection Unit Stylesheet
+       Enterprise Dark Theme - Zero Emojis - Pristine Alignment (Rule 11)
+       ========================================================================== */
+    :root {
+      --primary: #059669;
+      --primary-hover: #047857;
+      --secondary: #0d9488;
+      --bg-main: #064e3b;
+      --bg-dark: #022c22;
+      --bg-surface: #065f46;
+      --bg-elevated: #047857;
+      --text-main: #f0fdf4;
+      --text-muted: #a7f3d0;
+      --accent-gold: #f59e0b;
+      --accent-green: #34d399;
+      --border: #059669;
+      --border-light: rgba(52, 211, 153, 0.3);
+      --radius-card: 20px;
+      --radius-btn: 14px;
+      --touch-cta: 58px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Universal Custom Slim Scrollbars */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #047857;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #059669;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    .bin-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      background: radial-gradient(circle at top left, #065f46 0%, #022c22 100%);
+      position: relative;
+    }
+
+    /* Header */
+    .bin-header {
+      height: 68px;
+      padding: 0 clamp(16px, 2.5vw, 36px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: rgba(6, 78, 59, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 20px;
+      color: #ffffff;
+      letter-spacing: 1px;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background-color: rgba(5, 150, 105, 0.25);
+      border: 1px solid var(--accent-green);
+      border-radius: 20px;
+      color: var(--accent-green);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green);
+    }
+
+    /* Content Area */
+    .main-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(12px, 2.5vh, 28px);
+      overflow-y: auto;
+    }
+
+    .flow-card {
+      width: 100%;
+      max-width: min(620px, 95vw);
+      background-color: rgba(6, 95, 70, 0.94);
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: clamp(16px, 3vh, 32px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      text-align: center;
+    }
+
+    .step-indicator {
+      display: inline-block;
+      padding: 5px 14px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--accent-gold);
+      border-radius: 10px;
+      color: var(--accent-gold);
+      font-weight: 800;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+
+    .headline {
+      font-size: clamp(22px, 2.8vw, 28px);
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+
+    .subtext {
+      font-size: clamp(13px, 1.4vw, 15px);
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    /* Diaper Selection Grid */
+    .diaper-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .diaper-row-card {
+      background: rgba(2, 44, 34, 0.85);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .diaper-row-card.active-item {
+      border-color: var(--accent-green);
+      background: rgba(5, 150, 105, 0.22);
+    }
+
+    .diaper-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .diaper-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 3px;
+    }
+
+    .diaper-title {
+      font-size: clamp(15px, 1.6vw, 17px);
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .diaper-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(52, 211, 153, 0.2);
+      color: var(--accent-green);
+      letter-spacing: 0.5px;
+    }
+
+    .diaper-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Counter Controls (Touch Ergonomic) */
+    .counter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .counter-btn {
+      width: clamp(44px, 5.5vw, 50px);
+      height: clamp(44px, 5.5vw, 50px);
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 12px;
+      background: rgba(6, 78, 59, 0.9);
+      border: 2px solid var(--border);
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+
+    .counter-btn:active {
+      transform: scale(0.94);
+      background: var(--primary);
+    }
+
+    .counter-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      border-color: #064e3b;
+      transform: none;
+    }
+
+    .counter-value {
+      min-width: 36px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--accent-green);
+      font-family: monospace;
+    }
+
+    .counter-value.has-count {
+      color: #ffffff;
+    }
+
+    /* Summary Bar */
+    .selection-summary-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: rgba(2, 44, 34, 0.9);
+      border: 1px dashed var(--accent-green);
+      border-radius: 12px;
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
+
+    .total-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 800;
+      color: var(--accent-green);
+      font-size: 15px;
+    }
+
+    /* Primary Action Buttons */
+    .btn-cta {
+      min-height: var(--touch-cta);
+      padding: 0 24px;
+      background: linear-gradient(135deg, var(--primary), #047857);
+      color: #ffffff;
+      font-size: clamp(16px, 1.8vw, 18px);
+      font-weight: 800;
+      border: none;
+      border-radius: var(--radius-btn);
+      cursor: pointer;
+      width: 100%;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 20px rgba(5, 150, 105, 0.35);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-cta:active {
+      transform: scale(0.98);
+    }
+
+    .btn-cta:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+      filter: grayscale(0.5);
+    }
+
+    .btn-secondary {
+      min-height: 44px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: var(--radius-btn);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0 16px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+    }
+
+    /* Spinner */
+    .radial-loader {
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--accent-green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Clean Receipt Card with QR Code */
+    .receipt-container {
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 14px;
+      padding: clamp(14px, 2vh, 20px);
+      max-width: 380px;
+      margin: 0 auto 16px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    .receipt-items-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: #334155;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .redeem-code-box {
+      background-color: #f1f5f9;
+      border: 2px dashed #059669;
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin: 10px 0;
+    }
+
+    .code-text {
+      font-family: monospace;
+      font-size: clamp(20px, 2.4vw, 24px);
+      font-weight: 900;
+      color: #065f46;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bin-shell">
+    <!-- Header -->
+    <header class="bin-header">
+      <div class="brand-block" style="cursor: pointer;" onclick="resetFlow()">
+        <div class="brand-icon">SD</div>
+        <div>
+          <h1 style="font-size: 22px; font-weight: 800; letter-spacing: -0.3px;">Collection Unit</h1>
+          <p style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Automated Diaper Disposal System · Unit #BIN-KGP-01</p>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div class="status-badge">
+          <div class="status-dot"></div>
+          <span>UNIT OPERATIONAL</span>
+        </div>
+        <button class="btn-secondary" onclick="resetFlow()">
+          Reset
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Stage -->
+    <main class="main-stage">
+
+      <!-- Stage 1: Welcome -->
+      <div id="viewWelcome" class="flow-card">
+        <span class="step-indicator">Direct Diaper Recovery · No OTP Required</span>
+        <h2 class="headline">Diaper Waste Recovery</h2>
+        <p class="subtext">
+          Deposit baby or adult diapers directly into the sealed intake chamber.
+          Each deposit is measured by precision load cells and converted into an instant discount voucher redeemable on the Diaper Vending Machine.
+        </p>
+        <button class="btn-cta" onclick="startDiaperSelection()">
+          Start Diaper Deposit →
+        </button>
+      </div>
+
+      <!-- Stage 2: Item Selection (What to Put in Bin) -->
+      <div id="viewDiaperSelect" class="flow-card" style="display: none;">
+        <span class="step-indicator">Step 1 of 3: Select Diapers to Deposit</span>
+        <h2 class="headline">What Diapers Are You Depositing?</h2>
+        <p class="subtext">
+          Select the items you are placing into the intake chamber using the + / - buttons.
+        </p>
+
+        <!-- Diaper Item Cards -->
+        <div class="diaper-list">
+          <!-- Small Baby Diaper -->
+          <div id="card_small" class="diaper-row-card">
+            <div class="diaper-info">
+              <div class="diaper-title-row">
+                <span class="diaper-title">Small Baby Diaper</span>
+                <span class="diaper-badge">Size S</span>
+              </div>
+              <div class="diaper-desc">Infant diapers (0 – 6 kg)</div>
+            </div>
+            <div class="counter-group">
+              <button id="btnDec_small" class="counter-btn" onclick="adjustDiaperCount('small', -1)" disabled>-</button>
+              <span id="lblCount_small" class="counter-value">0</span>
+              <button class="counter-btn" onclick="adjustDiaperCount('small', 1)">+</button>
+            </div>
+          </div>
+
+          <!-- Medium Baby Diaper -->
+          <div id="card_medium" class="diaper-row-card">
+            <div class="diaper-info">
+              <div class="diaper-title-row">
+                <span class="diaper-title">Medium Baby Diaper</span>
+                <span class="diaper-badge">Size M</span>
+              </div>
+              <div class="diaper-desc">Crawler diapers (6 – 11 kg)</div>
+            </div>
+            <div class="counter-group">
+              <button id="btnDec_medium" class="counter-btn" onclick="adjustDiaperCount('medium', -1)" disabled>-</button>
+              <span id="lblCount_medium" class="counter-value">0</span>
+              <button class="counter-btn" onclick="adjustDiaperCount('medium', 1)">+</button>
+            </div>
+          </div>
+
+          <!-- Large Baby Diaper -->
+          <div id="card_large" class="diaper-row-card">
+            <div class="diaper-info">
+              <div class="diaper-title-row">
+                <span class="diaper-title">Large Baby Diaper</span>
+                <span class="diaper-badge">Size L</span>
+              </div>
+              <div class="diaper-desc">Toddler diapers (11 – 18 kg)</div>
+            </div>
+            <div class="counter-group">
+              <button id="btnDec_large" class="counter-btn" onclick="adjustDiaperCount('large', -1)" disabled>-</button>
+              <span id="lblCount_large" class="counter-value">0</span>
+              <button class="counter-btn" onclick="adjustDiaperCount('large', 1)">+</button>
+            </div>
+          </div>
+
+          <!-- Adult Diaper -->
+          <div id="card_adult" class="diaper-row-card">
+            <div class="diaper-info">
+              <div class="diaper-title-row">
+                <span class="diaper-title">Adult Diaper</span>
+                <span class="diaper-badge" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-gold);">Adult</span>
+              </div>
+              <div class="diaper-desc">Senior & medical incontinence diapers</div>
+            </div>
+            <div class="counter-group">
+              <button id="btnDec_adult" class="counter-btn" onclick="adjustDiaperCount('adult', -1)" disabled>-</button>
+              <span id="lblCount_adult" class="counter-value">0</span>
+              <button class="counter-btn" onclick="adjustDiaperCount('adult', 1)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Bar -->
+        <div class="selection-summary-bar">
+          <span>Items Queued for Disposal:</span>
+          <span class="total-pill">
+            <strong id="lblTotalDiapers" style="font-size: 18px; color: #ffffff;">0</strong> Diapers
+          </span>
+        </div>
+
+        <!-- Actions -->
+        <div style="display: flex; gap: 12px;">
+          <button class="btn-secondary" style="min-height: var(--touch-cta);" onclick="resetFlow()">
+            ← Back
+          </button>
+          <button id="btnConfirmDiapers" class="btn-cta" style="flex: 1;" onclick="confirmDiapersAndOpenHatch()" disabled>
+            Confirm & Open Intake Chamber →
+          </button>
+        </div>
+      </div>
+
+      <!-- Stage 3: Hatch Open for Deposit -->
+      <div id="viewDeposit" class="flow-card" style="display: none;">
+        <span class="step-indicator">Step 2 of 3: Deposit Chamber Open</span>
+        <h2 class="headline">Place Diaper in Intake Chamber</h2>
+        <p class="subtext">
+          Inspection camera registered. Solenoid door latch is unsealed.<br>
+          <strong id="depositPromptSummary" style="color: var(--accent-green);"></strong>
+        </p>
+
+        <div style="background: rgba(5, 150, 105, 0.2); border: 2px dashed var(--accent-green); border-radius: 14px; padding: 18px; margin-bottom: 24px;">
+          <span style="font-size: 15px; font-weight: 700; color: var(--accent-green);">
+            Intake chamber auto-seals in <span id="hatchTimerDisplay">25</span>s
+          </span>
+        </div>
+
+        <button class="btn-cta" onclick="lockAndMeasureWeight()">
+          Deposit Completed (Seal & Weigh) →
+        </button>
+      </div>
+
+      <!-- Stage 4: Weighing -->
+      <div id="viewWeighing" class="flow-card" style="display: none;">
+        <span class="step-indicator">Step 3 of 3: Precision Measurement</span>
+        <div class="radial-loader"></div>
+        <h2 class="headline">Measuring Diaper Weight</h2>
+        <p class="subtext">Chamber sealed. Strain gauge load cell stabilizing reading...</p>
+        <div style="font-size: 40px; font-weight: 900; color: var(--accent-gold); margin-top: 10px;">
+          <span id="lblWeightGrams">---</span> g
+        </div>
+      </div>
+
+      <!-- Stage 5: Receipt & QR Redeem Code -->
+      <div id="viewReceipt" class="flow-card" style="display: none;">
+        <span class="step-indicator" style="background: rgba(52, 211, 153, 0.2); border-color: var(--accent-green); color: var(--accent-green);">
+          Deposit Verified & Recorded
+        </span>
+        <h2 class="headline">Reward Issued</h2>
+        <p class="subtext">Your discount voucher has been generated. Use the Redeem Code below at the Vending Machine checkout.</p>
+
+        <!-- Clean Printed Voucher Card with QR -->
+        <div class="receipt-container">
+          <div style="border-bottom: 1px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 12px;">
+            <div style="font-size: 16px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">Diaper Reward Voucher</div>
+            <div style="font-size: 12px; color: #64748b;">Unit #BIN-KGP-01 · 7-Day Validity</div>
+          </div>
+
+          <!-- Deposited Items Breakdown -->
+          <div id="lblReceiptItems" class="receipt-items-box">
+            Items: 1x Small Diaper
+          </div>
+
+          <div style="display: flex; justify-content: space-around; margin-bottom: 12px; font-size: 14px;">
+            <div>Weight: <strong id="lblReceiptWeight">280</strong>g</div>
+            <div>Discount: <strong id="lblReceiptDiscount" style="color: #059669; font-size: 16px;">20%</strong></div>
+          </div>
+
+          <!-- Clean SVG QR Code -->
+          <div style="width: 140px; height: 140px; margin: 0 auto; padding: 8px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <svg id="qrSvgElement" viewBox="0 0 25 25" width="100%" height="100%"></svg>
+          </div>
+
+          <div class="redeem-code-box">
+            <div style="font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; margin-bottom: 4px;">Redeem Code</div>
+            <div id="lblRedeemCode" class="code-text">ECO-20-4A91</div>
+          </div>
+
+          <p style="font-size: 12px; color: #64748b;">
+            Type this Redeem Code directly into the Vending Machine to apply your discount.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+          <button class="btn-cta" style="flex: 1;" onclick="applyToVendingMachine()">
+            Redeem at Vending Machine →
+          </button>
+          <button class="btn-cta" style="background: #064e3b; width: auto; padding: 0 24px;" onclick="resetFlow()">
+            Done
+          </button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    const sddsSyncChannel = new BroadcastChannel('sdds_realtime_sync');
+    window.sddsSyncChannel = sddsSyncChannel;
+    let hatchInterval = null;
+    let generatedRedeemCode = '';
+
+    // Diaper counts state map
+    const diaperCounts = {
+      small: 0,
+      medium: 0,
+      large: 0,
+      adult: 0
+    };
+
+    function getTotalDiapersCount() {
+      return diaperCounts.small + diaperCounts.medium + diaperCounts.large + diaperCounts.adult;
+    }
+
+    function startDiaperSelection() {
+      showView('viewDiaperSelect');
+      updateDiaperSelectDisplay();
+    }
+
+    // Retain compatibility alias
+    function startDirectDeposit() {
+      startDiaperSelection();
+    }
+
+    function adjustDiaperCount(type, delta) {
+      if (!diaperCounts.hasOwnProperty(type)) return;
+      diaperCounts[type] = Math.max(0, Math.min(99, diaperCounts[type] + delta));
+      updateDiaperSelectDisplay();
+    }
+
+    function updateDiaperSelectDisplay() {
+      const types = ['small', 'medium', 'large', 'adult'];
+      types.forEach(t => {
+        const count = diaperCounts[t];
+        const countEl = document.getElementById(`lblCount_${t}`);
+        const decBtn = document.getElementById(`btnDec_${t}`);
+        const cardEl = document.getElementById(`card_${t}`);
+
+        if (countEl) {
+          countEl.innerText = count;
+          countEl.className = 'counter-value' + (count > 0 ? ' has-count' : '');
+        }
+        if (decBtn) {
+          decBtn.disabled = (count <= 0);
+        }
+        if (cardEl) {
+          if (count > 0) cardEl.classList.add('active-item');
+          else cardEl.classList.remove('active-item');
+        }
+      });
+
+      const total = getTotalDiapersCount();
+      const totalEl = document.getElementById('lblTotalDiapers');
+      if (totalEl) totalEl.innerText = total;
+
+      const confirmBtn = document.getElementById('btnConfirmDiapers');
+      if (confirmBtn) {
+        confirmBtn.disabled = (total <= 0);
+      }
+    }
+
+    function formatItemsSummaryText() {
+      const parts = [];
+      if (diaperCounts.small > 0) parts.push(`${diaperCounts.small}x Small Baby`);
+      if (diaperCounts.medium > 0) parts.push(`${diaperCounts.medium}x Medium Baby`);
+      if (diaperCounts.large > 0) parts.push(`${diaperCounts.large}x Large Baby`);
+      if (diaperCounts.adult > 0) parts.push(`${diaperCounts.adult}x Adult`);
+      return parts.length > 0 ? parts.join(', ') : '1x Diaper';
+    }
+
+    function confirmDiapersAndOpenHatch() {
+      if (getTotalDiapersCount() <= 0) return;
+
+      const summaryText = formatItemsSummaryText();
+      const promptEl = document.getElementById('depositPromptSummary');
+      if (promptEl) {
+        promptEl.innerText = `Please place your ${getTotalDiapersCount()} diaper(s) (${summaryText}) onto the weighing platform.`;
+      }
+
+      showView('viewDeposit');
+
+      let countdown = 25;
+      document.getElementById('hatchTimerDisplay').innerText = countdown;
+
+      clearInterval(hatchInterval);
+      hatchInterval = setInterval(() => {
+        countdown -= 1;
+        document.getElementById('hatchTimerDisplay').innerText = countdown;
+        if (countdown <= 0) {
+          clearInterval(hatchInterval);
+          lockAndMeasureWeight();
+        }
+      }, 1000);
+    }
+
+    function lockAndMeasureWeight() {
+      clearInterval(hatchInterval);
+      showView('viewWeighing');
+
+      // Calibrated weight based on actual selected diaper counts
+      let baseWeight = 0;
+      baseWeight += diaperCounts.small * (55 + Math.random() * 20);
+      baseWeight += diaperCounts.medium * (75 + Math.random() * 25);
+      baseWeight += diaperCounts.large * (105 + Math.random() * 30);
+      baseWeight += diaperCounts.adult * (230 + Math.random() * 50);
+
+      // Fallback if zero items
+      if (baseWeight <= 0) baseWeight = 200 + Math.random() * 80;
+      const finalWeight = Math.round(baseWeight);
+
+      let currentReading = 0;
+      const step = Math.max(10, Math.floor(finalWeight / 12));
+
+      const timer = setInterval(() => {
+        currentReading += step;
+        if (currentReading >= finalWeight) {
+          clearInterval(timer);
+          document.getElementById('lblWeightGrams').innerText = finalWeight;
+          setTimeout(() => finalizeReward(finalWeight), 600);
+        } else {
+          document.getElementById('lblWeightGrams').innerText = currentReading;
+        }
+      }, 50);
+    }
+
+    function finalizeReward(weight) {
+      // Formula: 5% base + 1% per 50g above 50g threshold (max 25%)
+      const discountPercentage = Math.min(25, 5 + Math.floor(Math.max(0, weight - 50) / 50));
+      const suffix = Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
+      generatedRedeemCode = `ECO-${discountPercentage}-${suffix}`;
+
+      const itemsText = formatItemsSummaryText();
+      const itemsLabel = document.getElementById('lblReceiptItems');
+      if (itemsLabel) {
+        itemsLabel.innerText = `Deposited: ${itemsText}`;
+      }
+
+      document.getElementById('lblReceiptWeight').innerText = weight;
+      document.getElementById('lblReceiptDiscount').innerText = discountPercentage + '%';
+      document.getElementById('lblRedeemCode').innerText = generatedRedeemCode;
+
+      // Draw pure SVG QR code
+      drawSvgQr(document.getElementById('qrSvgElement'), generatedRedeemCode);
+
+      // Broadcast to localStorage and real-time event bus
+      try {
+        const voucherData = {
+          code: generatedRedeemCode,
+          discountPercentage: discountPercentage,
+          weight: weight,
+          items: { ...diaperCounts },
+          totalCount: getTotalDiapersCount(),
+          timestamp: Date.now()
+        };
+        localStorage.setItem('sdds_latest_redeem_code', JSON.stringify(voucherData));
+        localStorage.setItem('sdds_sync_event', JSON.stringify({
+          type: 'VOUCHER_ISSUED',
+          voucher: voucherData,
+          timestamp: Date.now()
+        }));
+
+        // Broadcast Channel
+        if (window.sddsSyncChannel) {
+          window.sddsSyncChannel.postMessage({
+            type: 'VOUCHER_ISSUED',
+            voucher: voucherData
+          });
+        }
+
+        // Post disposal to backend server for Admin KPIs & environmental tracking
+        fetch('/api/v1/bin/disposal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            weightGrams: weight,
+            rewardPercentage: discountPercentage,
+            redeemCode: generatedRedeemCode,
+            items: diaperCounts,
+            totalCount: getTotalDiapersCount()
+          })
+        }).catch(err => console.warn('Disposal sync offline:', err));
+      } catch (e) {}
+
+      showView('viewReceipt');
+    }
+
+    function drawSvgQr(svg, text) {
+      // High-precision clean SVG 25x25 QR Matrix
+      svg.innerHTML = '';
+      const size = 25;
+      let seed = 0;
+      for (let i = 0; i < text.length; i++) seed += text.charCodeAt(i);
+
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          const isCorner1 = (r < 7 && c < 7);
+          const isCorner2 = (r < 7 && c >= size - 7);
+          const isCorner3 = (r >= size - 7 && c < 7);
+          let isBlack = false;
+
+          if (isCorner1 || isCorner2 || isCorner3) {
+            const lr = isCorner3 ? r - (size - 7) : r;
+            const lc = isCorner2 ? c - (size - 7) : c;
+            if (lr === 0 || lr === 6 || lc === 0 || lc === 6) isBlack = true;
+            else if (lr >= 2 && lr <= 4 && lc >= 2 && lc <= 4) isBlack = true;
+          } else {
+            isBlack = ((r * c + seed + (r ^ c)) % 3 === 0);
+          }
+
+          if (isBlack) {
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', c);
+            rect.setAttribute('y', r);
+            rect.setAttribute('width', 1);
+            rect.setAttribute('height', 1);
+            rect.setAttribute('fill', '#0f172a');
+            svg.appendChild(rect);
+          }
+        }
+      }
+    }
+
+    function applyToVendingMachine() {
+      // In the dual kiosk simulator or solo window, applies the code to the vending machine
+      if (window.parent && window.parent.applyRedeemCodeToVending) {
+        window.parent.applyRedeemCodeToVending(generatedRedeemCode);
+      } else {
+        window.open('kiosk.html?code=' + encodeURIComponent(generatedRedeemCode), '_blank');
+      }
+    }
+
+    function showView(viewId) {
+      const views = ['viewWelcome', 'viewDiaperSelect', 'viewDeposit', 'viewWeighing', 'viewReceipt'];
+      views.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = (id === viewId) ? 'block' : 'none';
+      });
+    }
+
+    function resetFlow() {
+      clearInterval(hatchInterval);
+      // Reset diaper counts
+      diaperCounts.small = 0;
+      diaperCounts.medium = 0;
+      diaperCounts.large = 0;
+      diaperCounts.adult = 0;
+      updateDiaperSelectDisplay();
+      showView('viewWelcome');
+    }
+
+    // Physical Hardware & Desktop Keyboard Listener
+    window.addEventListener('keydown', (e) => {
+      const views = ['viewWelcome', 'viewDiaperSelect', 'viewDeposit', 'viewWeighing', 'viewReceipt'];
+      const activeView = views.find(id => {
+        const el = document.getElementById(id);
+        return el && el.style.display !== 'none';
+      });
+
+      if (activeView === 'viewWelcome') {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          startDiaperSelection();
+        }
+      } else if (activeView === 'viewDiaperSelect') {
+        if (e.key === '1') {
+          adjustDiaperCount('small', 1);
+        } else if (e.key === '2') {
+          adjustDiaperCount('medium', 1);
+        } else if (e.key === '3') {
+          adjustDiaperCount('large', 1);
+        } else if (e.key === '4') {
+          adjustDiaperCount('adult', 1);
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (getTotalDiapersCount() > 0) confirmDiapersAndOpenHatch();
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          resetFlow();
+        }
+      } else if (activeView === 'viewDeposit') {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          lockAndMeasureWeight();
+        }
+      } else if (activeView === 'viewReceipt') {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          applyToVendingMachine();
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          resetFlow();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

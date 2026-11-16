@@ -1,0 +1,19 @@
+{
+  "name": "@sdds/shared",
+  "version": "1.0.0",
+  "description": "Shared domain models, types, database drivers, and security validation for SDDS",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "mongodb": "^6.8.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^22.0.0"
+  }
+}
+

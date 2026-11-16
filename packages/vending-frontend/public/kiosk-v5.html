@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SDDS V5 — Diaper Vending Machine (PRD Baseline)</title>
+  <style>
+    /* ==========================================================================
+       SDDS V5 Professional Vending Machine Stylesheet
+       Enterprise Dark Theme - Zero Emojis - Rule 11 Touch Standards
+       ========================================================================== */
+    :root {
+      --bg: #090d16;
+      --panel-bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-hover: #273549;
+      --border: #334155;
+      --primary: #0d9488;
+      --primary-hover: #0f766e;
+      --accent-green: #059669;
+      --accent-gold: #f59e0b;
+      --accent-blue: #38bdf8;
+      --accent-red: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Universal Custom Slim Scrollbars */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      height: 64px;
+      padding: 0 clamp(16px, 2vw, 28px);
+      background: var(--panel-bg);
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-v5 {
+      background: linear-gradient(135deg, var(--primary), var(--accent-green));
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+
+    .cctv-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--accent-red);
+      border-radius: 20px;
+      color: #fca5a5;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .rec-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-red);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Layout */
+    .app-body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Main Product Stage */
+    .catalogue-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 16px;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+
+    .filter-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .filter-pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .product-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .prod-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.15s ease;
+    }
+
+    .prod-card:hover {
+      border-color: var(--primary);
+      background: var(--card-hover);
+    }
+
+    .prod-slot {
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent-blue);
+      margin-bottom: 4px;
+    }
+
+    .prod-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .prod-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .prod-price {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--accent-gold);
+    }
+
+    .btn-add {
+      background: linear-gradient(135deg, var(--primary), #047857);
+      border: none;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .btn-add:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Cart Sidebar */
+    .cart-drawer {
+      width: 320px;
+      background: var(--panel-bg);
+      border-left: 2px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .cart-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cart-item-row {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .voucher-box {
+      padding: 12px 14px;
+      border-top: 1px solid var(--border);
+      background: rgba(13, 148, 136, 0.1);
+    }
+
+    .cart-totals {
+      padding: 14px;
+      border-top: 1px solid var(--border);
+      background: #0b1120;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .total-row.grand {
+      font-size: 17px;
+      font-weight: 900;
+      color: #fff;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .btn-checkout {
+      min-height: 48px;
+      background: linear-gradient(135deg, var(--accent-green), var(--primary));
+      border: none;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      border-radius: 10px;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-checkout:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-card {
+      background: var(--panel-bg);
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+    }
+
+    .radial-loader {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--accent-green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 16px auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Master Header -->
+  <header>
+    <div class="brand-group">
+      <span class="badge-v5">SDDS V5</span>
+      <h1 style="font-size: 18px; font-weight: 800; letter-spacing: -0.3px;">Diaper Vending Machine</h1>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div id="cctvVndBadge" class="cctv-pill" style="display: flex;">
+        <div class="rec-dot"></div>
+        <span>CCTV ACTIVE</span>
+      </div>
+      <div style="font-size: 12px; color: var(--text-muted); font-family: monospace;">
+        Session: <strong id="lblVndSession" style="color: #fff;">SES-VND-01</strong>
+      </div>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <div class="app-body">
+    <!-- Catalogue Stage -->
+    <main class="catalogue-stage">
+      <div class="filter-bar">
+        <button id="tabAll" class="filter-pill active" onclick="setCategoryFilter('all')">All Diapers (8)</button>
+        <button id="tabBaby" class="filter-pill" onclick="setCategoryFilter('baby')">Baby Diapers (4)</button>
+        <button id="tabAdult" class="filter-pill" onclick="setCategoryFilter('adult')">Adult Diapers (4)</button>
+      </div>
+
+      <div id="productGrid" class="product-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </main>
+
+    <!-- Cart Drawer -->
+    <aside class="cart-drawer">
+      <div class="cart-header">
+        <span>Cart Items (<span id="cartCount">0</span>)</span>
+        <button onclick="clearCart()" style="background:none; border:none; color:var(--text-muted); font-size:12px; cursor:pointer;">Clear</button>
+      </div>
+
+      <div id="cartItemsList" class="cart-items">
+        <p style="color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 40px;">Your cart is empty.</p>
+      </div>
+
+      <!-- Voucher Area -->
+      <div class="voucher-box">
+        <div style="font-size: 12px; font-weight: 800; margin-bottom: 6px;">Reward Voucher Code</div>
+        <div style="display: flex; gap: 6px;">
+          <input id="inputVoucher" type="text" placeholder="ECO-20-4A91" style="flex:1; background:#022c22; border:1px solid var(--border); color:#34d399; font-family:monospace; padding:6px 10px; border-radius:6px; font-weight:800; font-size:13px;" />
+          <button onclick="applyVoucher()" style="background:var(--primary); border:none; color:#fff; font-size:12px; font-weight:800; padding:0 12px; border-radius:6px; cursor:pointer;">Apply</button>
+        </div>
+        <div id="voucherFeedback" style="font-size: 11px; margin-top: 4px; display: none;"></div>
+      </div>
+
+      <!-- Totals & Checkout -->
+      <div class="cart-totals">
+        <div class="total-row">
+          <span>Subtotal:</span>
+          <span>₹<span id="lblSubtotal">0</span></span>
+        </div>
+        <div class="total-row">
+          <span>Voucher Discount:</span>
+          <span style="color: #34d399;">-<span id="lblDiscountPct">0</span>% (₹<span id="lblDiscountAmt">0</span>)</span>
+        </div>
+        <div class="total-row grand">
+          <span>Net Payable:</span>
+          <span style="color: var(--accent-gold);">₹<span id="lblNetPayable">0</span></span>
+        </div>
+        <button id="btnCheckout" class="btn-checkout" onclick="openCheckoutModal()" disabled>
+          Reserve Stock & Checkout →
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Checkout & Payment Modal -->
+  <div id="modalCheckout" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div style="font-size: 12px; font-weight: 800; color: var(--accent-blue); text-transform: uppercase;">
+        FR-VND-07 Stock Reserved · Server Verified Payment
+      </div>
+      <h2 style="font-size: 20px; font-weight: 800; margin: 8px 0 16px;">Complete Payment</h2>
+
+      <div style="background: #0b1120; border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 16px;">
+        <div style="font-size: 13px; color: var(--text-muted);">Amount Due:</div>
+        <div style="font-size: 32px; font-weight: 900; color: var(--accent-gold);">
+          ₹<span id="modalPayAmount">0</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+        <button class="btn-checkout" style="margin: 0; background: linear-gradient(135deg, #6366f1, #4f46e5);" onclick="executePayment('STRIPE_CARD')">
+          Pay via Stripe Card (1-Tap Test)
+        </button>
+        <button class="btn-checkout" style="margin: 0; background: linear-gradient(135deg, #0d9488, #059669);" onclick="executePayment('UPI_QR')">
+          Scan & Pay via UPI QR
+        </button>
+        <button class="btn-checkout" style="margin: 0; background: #1e293b; border: 1px solid var(--border);" onclick="executePayment('CASH')">
+          Pay via Cash Validator
+        </button>
+      </div>
+
+      <button onclick="closeModal('modalCheckout')" style="background: transparent; border: none; color: var(--text-muted); font-size: 13px; cursor: pointer;">
+        ← Cancel & Release Stock
+      </button>
+    </div>
+  </div>
+
+  <!-- Dispensing & Evidence Modal -->
+  <div id="modalDispensing" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div class="radial-loader"></div>
+      <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 8px;">Dispensing Physical Product</h2>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+        ESP32 Modbus motor rotating coil... Sampling infrared drop sensor for physical confirmation.
+      </p>
+
+      <div id="dispenseEvidence" style="font-family: monospace; font-size: 12px; background: #022c22; border: 1px solid var(--accent-green); color: var(--accent-green); padding: 10px; border-radius: 8px; margin-bottom: 16px;">
+        IR Drop Beam Status: VERIFYING...
+      </div>
+
+      <button id="btnFinishDispense" class="btn-checkout" style="display: none;" onclick="finishSession()">
+        Collect Diapers & Complete (15s) →
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // State Store
+    const products = [
+      { id: "PROD_BABY_S", slot: "SLOT_A1", name: "MamyPoko Pants Standard", category: "baby", size: "S", price: 220, stock: 15 },
+      { id: "PROD_BABY_M", slot: "SLOT_A2", name: "Pampers Active Baby Pants", category: "baby", size: "M", price: 310, stock: 12 },
+      { id: "PROD_BABY_L", slot: "SLOT_A3", name: "Huggies Wonder Pants", category: "baby", size: "L", price: 340, stock: 8 },
+      { id: "PROD_BABY_XL", slot: "SLOT_A4", name: "MamyPoko Extra Absorb", category: "baby", size: "XL", price: 380, stock: 10 },
+      { id: "PROD_ADULT_M", slot: "SLOT_B1", name: "Friends Premium Adult Diapers", category: "adult", size: "M", price: 450, stock: 10 },
+      { id: "PROD_ADULT_L1", slot: "SLOT_B2", name: "Friends Overnight Adult Diapers", category: "adult", size: "L", price: 470, stock: 7 },
+      { id: "PROD_ADULT_L2", slot: "SLOT_B3", name: "Lifree Extra Absorb Pants", category: "adult", size: "L", price: 490, stock: 6 },
+      { id: "PROD_ADULT_XL", slot: "SLOT_B4", name: "KareIn Classic Adult Diapers", category: "adult", size: "XL", price: 520, stock: 5 }
+    ];
+
+    let cart = [];
+    let activeCategory = 'all';
+    let appliedDiscountPct = 0;
+    let currentVndSession = 'SES-VND-' + Math.floor(100000 + Math.random() * 900000);
+
+    document.getElementById('lblVndSession').innerText = currentVndSession;
+
+    function renderProducts() {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+
+      const filtered = activeCategory === 'all' 
+        ? products 
+        : products.filter(p => p.category === activeCategory);
+
+      filtered.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'prod-card';
+        card.innerHTML = `
+          <div>
+            <div class="prod-slot">${p.slot} · Size ${p.size}</div>
+            <div class="prod-title">${p.name}</div>
+            <div class="prod-meta">In Stock: ${p.stock} packs</div>
+          </div>
+          <div>
+            <div class="prod-price">₹${p.price}</div>
+            <button class="btn-add" onclick="addToCart('${p.id}')" ${p.stock <= 0 ? 'disabled' : ''}>
+              ${p.stock > 0 ? '+ Add to Cart' : 'Sold Out'}
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function setCategoryFilter(cat) {
+      activeCategory = cat;
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      if (cat === 'all') document.getElementById('tabAll').classList.add('active');
+      if (cat === 'baby') document.getElementById('tabBaby').classList.add('active');
+      if (cat === 'adult') document.getElementById('tabAdult').classList.add('active');
+      renderProducts();
+    }
+
+    function addToCart(prodId) {
+      const item = products.find(p => p.id === prodId);
+      if (!item) return;
+      const existing = cart.find(c => c.id === prodId);
+      if (existing) {
+        if (existing.qty < item.stock) existing.qty += 1;
+      } else {
+        cart.push({ ...item, qty: 1 });
+      }
+      renderCart();
+    }
+
+    function renderCart() {
+      const list = document.getElementById('cartItemsList');
+      const countEl = document.getElementById('cartCount');
+      const subtotalEl = document.getElementById('lblSubtotal');
+      const discAmtEl = document.getElementById('lblDiscountAmt');
+      const netPayableEl = document.getElementById('lblNetPayable');
+      const chkBtn = document.getElementById('btnCheckout');
+
+      countEl.innerText = cart.reduce((acc, c) => acc + c.qty, 0);
+
+      if (cart.length === 0) {
+        list.innerHTML = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 40px;">Your cart is empty.</p>`;
+        subtotalEl.innerText = '0';
+        discAmtEl.innerText = '0';
+        netPayableEl.innerText = '0';
+        chkBtn.disabled = true;
+        return;
+      }
+
+      list.innerHTML = '';
+      let subtotal = 0;
+
+      cart.forEach((c, idx) => {
+        subtotal += c.price * c.qty;
+        const row = document.createElement('div');
+        row.className = 'cart-item-row';
+        row.innerHTML = `
+          <div>
+            <div style="font-size: 13px; font-weight: 800;">${c.name}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">₹${c.price} x ${c.qty}</div>
+          </div>
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <button onclick="modifyCartQty(${idx}, -1)" style="width:28px; height:28px; background:#334155; border:none; color:#fff; border-radius:6px; cursor:pointer;">-</button>
+            <span style="font-weight: 800; font-size: 13px;">${c.qty}</span>
+            <button onclick="modifyCartQty(${idx}, 1)" style="width:28px; height:28px; background:#334155; border:none; color:#fff; border-radius:6px; cursor:pointer;">+</button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+
+      const discAmount = Math.round(subtotal * (appliedDiscountPct / 100));
+      const net = Math.max(0, subtotal - discAmount);
+
+      subtotalEl.innerText = subtotal;
+      discAmtEl.innerText = discAmount;
+      netPayableEl.innerText = net;
+      chkBtn.disabled = false;
+    }
+
+    function modifyCartQty(idx, delta) {
+      if (!cart[idx]) return;
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      renderCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      renderCart();
+    }
+
+    function applyVoucher() {
+      const input = document.getElementById('inputVoucher').value.trim();
+      const fb = document.getElementById('voucherFeedback');
+
+      const match = input.match(/^ECO-(\d+)-[A-Z0-9]+$/i);
+      if (match) {
+        appliedDiscountPct = parseInt(match[1], 10);
+        document.getElementById('lblDiscountPct').innerText = appliedDiscountPct;
+        fb.style.display = 'block';
+        fb.style.color = '#34d399';
+        fb.innerText = `Reward voucher active: -${appliedDiscountPct}% applied!`;
+        renderCart();
+      } else {
+        fb.style.display = 'block';
+        fb.style.color = '#ef4444';
+        fb.innerText = 'Invalid voucher format (use ECO-XX-XXXX)';
+      }
+    }
+
+    // Checkout Modal
+    function openCheckoutModal() {
+      const net = document.getElementById('lblNetPayable').innerText;
+      document.getElementById('modalPayAmount').innerText = net;
+      document.getElementById('modalCheckout').style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function executePayment(method) {
+      closeModal('modalCheckout');
+      document.getElementById('modalDispensing').style.display = 'flex';
+
+      const evidence = document.getElementById('dispenseEvidence');
+      evidence.innerText = `Authorizing ${method}... ESP32 motor pulse initiated.`;
+
+      setTimeout(() => {
+        evidence.innerText = `ESP32 ACK (0x06): IR Drop Beam Interrupted! Product physically dropped into tray.`;
+        document.getElementById('btnFinishDispense').style.display = 'block';
+      }, 1400);
+    }
+
+    function finishSession() {
+      closeModal('modalDispensing');
+      clearCart();
+      appliedDiscountPct = 0;
+      document.getElementById('lblDiscountPct').innerText = '0';
+      document.getElementById('inputVoucher').value = '';
+      document.getElementById('voucherFeedback').style.display = 'none';
+
+      // Generate new session ID
+      currentVndSession = 'SES-VND-' + Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('lblVndSession').innerText = currentVndSession;
+    }
+
+    // Listen for Real-Time Sync from Bin Kiosk
+    const sddsSyncChannel = new BroadcastChannel('sdds_realtime_sync');
+    sddsSyncChannel.onmessage = (event) => {
+      if (event.data && event.data.type === 'VOUCHER_ISSUED' && event.data.voucher) {
+        document.getElementById('inputVoucher').value = event.data.voucher.code;
+        applyVoucher();
+      }
+    };
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'sdds_sync_event') {
+        try {
+          const data = JSON.parse(e.newValue);
+          if (data && data.type === 'VOUCHER_ISSUED' && data.voucher) {
+            document.getElementById('inputVoucher').value = data.voucher.code;
+            applyVoucher();
+          }
+        } catch(err) {}
+      }
+    });
+
+    // Check URL params
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('code')) {
+      document.getElementById('inputVoucher').value = params.get('code');
+      applyVoucher();
+    }
+
+    renderProducts();
+  </script>
+</body>
+</html>

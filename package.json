@@ -1,0 +1,25 @@
+{
+  "name": "sdds-monorepo",
+  "version": "1.0.0",
+  "description": "Smart Diaper Disposal and Vending System (SDDS) Monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "start:vending-backend": "npm run start --workspace=@sdds/vending-backend",
+    "start:vending-frontend": "npm run start --workspace=@sdds/vending-frontend",
+    "start:bin-backend": "npm run start --workspace=@sdds/bin-backend",
+    "start:bin-frontend": "npm run start --workspace=@sdds/bin-frontend"
+  },
+  "keywords": [
+    "sdds",
+    "vending-machine",
+    "collection-bin",
+    "kiosk",
+    "iot",
+    "typescript"
+  ]
+}
+

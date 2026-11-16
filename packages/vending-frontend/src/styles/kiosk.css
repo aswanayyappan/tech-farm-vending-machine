@@ -1,0 +1,537 @@
+/* ==========================================================================
+   SDDS Smart Vending Machine Touchscreen Kiosk Stylesheet
+   Strictly complies with Rule 11 (Touch Ergonomics, High Contrast, 60fps)
+   ========================================================================== */
+
+:root {
+  --primary-color: #0d9488;         /* High-contrast calming teal */
+  --primary-hover: #0f766e;
+  --primary-light: #ccfbf1;
+  --secondary-color: #4f46e5;       /* Accent indigo */
+  --bg-main: #0f172a;               /* Modern deep slate dark background */
+  --bg-surface: #1e293b;            /* High clarity card surface */
+  --bg-surface-elevated: #334155;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-gold: #f59e0b;           /* Special offers & discounts */
+  --accent-green: #10b981;          /* In-stock & success states */
+  --accent-red: #ef4444;            /* Out-of-stock & error states */
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --touch-target-min: 52px;
+  --touch-target-cta: 68px;
+  --border-radius-card: 20px;
+  --border-radius-btn: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none; /* Prevent accidental text highlighting on kiosk touchscreens */
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Kiosk Layout Shell */
+.kiosk-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background: radial-gradient(circle at top right, #1e293b 0%, #0f172a 100%);
+}
+
+/* Header */
+.kiosk-header {
+  height: 80px;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 2px solid #334155;
+}
+
+.kiosk-logo-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.kiosk-logo-badge {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.kiosk-title {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.kiosk-meta {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+.kiosk-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: rgba(16, 185, 129, 0.15);
+  border: 1px solid var(--accent-green);
+  border-radius: 20px;
+  color: var(--accent-green);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* Idle Advertisement Carousel */
+.ad-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  background-color: #0b0f19;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 40px;
+}
+
+.ad-slide-content {
+  text-align: center;
+  max-width: 900px;
+  margin-top: 60px;
+}
+
+.ad-badge {
+  display: inline-block;
+  padding: 10px 24px;
+  background: rgba(13, 148, 136, 0.2);
+  color: #2dd4bf;
+  border: 2px solid #2dd4bf;
+  border-radius: 30px;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ad-headline {
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.ad-subtext {
+  font-size: 24px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.ad-cta-button {
+  min-height: var(--touch-target-cta);
+  padding: 0 60px;
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  border: none;
+  border-radius: var(--border-radius-btn);
+  box-shadow: 0 12px 30px rgba(13, 148, 136, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.15s ease;
+}
+
+.ad-cta-button:active {
+  transform: scale(0.97);
+}
+
+/* Category & Filter Tabs */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  background-color: rgba(15, 23, 42, 0.6);
+  border-bottom: 1px solid #334155;
+}
+
+.category-tabs {
+  display: flex;
+  gap: 16px;
+}
+
+.category-btn {
+  min-height: var(--touch-target-min);
+  padding: 0 32px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background-color: var(--bg-surface);
+  border: 2px solid #334155;
+  border-radius: var(--border-radius-btn);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.category-btn.active {
+  color: #ffffff;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 16px rgba(13, 148, 136, 0.3);
+}
+
+.size-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.size-pill {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background-color: var(--bg-surface);
+  border: 2px solid #334155;
+  color: var(--text-muted);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.size-pill.active {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: #ffffff;
+}
+
+/* Product Catalogue Grid */
+.catalogue-container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 28px 32px;
+  overflow-y: auto;
+}
+
+/* Product Card */
+.product-card {
+  background-color: var(--bg-surface);
+  border: 2px solid #334155;
+  border-radius: var(--border-radius-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.2s ease;
+}
+
+.product-card:hover {
+  border-color: var(--primary-color);
+}
+
+.product-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.product-brand {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2dd4bf;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stock-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.stock-badge.in-stock {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: var(--accent-green);
+}
+
+.stock-badge.out-stock {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: var(--accent-red);
+}
+
+.product-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.product-spec {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.product-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid #334155;
+}
+
+.product-price {
+  font-size: 32px;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.product-price-currency {
+  font-size: 22px;
+  color: var(--accent-gold);
+  font-weight: 700;
+  margin-right: 2px;
+}
+
+.btn-add-touch {
+  min-height: var(--touch-target-min);
+  padding: 0 24px;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 800;
+  border: none;
+  border-radius: var(--border-radius-btn);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-add-touch:disabled {
+  background-color: #334155;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+/* Floating Cart Trigger Bar */
+.cart-floating-bar {
+  height: 90px;
+  background-color: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(12px);
+  border-top: 2px solid #334155;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cart-summary-text {
+  font-size: 20px;
+  color: var(--text-muted);
+}
+
+.cart-summary-amount {
+  font-size: 34px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-left: 8px;
+}
+
+.btn-checkout-cta {
+  min-height: var(--touch-target-cta);
+  padding: 0 44px;
+  background: linear-gradient(135deg, var(--accent-green), #059669);
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 800;
+  border: none;
+  border-radius: var(--border-radius-btn);
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+}
+
+/* Modal Overlay & Card System */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-card {
+  width: 90%;
+  max-width: 640px;
+  background-color: var(--bg-surface);
+  border: 2px solid #334155;
+  border-radius: 24px;
+  padding: 36px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 32px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* Barcode Scanner UI */
+.scanner-viewport {
+  height: 220px;
+  background-color: #0b0f19;
+  border: 3px dashed var(--primary-color);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.scanner-laser {
+  position: absolute;
+  top: 50%;
+  width: 85%;
+  height: 3px;
+  background-color: #ef4444;
+  box-shadow: 0 0 12px #ef4444;
+}
+
+.scanner-hint {
+  font-size: 18px;
+  color: var(--text-muted);
+  margin-top: 12px;
+}
+
+/* Payment Selector */
+.payment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.payment-option-btn {
+  min-height: 80px;
+  background-color: var(--bg-surface-elevated);
+  border: 2px solid #475569;
+  border-radius: var(--border-radius-btn);
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.payment-option-btn.selected {
+  border-color: var(--accent-green);
+  background-color: rgba(16, 185, 129, 0.15);
+}
+
+/* Dispensing Status Spinner & Progress */
+.dispense-progress-box {
+  text-align: center;
+  padding: 30px 0;
+}
+
+.dispense-spinner {
+  width: 90px;
+  height: 90px;
+  border: 8px solid #334155;
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 24px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.dispense-status-msg {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.dispense-chute-alert {
+  padding: 16px 24px;
+  background-color: rgba(16, 185, 129, 0.2);
+  border: 2px solid var(--accent-green);
+  border-radius: 16px;
+  color: #34d399;
+  font-size: 20px;
+  font-weight: 700;
+}
+

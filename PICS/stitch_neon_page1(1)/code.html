@@ -1,0 +1,213 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Smart Hygiene Care Kiosk - Welcome</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet">
+<!-- Font Awesome for Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"><style data-purpose="liquid-wave-styles">
+@keyframes wave-move-1 {
+  0% { transform: translateX(0) translateZ(0) scaleY(1); }
+  50% { transform: translateX(-25%) translateZ(0) scaleY(1.08); }
+  100% { transform: translateX(-50%) translateZ(0) scaleY(1); }
+}
+@keyframes wave-move-2 {
+  0% { transform: translateX(-50%) translateZ(0) scaleY(1.05); }
+  50% { transform: translateX(-25%) translateZ(0) scaleY(0.92); }
+  100% { transform: translateX(0) translateZ(0) scaleY(1.05); }
+}
+@keyframes wave-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+}
+.wave-anim-1 {
+  animation: wave-move-1 5s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+}
+.wave-anim-2 {
+  animation: wave-move-2 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) -2s infinite;
+}
+</style>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            kiosk: {
+              cream: '#faf3dd',
+              surface: '#ffffff',
+              card: '#fbf7ea',
+              forest: '#0f2419',
+              spruce: '#12281e',
+              emerald: '#1b4332',
+              lime: '#9ef01a',
+              chartreuse: '#ccff33',
+              glow: 'rgba(158, 240, 26, 0.35)',
+              mint: '#e8f5e9',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'ripple-1': 'ripple 2.8s cubic-bezier(0.1, 0.2, 0.4, 1) infinite',
+            'ripple-2': 'ripple 2.8s cubic-bezier(0.1, 0.2, 0.4, 1) 0.9s infinite',
+            'ripple-3': 'ripple 2.8s cubic-bezier(0.1, 0.2, 0.4, 1) 1.8s infinite',
+            'float': 'floating 4s ease-in-out infinite',
+            'glow-beam': 'beam 6s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            ripple: {
+              '0%': { transform: 'scale(0.8)', opacity: '0.9' },
+              '100%': { transform: 'scale(2.6)', opacity: '0' },
+            },
+            floating: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' },
+            },
+            beam: {
+              '0%': { opacity: '0.4', transform: 'rotate(0deg) scale(1)' },
+              '100%': { opacity: '0.75', transform: 'rotate(15deg) scale(1.15)' },
+            }
+          }
+        }
+      }
+    };
+  </script>
+<!-- Custom Styles for Ambient Background & Glassmorphic Highlights -->
+<style data-purpose="custom-styling">
+    body {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    /* Subtle dot grid overlay on cream */
+    .bg-dot-matrix {
+      background-image: radial-gradient(rgba(15, 36, 25, 0.08) 1.5px, transparent 1.5px);
+      background-size: 28px 28px;
+    }
+    
+    /* Frosted glass styling for light theme */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(229, 221, 196, 0.9);
+      box-shadow: 0 25px 60px -15px rgba(15, 36, 25, 0.08), 0 10px 25px -5px rgba(158, 240, 26, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+    }
+    
+    .glass-pill {
+      background: rgba(251, 247, 234, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(220, 212, 185, 0.7);
+      box-shadow: 0 4px 14px rgba(15, 36, 25, 0.03);
+    }
+
+    /* Outer glow effects */
+    .neon-glow {
+      box-shadow: 0 0 40px rgba(158, 240, 26, 0.4);
+    }
+    
+    .text-glow {
+      text-shadow: 0 2px 14px rgba(158, 240, 26, 0.45);
+    }
+  </style>
+</head>
+<body class="bg-[#faf3dd] text-[#0f2419] font-sans antialiased overflow-hidden w-screen h-screen flex items-center justify-center p-4 md:p-6 lg:p-8 select-none">
+<!-- BEGIN: AmbientAtmosphere -->
+<!-- Ambient background glow elements in soft cream, ivory, and vibrant lime -->
+<div class="fixed inset-0 pointer-events-none overflow-hidden" data-purpose="ambient-lighting">
+<div class="absolute -top-[15%] left-1/4 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-[#ffffff]/90 via-[#f4ecd2]/80 to-transparent blur-[120px] animate-glow-beam"></div>
+<div class="absolute -bottom-[20%] right-1/4 w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-[#9ef01a]/20 via-[#ccff33]/15 to-transparent blur-[140px]"></div>
+<div class="absolute inset-0 bg-dot-matrix opacity-60"></div>
+</div>
+<!-- END: AmbientAtmosphere -->
+<!-- BEGIN: MainKioskViewport -->
+<!-- Primary 16:9 Light Glass Container mimicking high-end interactive touch screen terminal -->
+<main class="relative z-10 w-full max-w-[1720px] aspect-[16/9] max-h-[96vh] glass-card rounded-[2.5rem] flex flex-col justify-between p-7 lg:p-11 border border-[#ebdcb9] shadow-2xl overflow-hidden cursor-pointer" data-purpose="kiosk-interactive-container" id="kiosk-touch-area"><div class="absolute inset-0 pointer-events-none -z-10 overflow-hidden"><div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#9ef01a]/25 via-[#ccff33]/15 to-transparent blur-[100px]"></div><div class="absolute -bottom-36 -right-36 w-[650px] h-[650px] rounded-full bg-gradient-to-tl from-[#faf3dd] via-[#ccff33]/20 to-transparent blur-[110px]"></div><div class="absolute inset-0 bg-gradient-to-b from-white/60 via-[#faf3dd]/40 to-white/80"></div></div>
+<!-- Top Decorative Frame Accent Lines -->
+
+
+<!-- BEGIN: TopBar -->
+<header class="flex items-center justify-between w-full relative z-20 px-3 py-2 rounded-2xl" data-purpose="header-navigation"><div class="flex items-center space-x-4"><div class="relative w-12 h-12 p-2.5 rounded-2xl bg-[#0f2419] border border-[#9ef01a]/70 flex items-center justify-center shadow-lg group"><div class="absolute inset-0 bg-gradient-to-br from-[#9ef01a] via-[#ccff33]/40 to-transparent rounded-2xl opacity-40 blur-xs"></div><div class="w-5 h-5 rounded-xl bg-gradient-to-tr from-[#9ef01a] to-[#ccff33] shadow-[0_0_14px_rgba(158,240,26,0.9)]"></div></div><div class="flex flex-col justify-center"><h1 class="text-xl font-extrabold tracking-wider uppercase text-[#0f2419] leading-tight" style="letter-spacing: 0.12em;">WELCOME</h1><span class="text-[11px] font-semibold tracking-wider text-[#1b4332]/70 uppercase">Hygiene Care Kiosk</span></div></div><div class="flex items-center space-x-3 lg:space-x-4"><div class="glass-pill px-4 py-2 rounded-xl flex items-center space-x-2.5 border border-[#e5ddc4]/90 bg-white/70 shadow-sm" data-purpose="live-clock"><i class="far fa-clock text-[#0f2419] text-xs"></i><span class="text-sm font-bold tracking-wider text-[#0f2419]" id="system-clock">01:51 PM</span></div><div class="glass-pill p-1 rounded-xl flex items-center space-x-1 text-xs font-semibold border border-[#e5ddc4]/90 bg-white/70 shadow-sm" data-purpose="language-switch"><button class="px-3 py-1 rounded-lg bg-gradient-to-r from-[#9ef01a] to-[#ccff33] text-[#0f2419] font-black shadow-[0_2px_8px_rgba(158,240,26,0.4)] transition-all flex items-center gap-1"><span>EN</span></button></div><button class="w-10 h-10 rounded-xl glass-pill flex items-center justify-center hover:bg-white hover:border-[#9ef01a] text-[#0f2419] transition-all border border-[#e5ddc4]/90 bg-white/70 shadow-sm" title="Information Menu"><i class="fas fa-bars text-sm"></i></button></div></header>
+<!-- END: TopBar -->
+<!-- BEGIN: HeroInteractiveCenter -->
+<!-- Main Center Hero: Primary call to action with animated tactile ripple & hand touch icon -->
+<section class="flex flex-col items-center justify-start text-center relative z-20 mt-6 lg:mt-10 mb-auto pb-6" data-purpose="center-touch-hero"><div class="absolute -top-10 w-[720px] h-[480px] rounded-full bg-gradient-to-b from-[#9ef01a]/20 via-[#ccff33]/15 to-transparent blur-[110px] pointer-events-none -z-10"></div><h2 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight uppercase leading-none mb-6 drop-shadow-sm select-none" style="background: linear-gradient(135deg, rgb(9, 26, 18) 0%, rgb(21, 60, 41) 45%, rgb(42, 99, 68) 75%, rgb(15, 36, 25) 100%) text; -webkit-text-fill-color: transparent; text-shadow: rgba(158, 240, 26, 0.18) 0px 4px 24px; letter-spacing: -0.01em;">TOUCH THE DISPLAY</h2><div class="relative flex items-center justify-center w-44 h-44" data-purpose="ripple-interaction-anchor"><span class="absolute w-44 h-44 rounded-full bg-gradient-to-br from-[#9ef01a]/30 via-[#ccff33]/20 to-transparent animate-ripple-1 pointer-events-none blur-sm"></span><span class="absolute w-36 h-36 rounded-full border-2 border-[#9ef01a] animate-ripple-1 pointer-events-none shadow-[0_0_35px_rgba(158,240,26,0.7)]"></span><span class="absolute w-36 h-36 rounded-full border-2 border-[#ccff33] animate-ripple-2 pointer-events-none"></span><span class="absolute w-36 h-36 rounded-full border border-[#9ef01a]/40 animate-ripple-3 pointer-events-none"></span><div class="relative w-28 h-28 rounded-full p-1.5 bg-gradient-to-tr from-[#9ef01a] via-[#ccff33] to-white shadow-[0_0_40px_rgba(158,240,26,0.55),0_16px_36px_rgba(15,36,25,0.15)] flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 group" style="background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(16px); border: 2px solid rgba(158, 240, 26, 0.45); box-shadow: rgba(158, 240, 26, 0.25) 0px 0px 30px, rgba(15, 36, 25, 0.08) 0px 8px 24px;"><div class="w-full h-full rounded-full flex items-center justify-center border border-white shadow-inner bg-transparent"><svg class="w-12 h-12 relative z-10 transition-transform duration-200 drop-shadow-sm group-hover:scale-110 text-[#0f2419]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24"><path class="stroke-[#9ef01a] opacity-90 group-hover:opacity-100 transition-opacity" d="M12 2a4 4 0 0 1 4 4" stroke-width="2.2"></path><path class="stroke-[#426900]" d="M12 5a1 1 0 0 1 1 1" stroke-width="2.4"></path><path d="M18 11V6a2 2 0 0 0-4 0v5"></path><path d="M14 10V4a2 2 0 0 0-4 0v7"></path><path d="M10 10.5V6a2 2 0 0 0-4 0v8"></path><path d="M18 11a2 2 0 0 1 2 2c0 4.5-3.5 8-8 8s-7-2.5-7-7v-3a2 2 0 0 1 3.8-1"></path></svg></div></div></div></section>
+<!-- END: HeroInteractiveCenter -->
+<!-- BEGIN: QuickFeaturesAndFooter -->
+<!-- Bottom Section: 3 Quick Key Info Badges in creamy white containers -->
+
+<!-- END: QuickFeaturesAndFooter -->
+<div class="absolute bottom-0 left-0 right-0 w-full pointer-events-none z-10 overflow-hidden flex items-end justify-center select-none"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1SWWybF4Q_MT0I13MBHmy8lfSk8u6JHdMkd5MG7XVBXJDhWbDQrsZhEkFgH1vdVl8tG_u_yyXD1O50hA_LLd28ACc1flZ0ExY6t7MFxi9RmGvQnraQX-VB-GcBYvjrg_4CCpeax299rz6WpgYOYuToJ74UE-44__7HRQ17sKBdHTKPTL0G7ivTyCVt4dQSdAUVSAV3wt_HKm5FzmQiSBGLHDFsA60itm27JOKoYNSOoaoAvyiBv4CdQ" alt="Flowing green wave artwork" class="w-full max-h-[46%] object-cover object-top opacity-90 drop-shadow-[0_-8px_20px_rgba(15,36,25,0.06)] mix-blend-multiply" style="mask-image: linear-gradient(to top, black 70%, transparent 100%);"></div></main>
+<!-- END: MainKioskViewport -->
+<!-- BEGIN: InteractiveScripts -->
+<!-- Script for real-time clock update & tactile feedback -->
+<script data-purpose="clock-and-interactivity">
+    // Update live station clock
+    function updateClock() {
+      const clockEl = document.getElementById('system-clock');
+      if (!clockEl) return;
+      
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // 0 should be 12
+      const formattedHours = String(hours).padStart(2, '0');
+      
+      clockEl.textContent = `${formattedHours}:${minutes} ${ampm}`;
+    }
+    
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Tactile screen tap ripple effect simulation on touch / click
+    const kioskArea = document.getElementById('kiosk-touch-area');
+    if (kioskArea) {
+      kioskArea.addEventListener('pointerdown', (e) => {
+        // Prevent multi-spawning excessive DOM ripples if clicked on buttons
+        const rect = kioskArea.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const ripple = document.createElement('div');
+        ripple.style.position = 'absolute';
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        ripple.style.transform = 'translate(-50%, -50%)';
+        ripple.style.width = '20px';
+        ripple.style.height = '20px';
+        ripple.style.borderRadius = '50%';
+        ripple.style.background = 'radial-gradient(circle, rgba(158,240,26,0.8) 0%, rgba(204,255,51,0.2) 65%, transparent 100%)';
+        ripple.style.boxShadow = '0 0 25px rgba(158, 240, 26, 0.7)';
+        ripple.style.pointerEvents = 'none';
+        ripple.style.zIndex = '30';
+        ripple.style.transition = 'all 0.65s cubic-bezier(0.1, 0.8, 0.3, 1)';
+
+        kioskArea.appendChild(ripple);
+
+        requestAnimationFrame(() => {
+          ripple.style.width = '260px';
+          ripple.style.height = '260px';
+          ripple.style.opacity = '0';
+        });
+
+        setTimeout(() => {
+          ripple.remove();
+        }, 700);
+      });
+    }
+  </script>
+<!-- END: InteractiveScripts -->
+
+
+</body></html>

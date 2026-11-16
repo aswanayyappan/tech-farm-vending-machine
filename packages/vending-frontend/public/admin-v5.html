@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SDDS V5 — Central Administration & Telemetry Portal</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --panel: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --primary: #0d9488;
+      --accent-green: #059669;
+      --accent-gold: #f59e0b;
+      --accent-blue: #38bdf8;
+      --accent-red: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Universal Custom Slim Scrollbars */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--panel);
+      border-bottom: 2px solid var(--border);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .badge-v5 {
+      background: linear-gradient(135deg, #0d9488, #059669);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    /* Central Notification Center Banner */
+    .notification-bar {
+      background: #172554;
+      border-bottom: 1px solid var(--accent-blue);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+
+    .notif-chips {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .chip {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .chip.ok { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #059669; }
+    .chip.warn { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #d97706; }
+
+    /* Nav Tabs */
+    .tab-bar {
+      background: var(--panel);
+      padding: 8px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav-tab {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .nav-tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      padding: 20px 24px;
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+    }
+
+    .kpi-val {
+      font-size: 28px;
+      font-weight: 900;
+      margin-top: 6px;
+      color: #fff;
+    }
+
+    /* Tables */
+    .data-table-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    th {
+      color: var(--text-muted);
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+    }
+
+    .btn-action {
+      background: #1e293b;
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span class="badge-v5">SDDS V5</span>
+      <h1 style="font-size: 18px; font-weight: 800;">Central Admin & Telemetry Hub</h1>
+    </div>
+    <div style="font-size: 12px; color: var(--text-muted);">
+      Terminal: <strong style="color: #fff;">PORTAL-V5-MAIN</strong>
+    </div>
+  </header>
+
+  <!-- Central Notification Center -->
+  <div class="notification-bar">
+    <div class="notif-chips">
+      <span style="font-weight: 800;">Notifications:</span>
+      <span class="chip ok">BIN CAPACITY: 28%</span>
+      <span class="chip warn">SLOT_B4: LOW STOCK (5 packs)</span>
+      <span class="chip ok">ESP32 UART: ONLINE (COM3)</span>
+      <span class="chip ok">CCTV DISK: 64% FREE</span>
+    </div>
+    <span style="font-size: 11px; color: #93c5fd;">Section 6.10 Central Notifications Active</span>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button id="tabKpis" class="nav-tab active" onclick="switchTab('kpis')">Overview KPIs</button>
+    <button id="tabSlots" class="nav-tab" onclick="switchTab('slots')">Spiral Coil Matrix</button>
+    <button id="tabVideo" class="nav-tab" onclick="switchTab('video')">Video Recording Ledger</button>
+    <button id="tabOrders" class="nav-tab" onclick="switchTab('orders')">Orders Audit</button>
+  </div>
+
+  <main>
+    <!-- Tab 1: KPIs -->
+    <div id="viewKpis">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div style="font-size: 12px; color: var(--text-muted); font-weight: 800;">GROSS SALES TODAY</div>
+          <div class="kpi-val" style="color: var(--accent-gold);">₹4,280</div>
+          <div style="font-size: 12px; color: var(--accent-green); margin-top: 4px;">42 Orders Completed</div>
+        </div>
+        <div class="kpi-card">
+          <div style="font-size: 12px; color: var(--text-muted); font-weight: 800;">WASTE DIVERTED FROM LANDFILL</div>
+          <div class="kpi-val" style="color: var(--accent-green);">3.42 kg</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">18 Deposits Logged</div>
+        </div>
+        <div class="kpi-card">
+          <div style="font-size: 12px; color: var(--text-muted); font-weight: 800;">V5 REWARD VOUCHERS ISSUED</div>
+          <div class="kpi-val" style="color: var(--accent-blue);">18 Codes</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">14 Redeemed (77.7%)</div>
+        </div>
+        <div class="kpi-card">
+          <div style="font-size: 12px; color: var(--text-muted); font-weight: 800;">CCTV SESSION RECORDINGS</div>
+          <div class="kpi-val" style="color: #a78bfa;">60 Files</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">100% Finalized (0 Faults)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Spiral Coil Matrix -->
+    <div id="viewSlots" class="data-table-card" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="font-size: 16px; font-weight: 800;">8-Channel Physical Coil Matrix</h3>
+        <button class="btn-action" style="background: var(--primary); border: none;" onclick="restockAll()">Restock All Slots to 100%</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Slot ID</th>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Size</th>
+            <th>Stock Count</th>
+            <th>Unit Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="slotTableBody">
+          <!-- Rendered dynamically -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tab 3: Video Recording Ledger -->
+    <div id="viewVideo" class="data-table-card" style="display: none;">
+      <div style="margin-bottom: 12px;">
+        <h3 style="font-size: 16px; font-weight: 800;">CCTV Session Video Metadata Ledger (FR-VID-06)</h3>
+        <p style="font-size: 12px; color: var(--text-muted);">Session recordings stored as local video files. Database stores audit references without large BLOBs.</p>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Recording ID</th>
+            <th>Session ID</th>
+            <th>Module</th>
+            <th>Duration</th>
+            <th>File Size</th>
+            <th>Status</th>
+            <th>File Storage Reference</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-family: monospace;">REC-20261115-0104</td>
+            <td style="font-family: monospace;">SES-BIN-894120</td>
+            <td>Collection Bin</td>
+            <td>38s</td>
+            <td>4.2 MB</td>
+            <td><span class="chip ok">FINALIZED</span></td>
+            <td style="font-family: monospace; color: var(--text-muted);">/recordings/20261115/REC-0104.mp4</td>
+          </tr>
+          <tr>
+            <td style="font-family: monospace;">REC-20261115-0103</td>
+            <td style="font-family: monospace;">SES-VND-419201</td>
+            <td>Vending Machine</td>
+            <td>52s</td>
+            <td>5.8 MB</td>
+            <td><span class="chip ok">FINALIZED</span></td>
+            <td style="font-family: monospace; color: var(--text-muted);">/recordings/20261115/REC-0103.mp4</td>
+          </tr>
+          <tr>
+            <td style="font-family: monospace;">REC-20261115-0102</td>
+            <td style="font-family: monospace;">SES-BIN-771923</td>
+            <td>Collection Bin</td>
+            <td>29s</td>
+            <td>3.1 MB</td>
+            <td><span class="chip ok">FINALIZED</span></td>
+            <td style="font-family: monospace; color: var(--text-muted);">/recordings/20261115/REC-0102.mp4</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tab 4: Orders Audit -->
+    <div id="viewOrders" class="data-table-card" style="display: none;">
+      <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">Orders & Transaction Audit Trail</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Time</th>
+            <th>Item Dispensed</th>
+            <th>Gross</th>
+            <th>Voucher Code</th>
+            <th>Net Paid</th>
+            <th>Method</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-family: monospace;">ORD-20261115-0042</td>
+            <td>10:04 AM</td>
+            <td>MamyPoko Pants Standard (S)</td>
+            <td>₹220</td>
+            <td style="color: #34d399; font-family: monospace;">ECO-20-4A91 (-20%)</td>
+            <td style="font-weight: 800;">₹176</td>
+            <td>STRIPE_CARD</td>
+            <td><span class="chip ok">COMPLETED</span></td>
+          </tr>
+          <tr>
+            <td style="font-family: monospace;">ORD-20261115-0041</td>
+            <td>09:48 AM</td>
+            <td>Pampers Active Baby Pants (M)</td>
+            <td>₹310</td>
+            <td>None</td>
+            <td style="font-weight: 800;">₹310</td>
+            <td>UPI_QR</td>
+            <td><span class="chip ok">COMPLETED</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    const slots = [
+      { id: "SLOT_A1", name: "MamyPoko Pants Standard", cat: "Baby", size: "S", qty: 15, max: 15, price: 220 },
+      { id: "SLOT_A2", name: "Pampers Active Baby Pants", cat: "Baby", size: "M", qty: 12, max: 15, price: 310 },
+      { id: "SLOT_A3", name: "Huggies Wonder Pants", cat: "Baby", size: "L", qty: 8, max: 15, price: 340 },
+      { id: "SLOT_A4", name: "MamyPoko Extra Absorb", cat: "Baby", size: "XL", qty: 10, max: 15, price: 380 },
+      { id: "SLOT_B1", name: "Friends Premium Adult Diapers", cat: "Adult", size: "M", qty: 10, max: 10, price: 450 },
+      { id: "SLOT_B2", name: "Friends Overnight Adult Diapers", cat: "Adult", size: "L", qty: 7, max: 10, price: 470 },
+      { id: "SLOT_B3", name: "Lifree Extra Absorb Pants", cat: "Adult", size: "L", qty: 6, max: 10, price: 490 },
+      { id: "SLOT_B4", name: "KareIn Classic Adult Diapers", cat: "Adult", size: "XL", qty: 5, max: 10, price: 520 }
+    ];
+
+    function renderSlots() {
+      const tbody = document.getElementById('slotTableBody');
+      tbody.innerHTML = '';
+      slots.forEach((s, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-family: monospace; font-weight: 800; color: var(--accent-blue);">${s.id}</td>
+          <td style="font-weight: 700;">${s.name}</td>
+          <td>${s.cat}</td>
+          <td><span class="chip" style="background:#334155; color:#fff;">${s.size}</span></td>
+          <td style="font-weight: 800; color: ${s.qty <= 5 ? '#f59e0b' : '#34d399'};">${s.qty} / ${s.max}</td>
+          <td style="font-weight: 800;">₹${s.price}</td>
+          <td>
+            <button class="btn-action" onclick="restockSlot(${idx})">+ Restock</button>
+            <button class="btn-action" style="border-color: #f59e0b; color: #fbbf24;" onclick="testMotor('${s.id}')">Test Motor</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function restockSlot(idx) {
+      slots[idx].qty = slots[idx].max;
+      renderSlots();
+    }
+
+    function restockAll() {
+      slots.forEach(s => s.qty = s.max);
+      renderSlots();
+    }
+
+    function testMotor(slotId) {
+      alert(`[DIAGNOSTIC TEST] Fired 100ms motor pulse on ${slotId}. Infrared drop beam verified.`);
+    }
+
+    function switchTab(tab) {
+      ['kpis', 'slots', 'video', 'orders'].forEach(t => {
+        const el = document.getElementById('view' + t.charAt(0).toUpperCase() + t.slice(1));
+        const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (el) el.style.display = (t === tab) ? 'block' : 'none';
+        if (btn) {
+          if (t === tab) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      });
+      if (tab === 'slots') renderSlots();
+    }
+
+    renderSlots();
+  </script>
+</body>
+</html>

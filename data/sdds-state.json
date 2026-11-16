@@ -1,0 +1,1423 @@
+﻿{
+    "slots":  [
+                  {
+                      "slotId":  "SLOT_A1",
+                      "productId":  "PROD_BABY_S",
+                      "name":  "MamyPoko Pants Standard",
+                      "category":  "baby",
+                      "size":  "S",
+                      "sku":  "SKU-BABY-S-01",
+                      "price":  220,
+                      "qty":  15,
+                      "max":  15,
+                      "operational":  true
+                  },
+                  {
+                      "slotId":  "SLOT_A2",
+                      "productId":  "PROD_BABY_M",
+                      "name":  "Pampers Active Baby Pants",
+                      "category":  "baby",
+                      "size":  "M",
+                      "sku":  "SKU-BABY-M-02",
+                      "price":  310,
+                      "qty":  15,
+                      "max":  15,
+                      "operational":  true
+                  },
+                  {
+                      "slotId":  "SLOT_A3",
+                      "productId":  "PROD_BABY_L",
+                      "name":  "Huggies Wonder Pants",
+                      "category":  "baby",
+                      "size":  "L",
+                      "sku":  "SKU-BABY-L-03",
+                      "price":  340,
+                      "qty":  15,
+                      "max":  15,
+                      "operational":  true
+                  },
+                  {
+                      "slotId":  "SLOT_A4",
+                      "productId":  "PROD_BABY_XL",
+                      "name":  "MamyPoko Extra Absorb",
+                      "category":  "baby",
+                      "size":  "XL",
+                      "sku":  "SKU-BABY-XL-04",
+                      "price":  380,
+                      "qty":  15,
+                      "max":  15,
+                      "operational":  true
+                  },
+                  {
+                      "slotId":  "SLOT_B1",
+                      "productId":  "PROD_ADULT_M",
+                      "name":  "Friends Premium Adult Diapers",
+                      "category":  "adult",
+                      "size":  "M",
+                      "sku":  "SKU-ADULT-M-01",
+                      "price":  450,
+                      "qty":  10,
+                      "max":  10,
+                      "operational":  true
+                  },
+                  {
+                      "slotId":  "SLOT_B2",
+                      "productId":  "PROD_ADULT_L1",
+                      "name":  "Friends Overnight Adult Diapers",
+                      "category":  "adult",
+                      "size":  "L",
+                      "sku":  "SKU-ADULT-L-02",
+                      "price":  470,
+                      "qty":  10,
+                      "max":  10,
+                      "operational":  true
+                  },
+                  {
+                      "slotId":  "SLOT_B3",
+                      "productId":  "PROD_ADULT_L2",
+                      "name":  "Lifree Extra Absorb Pants",
+                      "category":  "adult",
+                      "size":  "L",
+                      "sku":  "SKU-ADULT-L-03",
+                      "price":  490,
+                      "qty":  10,
+                      "max":  10,
+                      "operational":  true
+                  },
+                  {
+                      "slotId":  "SLOT_B4",
+                      "productId":  "PROD_ADULT_XL",
+                      "name":  "KareIn Classic Adult Diapers",
+                      "category":  "adult",
+                      "size":  "XL",
+                      "sku":  "SKU-ADULT-XL-04",
+                      "price":  520,
+                      "qty":  10,
+                      "max":  10,
+                      "operational":  true
+                  }
+              ],
+    "orders":  [
+                   {
+                       "id":  "ORD-1794680754022",
+                       "time":  "11:55 PM",
+                       "item":  "Vending Products",
+                       "gross":  220,
+                       "discount":  "8% (ECO-8-1A32)",
+                       "net":  220,
+                       "method":  "UPI_QR",
+                       "status":  "COMPLETED"
+                   },
+                   {
+                       "id":  "ORD-1794678204997",
+                       "time":  "11:13 PM",
+                       "item":  "Pampers Active Baby Pants (M) x1, Huggies Wonder Pants (L) x1",
+                       "gross":  650,
+                       "discount":  "9% (ECO-9-1221)",
+                       "net":  591,
+                       "method":  "UPI_QR",
+                       "status":  "COMPLETED"
+                   },
+                   {
+                       "id":  "ORD-1794677527266",
+                       "time":  "11:02 PM",
+                       "item":  "Lifree Extra Absorb Pants (L) x2",
+                       "gross":  980,
+                       "discount":  "None",
+                       "net":  980,
+                       "method":  "UPI_QR",
+                       "status":  "COMPLETED"
+                   },
+                   {
+                       "id":  "ORD-TEST-SYNC-001",
+                       "time":  "10:59 PM",
+                       "item":  "MamyPoko Pants Standard (S) x2",
+                       "gross":  440,
+                       "discount":  "10% (ECO-10-SYNC)",
+                       "net":  396,
+                       "method":  "STRIPE_CARD",
+                       "status":  "COMPLETED"
+                   },
+                   {
+                       "id":  "ORD-20261114-0091",
+                       "time":  "10:42 AM",
+                       "item":  "MamyPoko Pants Standard (S)",
+                       "gross":  220,
+                       "discount":  "20% (ECO-20-4A91)",
+                       "net":  176,
+                       "method":  "STRIPE_CARD",
+                       "status":  "COMPLETED"
+                   },
+                   {
+                       "id":  "ORD-20261114-0090",
+                       "time":  "10:28 AM",
+                       "item":  "Pampers Active Baby Pants (M)",
+                       "gross":  310,
+                       "discount":  "None",
+                       "net":  310,
+                       "method":  "UPI_QR",
+                       "status":  "COMPLETED"
+                   },
+                   {
+                       "id":  "ORD-20261114-0089",
+                       "time":  "10:14 AM",
+                       "item":  "Friends Premium Adult Diapers (M)",
+                       "gross":  450,
+                       "discount":  "25% (ECO-25-8B12)",
+                       "net":  338,
+                       "method":  "STRIPE_CARD",
+                       "status":  "COMPLETED"
+                   },
+                   {
+                       "id":  "ORD-20261114-0088",
+                       "time":  "09:55 AM",
+                       "item":  "Huggies Wonder Pants (L)",
+                       "gross":  340,
+                       "discount":  "15% (ECO-15-7C33)",
+                       "net":  289,
+                       "method":  "UPI_QR",
+                       "status":  "COMPLETED"
+                   },
+                   {
+                       "id":  "ORD-20261114-0087",
+                       "time":  "09:20 AM",
+                       "item":  "Lifree Extra Absorb Pants (L)",
+                       "gross":  490,
+                       "discount":  "None",
+                       "net":  490,
+                       "method":  "UPI_QR",
+                       "status":  "COMPLETED"
+                   }
+               ],
+    "grossSalesTodayInr":  5827,
+    "ordersCountToday":  42,
+    "totalPacksDispensed":  45,
+    "totalWeightCollectedGrams":  15602,
+    "totalVouchersIssued":  37,
+    "disposals":  [
+                      {
+                          "id":  "DISP-20261116-162510",
+                          "weightGrams":  420,
+                          "discountPct":  12,
+                          "code":  "ECO-12-A694",
+                          "time":  "04:25 PM"
+                      },
+                      {
+                          "id":  "DISP-20261116-160202",
+                          "weightGrams":  420,
+                          "discountPct":  12,
+                          "code":  "ECO-12-2365",
+                          "time":  "04:02 PM"
+                      },
+                      {
+                          "id":  "DISP-20261116-155538",
+                          "weightGrams":  420,
+                          "discountPct":  12,
+                          "code":  "ECO-12-ECAB",
+                          "time":  "03:55 PM"
+                      },
+                      {
+                          "id":  "DISP-20261116-154055",
+                          "weightGrams":  360,
+                          "discountPct":  11,
+                          "code":  "ECO-11-A157",
+                          "time":  "03:40 PM"
+                      },
+                      {
+                          "id":  "DISP-20261116-152156",
+                          "weightGrams":  240,
+                          "discountPct":  8,
+                          "code":  "ECO-08-A5F9",
+                          "time":  "03:21 PM"
+                      },
+                      {
+                          "id":  "DISP-20261116-122654",
+                          "weightGrams":  1080,
+                          "discountPct":  25,
+                          "code":  "ECO-25-841B",
+                          "time":  "12:26 PM"
+                      },
+                      {
+                          "id":  "DISP-20261116-122540",
+                          "weightGrams":  1440,
+                          "discountPct":  25,
+                          "code":  "ECO-25-1B07",
+                          "time":  "12:25 PM"
+                      },
+                      {
+                          "id":  "DISP-20261116-120415",
+                          "weightGrams":  1080,
+                          "discountPct":  25,
+                          "code":  "ECO-25-0F5B",
+                          "time":  "12:04 PM"
+                      },
+                      {
+                          "id":  "DISP-20261116-115757",
+                          "weightGrams":  240,
+                          "discountPct":  8,
+                          "code":  "ECO-08-9892",
+                          "time":  "11:57 AM"
+                      },
+                      {
+                          "id":  "DISP-20261116-113201",
+                          "weightGrams":  1320,
+                          "discountPct":  25,
+                          "code":  "ECO-25-945B",
+                          "time":  "11:32 AM"
+                      },
+                      {
+                          "id":  "DISP-20261116-111923",
+                          "weightGrams":  1080,
+                          "discountPct":  25,
+                          "code":  "ECO-25-45E5",
+                          "time":  "11:19 AM"
+                      },
+                      {
+                          "id":  "DISP-20261116-111246",
+                          "weightGrams":  600,
+                          "discountPct":  16,
+                          "code":  "ECO-16-101B",
+                          "time":  "11:12 AM"
+                      },
+                      {
+                          "id":  "DISP-20261116-094927",
+                          "weightGrams":  420,
+                          "discountPct":  12,
+                          "code":  "ECO-12-C442",
+                          "time":  "09:49 AM"
+                      },
+                      {
+                          "id":  "DISP-20261116-093830",
+                          "weightGrams":  240,
+                          "discountPct":  8,
+                          "code":  "ECO-08-A5FA",
+                          "time":  "09:38 AM"
+                      },
+                      {
+                          "id":  "DISP-20261116-093314",
+                          "weightGrams":  420,
+                          "discountPct":  12,
+                          "code":  "ECO-12-DEMO403",
+                          "time":  "09:33 AM"
+                      },
+                      {
+                          "id":  "DISP-20261116-093314",
+                          "weightGrams":  420,
+                          "discountPct":  12,
+                          "code":  "ECO-12-DEMO683",
+                          "time":  "09:33 AM"
+                      },
+                      {
+                          "id":  "DISP-20261116-093311",
+                          "weightGrams":  420,
+                          "discountPct":  12,
+                          "code":  "ECO-12-DEMO839",
+                          "time":  "09:33 AM"
+                      },
+                      {
+                          "id":  "DISP-20261116-092512",
+                          "weightGrams":  420,
+                          "discountPct":  12,
+                          "code":  "ECO-12-5F67",
+                          "time":  "09:25 AM"
+                      },
+                      {
+                          "id":  "DISP-20261115-110046",
+                          "weightGrams":  516,
+                          "discountPct":  14,
+                          "code":  "ECO-14-C1D",
+                          "time":  "11:00 AM"
+                      },
+                      {
+                          "id":  "DISP-20261115-002846",
+                          "weightGrams":  355,
+                          "discountPct":  11,
+                          "code":  "ECO-11-87A",
+                          "time":  "12:28 AM"
+                      },
+                      {
+                          "id":  "DISP-20261114-235326",
+                          "weightGrams":  247,
+                          "discountPct":  8,
+                          "code":  "ECO-8-1A32",
+                          "time":  "11:53 PM"
+                      },
+                      {
+                          "id":  "DISP-20261114-231229",
+                          "weightGrams":  284,
+                          "discountPct":  9,
+                          "code":  "ECO-9-1221",
+                          "time":  "11:12 PM"
+                      },
+                      {
+                          "id":  "DISP-20261114-225918",
+                          "weightGrams":  320,
+                          "discountPct":  10,
+                          "code":  "ECO-10-SYNC",
+                          "time":  "10:59 PM"
+                      },
+                      {
+                          "id":  "DISP-101",
+                          "weightGrams":  280,
+                          "discountPct":  9,
+                          "code":  "ECO-09-A4F2",
+                          "time":  "10:35 AM"
+                      },
+                      {
+                          "id":  "DISP-100",
+                          "weightGrams":  450,
+                          "discountPct":  12,
+                          "code":  "ECO-12-7B19",
+                          "time":  "09:40 AM"
+                      }
+                  ],
+    "sessions":  [
+                     {
+                         "id":  "SESS-MWJ5CZR9",
+                         "startTime":  "2026-11-16T10:55:06.501Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TRANSACTION_COMPLETE",
+                         "endTime":  "2026-11-16T10:55:49.554Z",
+                         "durationSeconds":  43
+                     },
+                     {
+                         "id":  "SESS-MWJ4J5BW",
+                         "startTime":  "2026-11-16T10:31:54.044Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T10:33:06.919Z",
+                         "durationSeconds":  72
+                     },
+                     {
+                         "id":  "SESS-MWJ4DERH",
+                         "startTime":  "2026-11-16T10:27:26.333Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T10:28:26.912Z",
+                         "durationSeconds":  60
+                     },
+                     {
+                         "id":  "SESS-MWJ4APGE",
+                         "startTime":  "2026-11-16T10:25:20.222Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TRANSACTION_COMPLETE",
+                         "endTime":  "2026-11-16T10:26:23.913Z",
+                         "durationSeconds":  63
+                     },
+                     {
+                         "id":  "SESS-MWJ3X8HQ",
+                         "startTime":  "2026-11-16T10:14:51.710Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TRANSACTION_COMPLETE",
+                         "endTime":  "2026-11-16T10:15:35.888Z",
+                         "durationSeconds":  44
+                     },
+                     {
+                         "id":  "SESS-MWJ3RILQ",
+                         "startTime":  "2026-11-16T10:10:24.878Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TRANSACTION_COMPLETE",
+                         "endTime":  "2026-11-16T10:11:04.697Z",
+                         "durationSeconds":  39
+                     },
+                     {
+                         "id":  "SESS-MWJ3HMY5",
+                         "startTime":  "2026-11-16T10:02:43.949Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T10:04:37.919Z",
+                         "durationSeconds":  113
+                     },
+                     {
+                         "id":  "SESS-MWJ3GHHP",
+                         "startTime":  "2026-11-16T10:01:50.221Z",
+                         "cameraMonitoring":  true,
+                         "status":  "ACTIVE"
+                     },
+                     {
+                         "id":  "SESS-MWJ3BSPA",
+                         "startTime":  "2026-11-16T09:58:11.470Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TRANSACTION_COMPLETE",
+                         "endTime":  "2026-11-16T09:59:02.381Z",
+                         "durationSeconds":  50
+                     },
+                     {
+                         "id":  "SESS-MWJ3BDJF",
+                         "startTime":  "2026-11-16T09:57:51.819Z",
+                         "cameraMonitoring":  true,
+                         "status":  "ACTIVE"
+                     },
+                     {
+                         "id":  "SESS-MWJ3B27T",
+                         "startTime":  "2026-11-16T09:57:37.145Z",
+                         "cameraMonitoring":  true,
+                         "status":  "ACTIVE"
+                     },
+                     {
+                         "id":  "SESS-MWJ32I0C",
+                         "startTime":  "2026-11-16T09:50:57.708Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T09:52:59.925Z",
+                         "durationSeconds":  122
+                     },
+                     {
+                         "id":  "SESS-MWJ2RBE1",
+                         "startTime":  "2026-11-16T09:42:15.913Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T09:43:16.923Z",
+                         "durationSeconds":  61
+                     },
+                     {
+                         "id":  "SESS-MWJ2NJJO",
+                         "startTime":  "2026-11-16T09:39:19.860Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T09:41:17.914Z",
+                         "durationSeconds":  118
+                     },
+                     {
+                         "id":  "SESS-MWJ277DX",
+                         "startTime":  "2026-11-16T09:26:37.605Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T09:28:45.921Z",
+                         "durationSeconds":  128
+                     },
+                     {
+                         "id":  "SESS-MWJ23KDC",
+                         "startTime":  "2026-11-16T09:23:47.809Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T09:25:04.911Z",
+                         "durationSeconds":  77
+                     },
+                     {
+                         "id":  "SESS-MWJ1LMI1",
+                         "startTime":  "2026-11-16T09:09:50.761Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T09:10:50.917Z",
+                         "durationSeconds":  60
+                     },
+                     {
+                         "id":  "SESS-MWJ1FMTJ",
+                         "startTime":  "2026-11-16T09:05:11.239Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T09:06:48.925Z",
+                         "durationSeconds":  97
+                     },
+                     {
+                         "id":  "SESS-MWJ0NW2C",
+                         "startTime":  "2026-11-16T08:43:36.852Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T08:44:41.916Z",
+                         "durationSeconds":  65
+                     },
+                     {
+                         "id":  "SESS-MWJ0GXLA",
+                         "startTime":  "2026-11-16T08:38:12.238Z",
+                         "cameraMonitoring":  true,
+                         "status":  "ACTIVE"
+                     },
+                     {
+                         "id":  "SESS-MWIZYRJI",
+                         "startTime":  "2026-11-16T08:24:04.590Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T08:25:43.911Z",
+                         "durationSeconds":  99
+                     },
+                     {
+                         "id":  "SESS-MWIZBFVR",
+                         "startTime":  "2026-11-16T08:05:56.391Z",
+                         "cameraMonitoring":  true,
+                         "status":  "ACTIVE"
+                     },
+                     {
+                         "id":  "SESS-MWIWUHG1",
+                         "startTime":  "2026-11-16T06:56:46.033Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "COMPLETED_BIN",
+                         "endTime":  "2026-11-16T06:56:55.826Z",
+                         "durationSeconds":  9
+                     },
+                     {
+                         "id":  "SESS-MWIWST2F",
+                         "startTime":  "2026-11-16T06:55:27.783Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "COMPLETED_BIN",
+                         "endTime":  "2026-11-16T06:55:41.465Z",
+                         "durationSeconds":  13
+                     },
+                     {
+                         "id":  "SESS-MWIW4G5H",
+                         "startTime":  "2026-11-16T06:36:31.301Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-16T06:37:31.914Z",
+                         "durationSeconds":  60
+                     },
+                     {
+                         "id":  "SESS-MWIW15NQ",
+                         "startTime":  "2026-11-16T06:33:57.734Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "COMPLETED_BIN",
+                         "endTime":  "2026-11-16T06:34:17.159Z",
+                         "durationSeconds":  19
+                     },
+                     {
+                         "id":  "SESS-MWIVVLEA",
+                         "startTime":  "2026-11-16T06:29:38.194Z",
+                         "cameraMonitoring":  true,
+                         "status":  "ACTIVE"
+                     },
+                     {
+                         "id":  "SESS-MWIVSM9N",
+                         "startTime":  "2026-11-16T06:27:19.355Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "COMPLETED_RAZORPAY",
+                         "endTime":  "2026-11-16T06:28:59.909Z",
+                         "durationSeconds":  100
+                     },
+                     {
+                         "id":  "SESS-MWIVP2F1",
+                         "startTime":  "2026-11-16T06:24:33.661Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "USER_ABORTED",
+                         "endTime":  "2026-11-16T06:25:24.415Z",
+                         "durationSeconds":  50
+                     },
+                     {
+                         "id":  "SESS-MWIVNEFF",
+                         "startTime":  "2026-11-16T06:23:15.915Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "COMPLETED_RAZORPAY",
+                         "endTime":  "2026-11-16T06:24:23.932Z",
+                         "durationSeconds":  68
+                     },
+                     {
+                         "id":  "SESS-MWIVKOTA",
+                         "startTime":  "2026-11-16T06:21:09.406Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "USER_ABORTED",
+                         "endTime":  "2026-11-16T06:21:54.618Z",
+                         "durationSeconds":  45
+                     },
+                     {
+                         "id":  "SESS-MWIUVO3H",
+                         "startTime":  "2026-11-16T06:01:42.077Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "COMPLETED_VENDING",
+                         "endTime":  "2026-11-16T06:02:23.452Z",
+                         "durationSeconds":  41
+                     },
+                     {
+                         "id":  "SESS-MWIUVJN8",
+                         "startTime":  "2026-11-16T06:01:36.308Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "USER_ABORTED",
+                         "endTime":  "2026-11-16T06:01:40.484Z",
+                         "durationSeconds":  4
+                     },
+                     {
+                         "id":  "SESS-MWIUFJGE",
+                         "startTime":  "2026-11-16T05:49:09.566Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "COMPLETED_BIN",
+                         "endTime":  "2026-11-16T05:49:25.920Z",
+                         "durationSeconds":  16
+                     },
+                     {
+                         "id":  "SESS-MWIU9I3I",
+                         "startTime":  "2026-11-16T05:44:27.870Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "COMPLETED_VENDING",
+                         "endTime":  "2026-11-16T05:44:49.971Z",
+                         "durationSeconds":  22
+                     },
+                     {
+                         "id":  "SESS-MWIU6WI2",
+                         "startTime":  "2026-11-16T05:42:26.570Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "COMPLETED_BIN",
+                         "endTime":  "2026-11-16T05:42:49.121Z",
+                         "durationSeconds":  22
+                     },
+                     {
+                         "id":  "SESS-MWIS1XSF",
+                         "startTime":  "2026-11-16T04:42:35.727Z",
+                         "cameraMonitoring":  true,
+                         "status":  "ACTIVE"
+                     },
+                     {
+                         "id":  "SESS-MWIS1LUE",
+                         "startTime":  "2026-11-16T04:42:20.246Z",
+                         "cameraMonitoring":  true,
+                         "status":  "ACTIVE"
+                     },
+                     {
+                         "id":  "SESS-MWIR7ZA2",
+                         "startTime":  "2026-11-16T04:19:17.978Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "COMPLETED_BIN",
+                         "endTime":  "2026-11-16T04:19:30.275Z",
+                         "durationSeconds":  12
+                     },
+                     {
+                         "id":  "SESS-MWIR7P36",
+                         "startTime":  "2026-11-16T04:19:04.770Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "USER_ABORTED",
+                         "endTime":  "2026-11-16T04:19:15.018Z",
+                         "durationSeconds":  10
+                     },
+                     {
+                         "id":  "SESS-TEST-03",
+                         "startTime":  "2026-11-16T09:48:00Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "USER_ABORTED",
+                         "endTime":  "2026-11-16T09:48:24.1110896+05:30",
+                         "durationSeconds":  18
+                     }
+                 ],
+    "videoRecordings":  [
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  12,
+                                "filename":  "SURV_STANDBY_1MIN_20261116110623..mp4",
+                                "bytes":  976450,
+                                "timestamp":  "2026-11-16T16:36:24.0889933+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  11,
+                                "filename":  "SURV_STANDBY_1MIN_20261116110521..mp4",
+                                "bytes":  1000929,
+                                "timestamp":  "2026-11-16T16:35:22.0756856+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  10,
+                                "filename":  "SURV_STANDBY_1MIN_20261116110419..mp4",
+                                "bytes":  996177,
+                                "timestamp":  "2026-11-16T16:34:20.0874712+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  9,
+                                "filename":  "SURV_STANDBY_1MIN_20261116110317..mp4",
+                                "bytes":  1003995,
+                                "timestamp":  "2026-11-16T16:33:18.0420731+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  8,
+                                "filename":  "SURV_STANDBY_1MIN_20261116110215..mp4",
+                                "bytes":  1000214,
+                                "timestamp":  "2026-11-16T16:32:16.0644065+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  7,
+                                "filename":  "SURV_STANDBY_1MIN_20261116110113..mp4",
+                                "bytes":  998638,
+                                "timestamp":  "2026-11-16T16:31:14.0871848+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  6,
+                                "filename":  "SURV_STANDBY_1MIN_20261116110011..mp4",
+                                "bytes":  998065,
+                                "timestamp":  "2026-11-16T16:30:12.1060739+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  5,
+                                "filename":  "SURV_STANDBY_1MIN_20261116105909..mp4",
+                                "bytes":  1003947,
+                                "timestamp":  "2026-11-16T16:29:10.0821181+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  4,
+                                "filename":  "SURV_STANDBY_1MIN_20261116105807..mp4",
+                                "bytes":  1125246,
+                                "timestamp":  "2026-11-16T16:28:08.0733274+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  3,
+                                "filename":  "SURV_STANDBY_1MIN_20261116105705..mp4",
+                                "bytes":  1112688,
+                                "timestamp":  "2026-11-16T16:27:06.1135721+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  2,
+                                "filename":  "SURV_STANDBY_1MIN_20261116105605..mp4",
+                                "bytes":  1116612,
+                                "timestamp":  "2026-11-16T16:26:05.4083288+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWJ5CZR9",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-MWJ5CZR9_INTERACTION_0s_20261116105549..mp4",
+                                "bytes":  909222,
+                                "timestamp":  "2026-11-16T16:25:49.7395663+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  23,
+                                "filename":  "SURV_STANDBY_1MIN_20261116105435..mp4",
+                                "bytes":  1141267,
+                                "timestamp":  "2026-11-16T16:24:36.1037550+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  22,
+                                "filename":  "SURV_STANDBY_1MIN_20261116105333..mp4",
+                                "bytes":  1128768,
+                                "timestamp":  "2026-11-16T16:23:34.0801885+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-AUTOTEST-99",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
+                                "bytes":  1032,
+                                "timestamp":  "2026-11-16T16:23:02.0818533+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-MP4",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-TEST-MP4_chunk_0002_20261116_162301.mp4",
+                                "bytes":  24,
+                                "timestamp":  "2026-11-16T16:23:01.6179378+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-CHUNK",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261116_162301.webm",
+                                "bytes":  25,
+                                "timestamp":  "2026-11-16T16:23:01.4984082+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  21,
+                                "filename":  "SURV_STANDBY_1MIN_20261116105231..mp4",
+                                "bytes":  1116668,
+                                "timestamp":  "2026-11-16T16:22:32.1365914+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  20,
+                                "filename":  "SURV_STANDBY_1MIN_20261116105129..mp4",
+                                "bytes":  1105139,
+                                "timestamp":  "2026-11-16T16:21:30.1158123+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  19,
+                                "filename":  "SURV_STANDBY_1MIN_20261116105027..mp4",
+                                "bytes":  1121653,
+                                "timestamp":  "2026-11-16T16:20:28.1219233+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  18,
+                                "filename":  "SURV_STANDBY_1MIN_20261116104925..mp4",
+                                "bytes":  967435,
+                                "timestamp":  "2026-11-16T16:19:26.2789485+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  17,
+                                "filename":  "SURV_STANDBY_1MIN_20261116104823..mp4",
+                                "bytes":  909807,
+                                "timestamp":  "2026-11-16T16:18:24.1142190+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  16,
+                                "filename":  "SURV_STANDBY_1MIN_20261116104721..mp4",
+                                "bytes":  986070,
+                                "timestamp":  "2026-11-16T16:17:22.0300558+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  15,
+                                "filename":  "SURV_STANDBY_1MIN_20261116104619..mp4",
+                                "bytes":  1000844,
+                                "timestamp":  "2026-11-16T16:16:20.0553848+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  14,
+                                "filename":  "SURV_STANDBY_1MIN_20261116104517..mp4",
+                                "bytes":  999520,
+                                "timestamp":  "2026-11-16T16:15:18.0483137+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  13,
+                                "filename":  "SURV_STANDBY_1MIN_20261116104415..mp4",
+                                "bytes":  982528,
+                                "timestamp":  "2026-11-16T16:14:16.0543616+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  12,
+                                "filename":  "SURV_STANDBY_1MIN_20261116104313..mp4",
+                                "bytes":  997221,
+                                "timestamp":  "2026-11-16T16:13:14.1215187+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  11,
+                                "filename":  "SURV_STANDBY_1MIN_20261116104211..mp4",
+                                "bytes":  1000771,
+                                "timestamp":  "2026-11-16T16:12:12.0697265+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  10,
+                                "filename":  "SURV_STANDBY_1MIN_20261116104109..mp4",
+                                "bytes":  1007596,
+                                "timestamp":  "2026-11-16T16:11:10.0271552+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  9,
+                                "filename":  "SURV_STANDBY_1MIN_20261116104007..mp4",
+                                "bytes":  1005991,
+                                "timestamp":  "2026-11-16T16:10:08.0267923+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  8,
+                                "filename":  "SURV_STANDBY_1MIN_20261116103905..mp4",
+                                "bytes":  1000204,
+                                "timestamp":  "2026-11-16T16:09:06.0304922+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  7,
+                                "filename":  "SURV_STANDBY_1MIN_20261116103803..mp4",
+                                "bytes":  1147542,
+                                "timestamp":  "2026-11-16T16:08:04.0337549+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  6,
+                                "filename":  "SURV_STANDBY_1MIN_20261116103701..mp4",
+                                "bytes":  1135402,
+                                "timestamp":  "2026-11-16T16:07:02.0536031+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  5,
+                                "filename":  "SURV_STANDBY_1MIN_20261116103559..mp4",
+                                "bytes":  1134622,
+                                "timestamp":  "2026-11-16T16:06:00.0603957+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  4,
+                                "filename":  "SURV_STANDBY_1MIN_20261116103457..mp4",
+                                "bytes":  1130863,
+                                "timestamp":  "2026-11-16T16:04:58.0847348+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  3,
+                                "filename":  "SURV_STANDBY_1MIN_20261116103355..mp4",
+                                "bytes":  1122169,
+                                "timestamp":  "2026-11-16T16:03:56.0566383+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWJ4J5BW",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-MWJ4J5BW_INTERACTION_0s_20261116103306..mp4",
+                                "bytes":  1532166,
+                                "timestamp":  "2026-11-16T16:03:07.2210567+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  1,
+                                "filename":  "SURV_STANDBY_1MIN_20261116103253..mp4",
+                                "bytes":  1132829,
+                                "timestamp":  "2026-11-16T16:02:54.0988459+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  5,
+                                "filename":  "SURV_STANDBY_1MIN_20261116103106..mp4",
+                                "bytes":  1131474,
+                                "timestamp":  "2026-11-16T16:01:07.0504824+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  4,
+                                "filename":  "SURV_STANDBY_1MIN_20261116103004..mp4",
+                                "bytes":  1149731,
+                                "timestamp":  "2026-11-16T16:00:05.0847330+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  3,
+                                "filename":  "SURV_STANDBY_1MIN_20261116102902..mp4",
+                                "bytes":  1149151,
+                                "timestamp":  "2026-11-16T15:59:03.0629956+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWJ4DERH",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-MWJ4DERH_INTERACTION_0s_20261116102826..mp4",
+                                "bytes":  1282126,
+                                "timestamp":  "2026-11-16T15:58:27.1318865+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  1,
+                                "filename":  "SURV_STANDBY_1MIN_20261116102801..mp4",
+                                "bytes":  1129461,
+                                "timestamp":  "2026-11-16T15:58:02.0145880+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWJ4APGE",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-MWJ4APGE_INTERACTION_0s_20261116102623..mp4",
+                                "bytes":  1329358,
+                                "timestamp":  "2026-11-16T15:56:24.0863460+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  1,
+                                "filename":  "SURV_STANDBY_1MIN_20261116102610..mp4",
+                                "bytes":  1115982,
+                                "timestamp":  "2026-11-16T15:56:11.0257730+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  12,
+                                "filename":  "SURV_STANDBY_1MIN_20261116102509..mp4",
+                                "bytes":  39251,
+                                "timestamp":  "2026-11-16T15:55:10.0442440+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  11,
+                                "filename":  "SURV_STANDBY_1MIN_20261116102507..mp4",
+                                "bytes":  1104627,
+                                "timestamp":  "2026-11-16T15:55:08.0910696+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-AUTOTEST-99",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
+                                "bytes":  1032,
+                                "timestamp":  "2026-11-16T15:54:29.1227111+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-MP4",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-TEST-MP4_chunk_0002_20261116_155428.mp4",
+                                "bytes":  24,
+                                "timestamp":  "2026-11-16T15:54:28.8431334+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-CHUNK",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261116_155428.webm",
+                                "bytes":  25,
+                                "timestamp":  "2026-11-16T15:54:28.7541872+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-AUTOTEST-99",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
+                                "bytes":  1032,
+                                "timestamp":  "2026-11-16T15:54:16.1308076+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-MP4",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-TEST-MP4_chunk_0002_20261116_155415.mp4",
+                                "bytes":  24,
+                                "timestamp":  "2026-11-16T15:54:15.6261253+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-CHUNK",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261116_155415.webm",
+                                "bytes":  25,
+                                "timestamp":  "2026-11-16T15:54:15.5407568+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  10,
+                                "filename":  "SURV_STANDBY_1MIN_20261116102406..mp4",
+                                "bytes":  1137696,
+                                "timestamp":  "2026-11-16T15:54:07.0332144+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  9,
+                                "filename":  "SURV_STANDBY_1MIN_20261116102304..mp4",
+                                "bytes":  1133863,
+                                "timestamp":  "2026-11-16T15:53:05.0592132+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  8,
+                                "filename":  "SURV_STANDBY_1MIN_20261116102202..mp4",
+                                "bytes":  1120248,
+                                "timestamp":  "2026-11-16T15:52:03.0489752+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  7,
+                                "filename":  "SURV_STANDBY_1MIN_20261116102100..mp4",
+                                "bytes":  1120169,
+                                "timestamp":  "2026-11-16T15:51:01.0687716+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  6,
+                                "filename":  "SURV_STANDBY_1MIN_20261116101958..mp4",
+                                "bytes":  1120408,
+                                "timestamp":  "2026-11-16T15:49:59.0952033+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  5,
+                                "filename":  "SURV_STANDBY_1MIN_20261116101856..mp4",
+                                "bytes":  1121116,
+                                "timestamp":  "2026-11-16T15:48:57.0737669+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  4,
+                                "filename":  "SURV_STANDBY_1MIN_20261116101754..mp4",
+                                "bytes":  1121945,
+                                "timestamp":  "2026-11-16T15:47:55.0555652+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  3,
+                                "filename":  "SURV_STANDBY_1MIN_20261116101652..mp4",
+                                "bytes":  1119760,
+                                "timestamp":  "2026-11-16T15:46:53.0981914+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  2,
+                                "filename":  "SURV_STANDBY_1MIN_20261116101550..mp4",
+                                "bytes":  1139446,
+                                "timestamp":  "2026-11-16T15:45:51.0683034+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWJ3X8HQ",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-MWJ3X8HQ_INTERACTION_0s_20261116101535..mp4",
+                                "bytes":  943068,
+                                "timestamp":  "2026-11-16T15:45:36.0341006+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  14,
+                                "filename":  "SURV_STANDBY_1MIN_20261116101447..mp4",
+                                "bytes":  923489,
+                                "timestamp":  "2026-11-16T15:44:47.4949023+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  13,
+                                "filename":  "SURV_STANDBY_1MIN_20261116101356..mp4",
+                                "bytes":  1135615,
+                                "timestamp":  "2026-11-16T15:43:57.0463984+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  12,
+                                "filename":  "SURV_STANDBY_1MIN_20261116101254..mp4",
+                                "bytes":  1133321,
+                                "timestamp":  "2026-11-16T15:42:55.0256988+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  11,
+                                "filename":  "SURV_STANDBY_1MIN_20261116101152..mp4",
+                                "bytes":  1118816,
+                                "timestamp":  "2026-11-16T15:41:53.0633256+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWJ3RILQ",
+                                "chunkIndex":  10,
+                                "filename":  "SESS-MWJ3RILQ_INTERACTION_0s_20261116101104..mp4",
+                                "bytes":  841365,
+                                "timestamp":  "2026-11-16T15:41:04.8443933+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  9,
+                                "filename":  "SURV_STANDBY_1MIN_20261116101052..mp4",
+                                "bytes":  1126348,
+                                "timestamp":  "2026-11-16T15:40:52.4088775+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-AUTOTEST-99",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
+                                "bytes":  1032,
+                                "timestamp":  "2026-11-16T15:40:35.2381760+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-MP4",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-TEST-MP4_chunk_0002_20261116_154034.mp4",
+                                "bytes":  24,
+                                "timestamp":  "2026-11-16T15:40:34.9111394+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-CHUNK",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261116_154034.webm",
+                                "bytes":  25,
+                                "timestamp":  "2026-11-16T15:40:34.7830235+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-AUTOTEST-99",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
+                                "bytes":  1032,
+                                "timestamp":  "2026-11-16T15:40:01.5011357+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-MP4",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-TEST-MP4_chunk_0002_20261116_154001.mp4",
+                                "bytes":  24,
+                                "timestamp":  "2026-11-16T15:40:01.2991762+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-CHUNK",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261116_154001.webm",
+                                "bytes":  25,
+                                "timestamp":  "2026-11-16T15:40:01.1867374+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  8,
+                                "filename":  "SURV_STANDBY_1MIN_20261116100951..mp4",
+                                "bytes":  1111035,
+                                "timestamp":  "2026-11-16T15:39:52.0710745+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-AUTOTEST-99",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
+                                "bytes":  1032,
+                                "timestamp":  "2026-11-16T15:39:47.2855908+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-MP4",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-TEST-MP4_chunk_0002_20261116_153946.mp4",
+                                "bytes":  24,
+                                "timestamp":  "2026-11-16T15:39:46.8151541+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-CHUNK",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261116_153946.webm",
+                                "bytes":  25,
+                                "timestamp":  "2026-11-16T15:39:46.7201964+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  7,
+                                "filename":  "SURV_STANDBY_1MIN_20261116100850..mp4",
+                                "bytes":  1115599,
+                                "timestamp":  "2026-11-16T15:38:51.7392941+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  6,
+                                "filename":  "SURV_STANDBY_1MIN_20261116100748..mp4",
+                                "bytes":  1132229,
+                                "timestamp":  "2026-11-16T15:37:49.0411255+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  5,
+                                "filename":  "SURV_STANDBY_1MIN_20261116100646..mp4",
+                                "bytes":  1128139,
+                                "timestamp":  "2026-11-16T15:36:47.0344239+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  4,
+                                "filename":  "SURV_STANDBY_1MIN_20261116100544..mp4",
+                                "bytes":  1135249,
+                                "timestamp":  "2026-11-16T15:35:45.0452404+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  3,
+                                "filename":  "SURV_STANDBY_1MIN_20261116100442..mp4",
+                                "bytes":  1136851,
+                                "timestamp":  "2026-11-16T15:34:43.0538052+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWJ3HMY5",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-MWJ3HMY5_INTERACTION_0s_20261116100437..mp4",
+                                "bytes":  2375945,
+                                "timestamp":  "2026-11-16T15:34:38.1044528+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  1,
+                                "filename":  "SURV_STANDBY_1MIN_20261116100340..mp4",
+                                "bytes":  1114541,
+                                "timestamp":  "2026-11-16T15:33:41.0589441+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  4,
+                                "filename":  "SURV_STANDBY_1MIN_20261116100058..mp4",
+                                "bytes":  1138457,
+                                "timestamp":  "2026-11-16T15:30:59.0573528+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  3,
+                                "filename":  "SURV_STANDBY_1MIN_20261116095956..mp4",
+                                "bytes":  1118109,
+                                "timestamp":  "2026-11-16T15:29:57.0568261+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWJ3BSPA",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-MWJ3BSPA_INTERACTION_0s_20261116095902..mp4",
+                                "bytes":  1091930,
+                                "timestamp":  "2026-11-16T15:29:02.5855557+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  1,
+                                "filename":  "SURV_STANDBY_1MIN_20261116095855..mp4",
+                                "bytes":  1119884,
+                                "timestamp":  "2026-11-16T15:28:55.8705195+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-AUTOTEST-99",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
+                                "bytes":  1032,
+                                "timestamp":  "2026-11-16T15:28:03.1058199+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-MP4",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-TEST-MP4_chunk_0002_20261116_152802.mp4",
+                                "bytes":  24,
+                                "timestamp":  "2026-11-16T15:28:02.7571724+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-CHUNK",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261116_152802.webm",
+                                "bytes":  25,
+                                "timestamp":  "2026-11-16T15:28:02.6477161+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWJ3BDJF",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-MWJ3BDJF_INTERACTION_2s_20261116095753..mp4",
+                                "bytes":  49682,
+                                "timestamp":  "2026-11-16T15:27:53.7737249+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWJ3B27T",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-MWJ3B27T_INTERACTION_5s_20261116095742..mp4",
+                                "bytes":  118716,
+                                "timestamp":  "2026-11-16T15:27:42.3602890+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  8,
+                                "filename":  "SURV_STANDBY_1MIN_20261116095729..mp4",
+                                "bytes":  436925,
+                                "timestamp":  "2026-11-16T15:27:30.0225318+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-AUTOTEST-99",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
+                                "bytes":  1032,
+                                "timestamp":  "2026-11-16T15:27:05.7527709+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-MP4",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-TEST-MP4_chunk_0002_20261116_152705.mp4",
+                                "bytes":  24,
+                                "timestamp":  "2026-11-16T15:27:05.0098672+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-CHUNK",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261116_152704.webm",
+                                "bytes":  25,
+                                "timestamp":  "2026-11-16T15:27:04.9144585+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  7,
+                                "filename":  "SURV_STANDBY_1MIN_20261116095701..mp4",
+                                "bytes":  996880,
+                                "timestamp":  "2026-11-16T15:27:02.0185126+05:30"
+                            }
+                        ]
+}

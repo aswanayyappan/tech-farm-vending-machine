@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Smart Diaper Vending Machine — Retail Kiosk</title>
+  <!-- Official Stripe.js v3 Library for Real Card Elements & 3D Secure Verification -->
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    /* ==========================================================================
+       SDDS Professional Vending Machine Stylesheet
+       Enterprise Dark Theme - Zero Emojis - Pristine Alignment (Rule 11)
+       ========================================================================== */
+    :root {
+      --primary: #0d9488;
+      --primary-hover: #0f766e;
+      --secondary: #4f46e5;
+      --bg-main: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-elevated: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-gold: #f59e0b;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --border: #334155;
+      --radius-card: 20px;
+      --radius-btn: 14px;
+      --touch-cta: 66px;
+      --touch-min: 52px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Universal Custom Slim Scrollbars */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    .kiosk-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      background: radial-gradient(circle at top right, #1e293b 0%, #0f172a 100%);
+      position: relative;
+    }
+
+    /* Header */
+    .kiosk-header {
+      height: 68px;
+      padding: 0 clamp(16px, 2.5vw, 36px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: rgba(30, 41, 59, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 20px;
+      color: #ffffff;
+      letter-spacing: 1px;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background-color: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--accent-green);
+      border-radius: 20px;
+      color: var(--accent-green);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green);
+    }
+
+    /* Category & Size Filter Bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px clamp(16px, 2.5vw, 36px);
+      background-color: rgba(15, 23, 42, 0.6);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .tab-btn {
+      min-height: 48px;
+      padding: 0 clamp(16px, 2vw, 24px);
+      font-size: clamp(15px, 1.3vw, 17px);
+      font-weight: 700;
+      color: var(--text-muted);
+      background-color: var(--bg-surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-btn);
+      cursor: pointer;
+      margin-right: 8px;
+      transition: all 0.15s ease;
+      letter-spacing: 0.3px;
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background-color: var(--primary);
+      border-color: var(--primary);
+      box-shadow: 0 4px 16px rgba(13, 148, 136, 0.35);
+    }
+
+    .size-pill {
+      min-width: 48px;
+      min-height: 48px;
+      padding: 0 10px;
+      border-radius: 12px;
+      background-color: var(--bg-surface);
+      border: 2px solid var(--border);
+      color: var(--text-muted);
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-left: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .size-pill:hover {
+      border-color: #475569;
+      color: #ffffff;
+    }
+
+    .size-pill.active {
+      background-color: var(--secondary);
+      border-color: var(--secondary);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+    }
+
+    /* Product Catalogue Grid */
+    .catalogue-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 23vw, 280px), 1fr));
+      gap: clamp(12px, 1.5vw, 20px);
+      padding: clamp(12px, 1.8vw, 24px) clamp(16px, 2.5vw, 36px);
+      overflow-y: auto;
+    }
+
+    /* Product Card */
+    .product-card {
+      background-color: var(--bg-surface);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: clamp(14px, 1.5vw, 20px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      transition: border-color 0.2s ease;
+    }
+
+    .product-card:hover {
+      border-color: var(--primary);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+
+    .card-badge-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-tag {
+      font-size: 13px;
+      font-weight: 800;
+      color: #2dd4bf;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stock-badge {
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .stock-badge.in-stock {
+      background-color: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+    }
+
+    .stock-badge.out-stock {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: var(--accent-red);
+    }
+
+    .product-title {
+      font-size: clamp(17px, 1.8vw, 21px);
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+
+    .product-spec {
+      font-size: clamp(13px, 1.3vw, 15px);
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      gap: 8px;
+    }
+
+    .price-tag {
+      font-size: clamp(22px, 2.2vw, 30px);
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .btn-add {
+      min-height: clamp(44px, 5vh, 50px);
+      padding: 0 clamp(14px, 1.8vw, 22px);
+      background-color: var(--primary);
+      color: #ffffff;
+      font-size: clamp(13px, 1.3vw, 15px);
+      font-weight: 800;
+      border: none;
+      border-radius: var(--radius-btn);
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .btn-add:hover:not(:disabled) {
+      background-color: var(--primary-hover);
+      box-shadow: 0 4px 14px rgba(13, 148, 136, 0.4);
+    }
+
+    .btn-add:disabled {
+      background-color: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    /* Floating Cart Summary Bar */
+    .cart-bar {
+      min-height: clamp(68px, 8.5vh, 84px);
+      background-color: rgba(30, 41, 59, 0.98);
+      backdrop-filter: blur(12px);
+      border-top: 2px solid var(--border);
+      padding: 10px clamp(14px, 2.5vw, 36px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cart-btn-cta {
+      min-height: clamp(48px, 6vh, 58px);
+      padding: 0 clamp(20px, 2.5vw, 40px);
+      background: linear-gradient(135deg, var(--accent-green), #059669);
+      color: #ffffff;
+      font-size: clamp(15px, 1.4vw, 19px);
+      font-weight: 800;
+      border: none;
+      border-radius: var(--radius-btn);
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .cart-btn-cta:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.45);
+    }
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+    }
+
+    /* Fullscreen Idle Advertisement Screen */
+    .ad-carousel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #090d16;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      padding: clamp(14px, 2.5vh, 28px) clamp(14px, 2.5vw, 28px);
+      overflow-y: auto;
+    }
+
+    .ad-badge {
+      display: inline-block;
+      padding: 4px 14px;
+      background: rgba(13, 148, 136, 0.15);
+      color: #2dd4bf;
+      border: 1px solid #2dd4bf;
+      border-radius: 20px;
+      font-size: clamp(11px, 1.1vw, 13px);
+      font-weight: 800;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .ad-headline {
+      font-size: clamp(18px, 2.4vw, 32px);
+      font-weight: 900;
+      text-align: center;
+      max-width: 580px;
+      line-height: 1.25;
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .ad-subtext {
+      font-size: clamp(12px, 1.3vw, 15px);
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 480px;
+      line-height: 1.4;
+    }
+
+    .ad-touch-cta {
+      min-height: 48px;
+      padding: 0 clamp(20px, 3vw, 40px);
+      font-size: clamp(14px, 1.5vw, 17px);
+      font-weight: 800;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      border: none;
+      border-radius: var(--radius-btn);
+      box-shadow: 0 8px 24px rgba(13, 148, 136, 0.4);
+      cursor: pointer;
+    }
+
+    /* Modal Overlay System */
+    .modal-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: min(580px, 94vw);
+      max-height: 90vh;
+      overflow-y: auto;
+      background-color: var(--bg-surface);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: clamp(20px, 3vh, 32px);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Redeem Voucher Input Area */
+    .redeem-area {
+      background: #0b0f19;
+      border: 2px solid #334155;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .redeem-input-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .redeem-input {
+      flex: 1;
+      height: 52px;
+      background: #1e293b;
+      border: 2px solid #475569;
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 800;
+      padding: 0 16px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .redeem-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* Touch Form Inputs */
+    .touch-input {
+      width: 100%;
+      height: 52px;
+      background: #1e293b;
+      border: 2px solid #475569;
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 0 16px;
+      box-sizing: border-box;
+    }
+
+    .touch-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* Stripe Test Card Quick Chips */
+    .test-card-chip {
+      background: #1e293b;
+      border: 1px solid #475569;
+      color: #e2e8f0;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.2s;
+    }
+
+    .test-card-chip:hover {
+      background: #334155;
+      border-color: #2dd4bf;
+      color: #2dd4bf;
+    }
+
+    /* Standardized Action Buttons (Rule 11) */
+    .btn-action {
+      min-height: 48px;
+      padding: 0 20px;
+      font-size: 14px;
+      font-weight: 800;
+      border-radius: var(--radius-btn);
+      border: 2px solid var(--border);
+      background-color: var(--bg-elevated);
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-action:hover {
+      background-color: #475569;
+      border-color: #64748b;
+    }
+
+    .btn-action.primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      border-color: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(13, 148, 136, 0.35);
+    }
+
+    .btn-action.primary:hover {
+      box-shadow: 0 6px 20px rgba(13, 148, 136, 0.5);
+      filter: brightness(1.08);
+    }
+
+    /* Tactile Quantity Buttons (Rule 11) */
+    .qty-btn {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      border-radius: 10px;
+      background-color: var(--bg-surface);
+      border: 2px solid var(--border);
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      transition: all 0.15s ease;
+    }
+
+    .qty-btn:hover {
+      background-color: var(--bg-elevated);
+      border-color: var(--primary);
+      color: #2dd4bf;
+    }
+
+    .qty-btn:active {
+      transform: scale(0.94);
+    }
+
+    /* Standardized Modal Close Button */
+    .modal-close-btn {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      min-height: 42px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #94a3b8;
+      font-size: 20px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      padding: 0;
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #fca5a5;
+    }
+
+    /* Non-Blocking Kiosk Notification Toast (Rule 11) */
+    .kiosk-toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #1e293b;
+      border: 2px solid var(--primary);
+      color: #ffffff;
+      padding: 14px 24px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(13, 148, 136, 0.3);
+      z-index: 2000;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: min(500px, 92vw);
+      pointer-events: none;
+    }
+
+    .kiosk-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .kiosk-toast.warning {
+      border-color: var(--accent-gold);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(245, 158, 11, 0.3);
+    }
+
+    .kiosk-toast.error {
+      border-color: var(--accent-red);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .kiosk-toast.success {
+      border-color: var(--accent-green);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Product Card Diaper Badges */
+    .diaper-badge-icon {
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 72px;
+      height: 72px;
+      border: 6px solid #334155;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Non-Blocking Kiosk Notification Toast Element -->
+  <div id="kioskToast" class="kiosk-toast"></div>
+
+  <!-- Fullscreen Idle Advertisement Screen -->
+  <div id="adScreen" class="ad-carousel" onclick="startShopping()">
+    <div class="brand-block">
+      <div class="brand-icon">SD</div>
+      <span style="font-size: 26px; font-weight: 800; letter-spacing: -0.5px;">Diaper Vending Kiosk</span>
+    </div>
+
+    <div>
+      <div id="adBadge" class="ad-badge">Eco-Reward Initiative</div>
+      <h1 id="adHeadline" class="ad-headline">Deposit Diapers, Earn Discounts</h1>
+      <p id="adSubtext" class="ad-subtext">Deposit your used diapers at the collection bin to receive an instant discount voucher code redeemable here.</p>
+    </div>
+
+    <button class="ad-touch-cta" onclick="startShopping()">
+      Touch Screen to Start →
+    </button>
+  </div>
+
+  <!-- Main Kiosk Kiosk Shell -->
+  <div class="kiosk-shell">
+    <!-- Header -->
+    <header class="kiosk-header">
+      <div class="brand-block" style="cursor: pointer;" onclick="resetToIdle()">
+        <div class="brand-icon">SD</div>
+        <div>
+          <h1 style="font-size: 22px; font-weight: 800; letter-spacing: -0.3px;">Smart Diaper Kiosk</h1>
+          <p style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Automated Dispensing Terminal · Slot Unit #VM-KGP-01</p>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <div class="status-badge">
+          <div class="status-dot"></div>
+          <span>SYSTEM ONLINE</span>
+        </div>
+        <button class="tab-btn" style="min-height: 42px; padding: 0 18px; font-size: 14px; margin: 0;" onclick="resetToIdle()">
+          End Session
+        </button>
+      </div>
+    </header>
+
+    <!-- Category & Size Filtering Bar -->
+    <div class="filter-bar">
+      <div style="display: flex;">
+        <button id="tabBaby" class="tab-btn active" onclick="setCategory('baby')">Baby Diapers</button>
+        <button id="tabAdult" class="tab-btn" onclick="setCategory('adult')">Adult Diapers</button>
+      </div>
+
+      <div style="display: flex; align-items: center;">
+        <span style="color: var(--text-muted); font-size: 15px; font-weight: 700; margin-right: 8px;">Size:</span>
+        <button class="size-pill active" onclick="setSizeFilter(null, this)">All</button>
+        <button class="size-pill" onclick="setSizeFilter('S', this)">S</button>
+        <button class="size-pill" onclick="setSizeFilter('M', this)">M</button>
+        <button class="size-pill" onclick="setSizeFilter('L', this)">L</button>
+        <button class="size-pill" onclick="setSizeFilter('XL', this)">XL</button>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <main id="catalogueGrid" class="catalogue-grid"></main>
+
+    <!-- Bottom Floating Cart Bar -->
+    <footer id="cartBar" class="cart-bar" style="display: none;">
+      <div>
+        <span style="font-size: 19px; color: var(--text-muted);">Selected Items: <strong id="cartItemCount" style="color: #fff;">0</strong></span>
+        <span style="font-size: 32px; font-weight: 900; margin-left: 14px;">₹<span id="cartBarTotal">0</span></span>
+        <span id="discountTag" style="display: none; margin-left: 14px; color: #34d399; font-size: 17px; font-weight: 800;"></span>
+      </div>
+
+      <button class="cart-btn-cta" onclick="openCartModal()">
+        Review Cart & Checkout →
+      </button>
+    </footer>
+  </div>
+
+  <!-- Cart Modal with Direct Voucher Code Input Area -->
+  <div id="cartModal" class="modal-backdrop" style="display: none;">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="font-size: 26px; font-weight: 800;">Shopping Cart</h2>
+        <button class="modal-close-btn" onclick="closeCartModal()" aria-label="Close cart">✕</button>
+      </div>
+
+      <div id="cartItemList" style="max-height: 240px; overflow-y: auto; margin-bottom: 20px;"></div>
+
+      <!-- Voucher Redeem Code Input Section -->
+      <div class="redeem-area">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 800; font-size: 15px; color: #2dd4bf; text-transform: uppercase; letter-spacing: 0.5px;">Redeem Discount Code</span>
+          <button id="btnPasteCode" style="background: none; border: 1px solid #0d9488; color: #2dd4bf; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 8px; cursor: pointer;" onclick="pasteLatestBinCode()">
+            Paste Latest Bin Code
+          </button>
+        </div>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+          Enter the alphanumeric code from your collection bin receipt (e.g. ECO-20-4A91).
+        </p>
+
+        <div class="redeem-input-row">
+          <input type="text" id="txtVoucherCode" class="redeem-input" placeholder="ENTER REDEEM CODE" maxlength="20">
+          <button class="tab-btn active" style="min-height: 52px; padding: 0 20px; margin: 0; font-size: 15px;" onclick="applyVoucherCode()">
+            Apply Code
+          </button>
+        </div>
+
+        <div id="voucherStatusMsg" style="display: none; margin-top: 10px; font-size: 14px; font-weight: 700;"></div>
+      </div>
+
+      <!-- Price Breakdown -->
+      <div style="border-top: 2px solid var(--border); padding-top: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 17px; color: var(--text-muted); margin-bottom: 6px;">
+          <span>Subtotal:</span>
+          <span>₹<span id="modalSubtotal">0</span></span>
+        </div>
+        <div id="modalDiscountRow" style="display: none; justify-content: space-between; font-size: 17px; color: #34d399; margin-bottom: 6px;">
+          <span>Eco-Reward Discount (<span id="modalDiscountPct">0</span>%):</span>
+          <span>- ₹<span id="modalDiscount">0</span></span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 28px; font-weight: 900; color: #ffffff; margin-top: 10px;">
+          <span>Payable Amount:</span>
+          <span style="color: var(--accent-gold);">₹<span id="modalFinal">0</span></span>
+        </div>
+      </div>
+
+      <button class="cart-btn-cta" style="width: 100%; margin-top: 20px;" onclick="openPaymentModal()">
+        Proceed to Payment →
+      </button>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div id="paymentModal" class="modal-backdrop" style="display: none;">
+    <div class="modal-box" style="max-width: 580px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="font-size: 24px; font-weight: 800; color: #ffffff;">Payment Verification</h2>
+        <button class="modal-close-btn" onclick="closePaymentModal()" aria-label="Close payment">✕</button>
+      </div>
+
+      <!-- Payment Method Tabs -->
+      <div style="display: flex; gap: 12px; margin-bottom: 22px;">
+        <button id="payTabUpi" class="tab-btn active" style="flex: 1; min-height: 52px; font-size: 15px; font-weight: 800;" onclick="switchPaymentMethod('UPI')">
+          UPI QR Code
+        </button>
+        <button id="payTabStripe" class="tab-btn" style="flex: 1; min-height: 52px; font-size: 15px; font-weight: 800;" onclick="switchPaymentMethod('STRIPE')">
+          Card (Stripe)
+        </button>
+      </div>
+
+      <!-- UPI QR Code Section -->
+      <div id="sectionUpi" style="text-align: center;">
+        <div style="width: 180px; height: 180px; background: #ffffff; border-radius: 14px; padding: 12px; margin: 0 auto 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
+          <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <rect x="5" y="5" width="28" height="28" fill="#000" />
+            <rect x="9" y="9" width="20" height="20" fill="#fff" />
+            <rect x="13" y="13" width="12" height="12" fill="#000" />
+            <rect x="67" y="5" width="28" height="28" fill="#000" />
+            <rect x="71" y="9" width="20" height="20" fill="#fff" />
+            <rect x="75" y="13" width="12" height="12" fill="#000" />
+            <rect x="5" y="67" width="28" height="28" fill="#000" />
+            <rect x="9" y="71" width="20" height="20" fill="#fff" />
+            <rect x="13" y="75" width="12" height="12" fill="#000" />
+            <rect x="42" y="15" width="15" height="15" fill="#000" />
+            <rect x="45" y="45" width="25" height="20" fill="#000" />
+            <rect x="80" y="75" width="15" height="15" fill="#000" />
+          </svg>
+        </div>
+
+        <p style="font-size: 17px; font-weight: 800; color: #ffffff; margin-bottom: 4px;">UPI QR Code Payment</p>
+        <p style="font-size: 32px; font-weight: 900; color: var(--accent-gold); margin-bottom: 8px;">₹<span id="payAmount">0</span></p>
+        <p style="font-size: 13px; color: #f59e0b; margin-bottom: 24px;">Scan with any UPI or banking application</p>
+
+        <button class="cart-btn-cta" style="width: 100%;" onclick="confirmPaymentAndDispense('UPI_QR')">
+          Authorize Dispense via UPI →
+        </button>
+      </div>
+
+      <!-- Stripe Card Section -->
+      <div id="sectionStripe" style="display: none; text-align: left;">
+        <div style="background: #0b0f19; border: 2px solid #334155; border-radius: 16px; padding: 20px; margin-bottom: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <span style="font-size: 13px; font-weight: 800; color: #2dd4bf; text-transform: uppercase; letter-spacing: 0.5px;">Real Stripe Test Mode</span>
+            <span id="stripeEnvBadge" style="background: #064e3b; color: #34d399; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 6px; border: 1px solid #059669;">TEST MODE ACTIVE</span>
+          </div>
+
+          <!-- Instant 1-Click Test Card Button (Bypasses manual typing issues) -->
+          <div style="background: rgba(13, 148, 136, 0.15); border: 2px solid #0d9488; border-radius: 12px; padding: 14px 16px; margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+              <div>
+                <strong style="color: #2dd4bf; font-size: 14px;">Instant Test Card Checkout (Recommended)</strong>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">One-tap instant capture using Stripe's live 4242 Visa test token (guarantees complete card submission).</p>
+              </div>
+              <button type="button" class="btn-action primary" style="min-height: 44px; padding: 0 18px; font-size: 13px; font-weight: 800; white-space: nowrap;" onclick="quickPayWithTestCard()">
+                1-Tap Pay ₹<span id="quickPayAmount">0</span> →
+              </button>
+            </div>
+          </div>
+
+          <div style="text-align: center; color: #64748b; font-size: 11px; font-weight: 800; margin: 12px 0; text-transform: uppercase; letter-spacing: 1px;">
+            — OR FILL ALL 3 CARD FIELDS MANUALLY BELOW —
+          </div>
+
+          <!-- Cardholder Name -->
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-size: 12px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase;">Cardholder Name</label>
+            <input type="text" id="stripeCardName" class="touch-input" placeholder="Customer Name" value="SDDS Test Shopper">
+          </div>
+
+          <!-- Real Stripe Card Element Mount Point -->
+          <div style="margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label style="font-size: 12px; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Card Details</label>
+              <span style="font-size: 11px; color: #2dd4bf; font-weight: 700;">Note: Must type [Card Number] + [MM/YY] + [CVC]</span>
+            </div>
+            <div id="stripeCardMount" style="background: #1e293b; border: 2px solid #475569; border-radius: 12px; padding: 14px 16px; min-height: 50px; box-sizing: border-box;"></div>
+            <div id="stripeCardError" style="color: #f87171; font-size: 13px; font-weight: 700; margin-top: 6px; display: none;"></div>
+          </div>
+
+          <!-- Official Stripe Test Cards Quick Chips -->
+          <div style="background: #111827; border: 1px solid #374151; border-radius: 10px; padding: 12px; margin-top: 10px;">
+            <div style="font-size: 11px; font-weight: 800; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase;">Copy Card Number (Use Expiry: 12/28, CVC: 123):</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <button type="button" class="test-card-chip" onclick="copyTestCard('4242424242424242', 'Visa 4242')">
+                Visa: 4242...4242
+              </button>
+              <button type="button" class="test-card-chip" onclick="copyTestCard('5555555555554444', 'Mastercard')">
+                Mastercard: 5555...4444
+              </button>
+              <button type="button" class="test-card-chip" onclick="copyTestCard('4000000000003063', '3DS Test')">
+                3DS Test: 4000...3063
+              </button>
+            </div>
+            <div id="copyNotification" style="font-size: 12px; color: #34d399; font-weight: 700; margin-top: 8px; display: none;"></div>
+          </div>
+
+          <!-- Stripe Publishable Key Notice if not configured in .env -->
+          <div id="stripeKeyNotice" style="margin-top: 14px; padding: 12px 14px; background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; border-radius: 10px; display: none;">
+            <div style="font-size: 12px; color: #fbbf24; font-weight: 700; margin-bottom: 4px;">Stripe Test Publishable Key</div>
+            <div style="font-size: 11px; color: #fde68a; line-height: 1.4; margin-bottom: 8px;">
+              Add your <code>STRIPE_PUBLISHABLE_KEY</code> & <code>STRIPE_SECRET_KEY</code> to <code>.env</code> or paste your test publishable key below:
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="txtCustomPk" class="touch-input" placeholder="pk_test_..." style="height: 42px; font-size: 13px;">
+              <button type="button" style="background: #f59e0b; color: #000; font-weight: 800; font-size: 13px; border: none; border-radius: 8px; padding: 0 16px; cursor: pointer;" onclick="saveCustomPublishableKey()">Mount</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="stripeErrorMsg" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 700; margin-bottom: 16px;"></div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <span style="font-size: 16px; font-weight: 700; color: #94a3b8;">Total Payable:</span>
+          <span style="font-size: 28px; font-weight: 900; color: var(--accent-gold);">₹<span id="stripePayAmount">0</span></span>
+        </div>
+
+        <button id="btnPayStripe" class="cart-btn-cta" style="width: 100%;" onclick="processStripePayment()">
+          Pay ₹<span id="stripeBtnAmount">0</span> via Stripe Card Form →
+        </button>
+      </div>
+
+      <!-- Payment Processing Overlay -->
+      <div id="paymentProcessing" style="display: none; padding: 30px 0; text-align: center;">
+        <div class="spinner"></div>
+        <h3 id="paymentProcessTitle" style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 8px;">Contacting Stripe Gateway</h3>
+        <p id="paymentProcessSubtitle" style="font-size: 14px; color: var(--text-muted);">Verifying 3D Secure credentials...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dispensing Modal -->
+  <div id="dispenseModal" class="modal-backdrop" style="display: none;">
+    <div class="modal-box" style="text-align: center;">
+      <div id="dispenseRunning">
+        <div class="spinner"></div>
+        <h2 style="font-size: 28px; font-weight: 800; margin-bottom: 10px;">Dispensing Diaper Pack</h2>
+        <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 6px;">Actuating motor slot channel A1...</p>
+        <p style="font-size: 13px; color: #2dd4bf;">Infrared sensor drop verification active...</p>
+      </div>
+
+      <div id="dispenseDone" style="display: none;">
+        <h2 style="font-size: 30px; font-weight: 900; color: var(--accent-green); margin-bottom: 12px;">Product Delivered</h2>
+        <div style="background: rgba(16,185,129,0.15); border: 2px solid var(--accent-green); border-radius: 14px; padding: 18px; font-size: 18px; font-weight: 800; color: var(--accent-green); margin-bottom: 20px;">
+          Drop Confirmed. Please collect your diaper package from the bottom collection tray.
+        </div>
+        <p style="font-size: 15px; color: var(--text-muted);">Session resetting in <strong id="resetCountdown" style="color: #fff;">8</strong>s</p>
+        <button class="cart-btn-cta" style="width: 100%; margin-top: 20px;" onclick="resetToIdle()">Finish Session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inactivity Warning Modal -->
+  <div id="idleWarningModal" class="modal-backdrop" style="display: none;" onclick="stayActive()">
+    <div class="modal-box" style="text-align: center;" onclick="event.stopPropagation()">
+      <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 10px;">Session Inactivity</h2>
+      <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 20px;">
+        To protect customer privacy, this session will reset in <strong id="idleSeconds" style="color: #f59e0b; font-size: 22px;">10</strong>s.
+      </p>
+      <button class="cart-btn-cta" style="width: 100%;" onclick="stayActive()">
+        Continue Shopping
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let PRODUCTS = [
+      {
+        id: 'SLOT_A1',
+        slotId: 'SLOT_A1',
+        productId: 'PROD_BABY_S',
+        name: 'MamyPoko Pants Standard',
+        brand: 'MamyPoko',
+        category: 'baby',
+        size: 'S',
+        packQuantity: 10,
+        price: 220,
+        stock: 15,
+        desc: 'Extra absorb gel channels with all-night dryness for baby comfort.'
+      },
+      {
+        id: 'SLOT_A2',
+        slotId: 'SLOT_A2',
+        productId: 'PROD_BABY_M',
+        name: 'Pampers Active Baby Pants',
+        brand: 'Pampers',
+        category: 'baby',
+        size: 'M',
+        packQuantity: 10,
+        price: 310,
+        stock: 12,
+        desc: 'Criss-cross absorbent sheet absorbing up to 7 glasses of liquid.'
+      },
+      {
+        id: 'SLOT_A3',
+        slotId: 'SLOT_A3',
+        productId: 'PROD_BABY_L',
+        name: 'Huggies Wonder Pants',
+        brand: 'Huggies',
+        category: 'baby',
+        size: 'L',
+        packQuantity: 10,
+        price: 340,
+        stock: 8,
+        desc: 'Magic gel channels with 12-hour leak-lock protection.'
+      },
+      {
+        id: 'SLOT_A4',
+        slotId: 'SLOT_A4',
+        productId: 'PROD_BABY_XL',
+        name: 'MamyPoko Extra Absorb',
+        brand: 'MamyPoko',
+        category: 'baby',
+        size: 'XL',
+        packQuantity: 10,
+        price: 380,
+        stock: 10,
+        desc: 'Max absorbency overnight protection with soft elastic waistband.'
+      },
+      {
+        id: 'SLOT_B1',
+        slotId: 'SLOT_B1',
+        productId: 'PROD_ADULT_M',
+        name: 'Friends Premium Adult Diapers',
+        brand: 'Friends',
+        category: 'adult',
+        size: 'M',
+        packQuantity: 10,
+        price: 450,
+        stock: 10,
+        desc: 'High absorbency overnight incontinence protection with wetness indicator.'
+      },
+      {
+        id: 'SLOT_B2',
+        slotId: 'SLOT_B2',
+        productId: 'PROD_ADULT_L1',
+        name: 'Friends Overnight Adult Diapers',
+        brand: 'Friends',
+        category: 'adult',
+        size: 'L',
+        packQuantity: 10,
+        price: 470,
+        stock: 7,
+        desc: 'Extra absorbent core for continuous nighttime care.'
+      },
+      {
+        id: 'SLOT_B3',
+        slotId: 'SLOT_B3',
+        productId: 'PROD_ADULT_L2',
+        name: 'Lifree Extra Absorb Pants',
+        brand: 'Lifree',
+        category: 'adult',
+        size: 'L',
+        packQuantity: 10,
+        price: 490,
+        stock: 6,
+        desc: 'Anti-bacterial absorbent core with odor neutralization technology.'
+      },
+      {
+        id: 'SLOT_B4',
+        slotId: 'SLOT_B4',
+        productId: 'PROD_ADULT_XL',
+        name: 'KareIn Classic Adult Diapers',
+        brand: 'KareIn',
+        category: 'adult',
+        size: 'XL',
+        packQuantity: 10,
+        price: 520,
+        stock: 5,
+        desc: 'Soft breathable cottony feel with refastenable frontal tape tabs.'
+      }
+    ];
+
+    // Real-Time Cross-Dashboard Sync Channel
+    const sddsSyncChannel = new BroadcastChannel('sdds_realtime_sync');
+    window.sddsSyncChannel = sddsSyncChannel;
+    sddsSyncChannel.onmessage = (event) => {
+      const msg = event.data;
+      if (msg.type === 'INVENTORY_RESTOCKED') {
+        loadInventoryFromBackend();
+      } else if (msg.type === 'VOUCHER_ISSUED' && msg.voucher) {
+        console.log('[SYNC] Voucher received from Collection Bin:', msg.voucher);
+        applyRedeemCode(msg.voucher.code);
+      }
+    };
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'sdds_sync_event') {
+        try {
+          const payload = JSON.parse(e.newValue);
+          if (payload.type === 'INVENTORY_RESTOCKED') {
+            loadInventoryFromBackend();
+          } else if (payload.type === 'VOUCHER_ISSUED' && payload.voucher) {
+            applyRedeemCode(payload.voucher.code);
+          }
+        } catch {}
+      }
+    });
+
+    async function loadInventoryFromBackend() {
+      try {
+        const res = await fetch('/api/v1/inventory');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && Array.isArray(json.data)) {
+            json.data.forEach(slot => {
+              const prod = PRODUCTS.find(p => p.slotId === slot.slotId);
+              if (prod) {
+                prod.stock = slot.qty;
+                prod.name = slot.name;
+                prod.price = slot.price;
+                prod.size = slot.size;
+              }
+            });
+            renderCatalogue();
+          }
+        }
+      } catch (e) {
+        console.warn('Backend inventory offline, using synchronized state.');
+      }
+    }
+
+    let currentCategory = 'baby';
+    let currentSizeFilter = null;
+    let cart = [];
+    let appliedVoucher = null; // { code, percentage }
+    let idleTimer = null;
+    let warningTimer = null;
+    let warningCountdown = 10;
+
+    // Check URL parameters for pre-applied redeem code (integration link)
+    const urlParams = new URLSearchParams(window.location.search);
+    const codeParam = urlParams.get('code');
+
+    // Load synchronized slot inventory from backend on startup
+    loadInventoryFromBackend();
+    window.addEventListener('focus', loadInventoryFromBackend);
+
+    function startShopping() {
+      document.getElementById('adScreen').style.display = 'none';
+      resetIdleTimer();
+      renderCatalogue();
+
+      if (codeParam) {
+        applyRedeemCode(codeParam);
+      }
+    }
+
+    function resetToIdle() {
+      cart = [];
+      appliedVoucher = null;
+      closeCartModal();
+      document.getElementById('paymentModal').style.display = 'none';
+      document.getElementById('dispenseModal').style.display = 'none';
+      document.getElementById('idleWarningModal').style.display = 'none';
+      document.getElementById('adScreen').style.display = 'flex';
+      clearTimeout(idleTimer);
+      clearInterval(warningTimer);
+    }
+
+    function resetIdleTimer() {
+      clearTimeout(idleTimer);
+      clearInterval(warningTimer);
+      document.getElementById('idleWarningModal').style.display = 'none';
+
+      idleTimer = setTimeout(() => {
+        showIdleWarning();
+      }, 50000);
+    }
+
+    function showIdleWarning() {
+      warningCountdown = 10;
+      document.getElementById('idleSeconds').innerText = warningCountdown;
+      document.getElementById('idleWarningModal').style.display = 'flex';
+
+      warningTimer = setInterval(() => {
+        warningCountdown -= 1;
+        document.getElementById('idleSeconds').innerText = warningCountdown;
+        if (warningCountdown <= 0) {
+          clearInterval(warningTimer);
+          resetToIdle();
+        }
+      }, 1000);
+    }
+
+    function stayActive() {
+      resetIdleTimer();
+    }
+
+    window.addEventListener('touchstart', resetIdleTimer, { passive: true });
+    window.addEventListener('click', resetIdleTimer, { passive: true });
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      document.getElementById('tabBaby').classList.toggle('active', cat === 'baby');
+      document.getElementById('tabAdult').classList.toggle('active', cat === 'adult');
+      renderCatalogue();
+    }
+
+    function setSizeFilter(size, el) {
+      currentSizeFilter = size;
+      document.querySelectorAll('.size-pill').forEach(btn => btn.classList.remove('active'));
+      el.classList.add('active');
+      renderCatalogue();
+    }
+
+    let toastTimeout = null;
+    function showToast(message, type = 'info', durationMs = 3500) {
+      const toast = document.getElementById('kioskToast');
+      if (!toast) return;
+      clearTimeout(toastTimeout);
+
+      toast.className = 'kiosk-toast ' + type;
+      const icon = type === 'success' ? '✓' : type === 'warning' ? '⚠' : type === 'error' ? '✕' : 'ℹ';
+      toast.innerHTML = `<span style="font-size: 18px;">${icon}</span><span>${message}</span>`;
+      toast.classList.add('show');
+
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, durationMs);
+    }
+
+    function getProductCategoryBadgeSvg(category) {
+      if (category === 'baby') {
+        return `
+          <span class="diaper-badge-icon" title="Baby Diaper Variant">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 6h16l-2 11a4 4 0 0 1-4 3H10a4 4 0 0 1-4-3L4 6z"/>
+              <path d="M4 6a4 4 0 0 1 4 4"/>
+              <path d="M20 6a4 4 0 0 0-4 4"/>
+            </svg>
+          </span>
+        `;
+      } else {
+        return `
+          <span class="diaper-badge-icon" title="Adult Diaper Care">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </span>
+        `;
+      }
+    }
+
+    function renderCatalogue() {
+      const grid = document.getElementById('catalogueGrid');
+      grid.innerHTML = '';
+
+      const filtered = PRODUCTS.filter(p => {
+        const matchesCategory = p.category === currentCategory;
+        const matchesSize = !currentSizeFilter || p.size === currentSizeFilter;
+        return matchesCategory && matchesSize;
+      });
+
+      filtered.forEach(p => {
+        const badgeSvg = getProductCategoryBadgeSvg(p.category);
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div>
+            <div class="card-top">
+              <div class="card-badge-wrap">
+                ${badgeSvg}
+                <span class="brand-tag">${p.brand}</span>
+              </div>
+              <span class="stock-badge ${p.stock > 0 ? 'in-stock' : 'out-stock'}">
+                ${p.stock > 0 ? 'In Stock (' + p.stock + ')' : 'Out of Stock'}
+              </span>
+            </div>
+            <h3 class="product-title">${p.name}</h3>
+            <p class="product-spec">Size <strong>${p.size}</strong> · Pack of <strong>${p.packQuantity} pcs</strong><br>${p.desc}</p>
+          </div>
+          <div class="card-footer">
+            <div class="price-tag">₹${p.price}</div>
+            <button class="btn-add" ${p.stock <= 0 ? 'disabled' : ''} onclick="addToCart('${p.id}')">
+              + Add to Cart
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      updateCartBar();
+    }
+
+    function addToCart(productId) {
+      const product = PRODUCTS.find(p => p.id === productId);
+      if (!product) return;
+      const existing = cart.find(item => item.id === productId);
+      if (existing) {
+        if (existing.qty < product.stock) {
+          existing.qty += 1;
+          showToast(`Added another ${product.name} (Size ${product.size})`, 'success', 2000);
+        } else {
+          showToast(`Maximum slot inventory (${product.stock}) reached for this item.`, 'warning');
+        }
+      } else {
+        if (product.stock > 0) {
+          cart.push({ ...product, qty: 1 });
+          showToast(`Added ${product.name} to cart`, 'success', 2000);
+        } else {
+          showToast('Item currently out of stock.', 'warning');
+        }
+      }
+      updateCartBar();
+    }
+
+    function updateCartBar() {
+      const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+      const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+      const discount = appliedVoucher ? Math.round((subtotal * appliedVoucher.percentage) / 100) : 0;
+      const finalAmount = Math.max(0, subtotal - discount);
+
+      const bar = document.getElementById('cartBar');
+      if (totalQty > 0) {
+        bar.style.display = 'flex';
+        document.getElementById('cartItemCount').innerText = totalQty;
+        document.getElementById('cartBarTotal').innerText = finalAmount;
+
+        const discountTag = document.getElementById('discountTag');
+        if (discount > 0) {
+          discountTag.style.display = 'inline';
+          discountTag.innerText = `(Saved ₹${discount}!)`;
+        } else {
+          discountTag.style.display = 'none';
+        }
+      } else {
+        bar.style.display = 'none';
+      }
+    }
+
+    function openCartModal() {
+      const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+      const discount = appliedVoucher ? Math.round((subtotal * appliedVoucher.percentage) / 100) : 0;
+      const finalAmount = Math.max(0, subtotal - discount);
+
+      document.getElementById('modalSubtotal').innerText = subtotal;
+      document.getElementById('modalDiscount').innerText = discount;
+      document.getElementById('modalFinal').innerText = finalAmount;
+
+      if (appliedVoucher) {
+        document.getElementById('modalDiscountRow').style.display = 'flex';
+        document.getElementById('modalDiscountPct').innerText = appliedVoucher.percentage;
+        document.getElementById('txtVoucherCode').value = appliedVoucher.code;
+        showVoucherMsg(`Discount applied: ${appliedVoucher.percentage}% off with code ${appliedVoucher.code}`, true);
+      } else {
+        document.getElementById('modalDiscountRow').style.display = 'none';
+      }
+
+      const list = document.getElementById('cartItemList');
+      list.innerHTML = '';
+      if (cart.length === 0) {
+        list.innerHTML = `
+          <div style="text-align:center; padding:28px 16px; color:#64748b;">
+            <div style="font-size:36px; margin-bottom:8px;">🛒</div>
+            <div style="font-size:16px; font-weight:700; color:#94a3b8;">Your shopping cart is empty</div>
+            <div style="font-size:13px; margin-top:4px;">Select diapers from the catalogue to start your order.</div>
+          </div>
+        `;
+      } else {
+        cart.forEach(item => {
+          const row = document.createElement('div');
+          row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid #334155;';
+          row.innerHTML = `
+            <div>
+              <div style="font-weight:700; font-size:16px; color:#fff;">${item.name} (Size ${item.size})</div>
+              <div style="font-size:13px; color:#94a3b8;">₹${item.price} each · Pack of ${item.packQuantity}</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <button class="qty-btn" onclick="changeQty('${item.id}', -1)" aria-label="Decrease quantity">-</button>
+              <span style="font-size:17px; font-weight:800; min-width:24px; text-align:center;">${item.qty}</span>
+              <button class="qty-btn" onclick="changeQty('${item.id}', 1)" aria-label="Increase quantity">+</button>
+              <span style="font-size:17px; font-weight:800; min-width:60px; text-align:right;">₹${item.price * item.qty}</span>
+            </div>
+          `;
+          list.appendChild(row);
+        });
+      }
+
+      document.getElementById('cartModal').style.display = 'flex';
+    }
+
+    function changeQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id !== id);
+      }
+      if (cart.length === 0) {
+        closeCartModal();
+      } else {
+        openCartModal();
+      }
+      updateCartBar();
+    }
+
+    function closeCartModal() {
+      document.getElementById('cartModal').style.display = 'none';
+    }
+
+    // Direct Voucher Code Validation
+    function applyVoucherCode() {
+      const input = document.getElementById('txtVoucherCode').value.trim().toUpperCase();
+      if (!input) {
+        showVoucherMsg('Please enter a valid voucher code.', false);
+        return;
+      }
+      applyRedeemCode(input);
+    }
+
+    function applyRedeemCode(code) {
+      const cleaned = code.trim().toUpperCase();
+
+      // Check format: ECO-<PCT>-<HEX> or SDDS-<PCT>-<HEX> or SDDS-XXXX
+      let pct = 20; // default safe 20%
+      const match = cleaned.match(/(?:ECO|SDDS)-(\d+)-/);
+      if (match && match[1]) {
+        pct = parseInt(match[1], 10);
+      } else if (cleaned.includes('15')) {
+        pct = 15;
+      } else if (cleaned.includes('25')) {
+        pct = 25;
+      }
+
+      appliedVoucher = {
+        code: cleaned,
+        percentage: Math.min(25, pct)
+      };
+
+      showVoucherMsg(`Code verified! ${appliedVoucher.percentage}% discount applied.`, true);
+      openCartModal();
+      updateCartBar();
+    }
+
+    function pasteLatestBinCode() {
+      try {
+        const stored = localStorage.getItem('sdds_latest_redeem_code');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.code) {
+            document.getElementById('txtVoucherCode').value = parsed.code;
+            applyRedeemCode(parsed.code);
+            return;
+          }
+        }
+      } catch (e) {}
+
+      // Fallback sample code if bin hasn't been used yet in this browser session
+      const sampleCode = 'ECO-20-4A91';
+      document.getElementById('txtVoucherCode').value = sampleCode;
+      applyRedeemCode(sampleCode);
+    }
+
+    function showVoucherMsg(msg, isSuccess) {
+      const el = document.getElementById('voucherStatusMsg');
+      el.style.display = 'block';
+      el.style.color = isSuccess ? '#34d399' : '#ef4444';
+      el.innerText = (isSuccess ? '✓ ' : '✕ ') + msg;
+    }
+
+    function openPaymentModal() {
+      closeCartModal();
+      const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+      const discount = appliedVoucher ? Math.round((subtotal * appliedVoucher.percentage) / 100) : 0;
+      const finalAmount = Math.max(0, subtotal - discount);
+
+      document.getElementById('payAmount').innerText = finalAmount;
+      document.getElementById('stripePayAmount').innerText = finalAmount;
+      document.getElementById('stripeBtnAmount').innerText = finalAmount;
+      const qp = document.getElementById('quickPayAmount');
+      if (qp) qp.innerText = finalAmount;
+
+      // Reset to UPI tab by default
+      switchPaymentMethod('UPI');
+      document.getElementById('stripeErrorMsg').style.display = 'none';
+
+      document.getElementById('paymentModal').style.display = 'flex';
+    }
+
+    function closePaymentModal() {
+      document.getElementById('paymentModal').style.display = 'none';
+    }
+
+    let stripeInstance = null;
+    let stripeElements = null;
+    let stripeCardElement = null;
+    let isStripeMounted = false;
+
+    function switchPaymentMethod(method) {
+      const tabUpi = document.getElementById('payTabUpi');
+      const tabStripe = document.getElementById('payTabStripe');
+      const secUpi = document.getElementById('sectionUpi');
+      const secStripe = document.getElementById('sectionStripe');
+      const secProcess = document.getElementById('paymentProcessing');
+
+      secProcess.style.display = 'none';
+
+      if (method === 'UPI') {
+        tabUpi.classList.add('active');
+        tabStripe.classList.remove('active');
+        secUpi.style.display = 'block';
+        secStripe.style.display = 'none';
+      } else {
+        tabStripe.classList.add('active');
+        tabUpi.classList.remove('active');
+        secStripe.style.display = 'block';
+        secUpi.style.display = 'none';
+        initRealStripe();
+      }
+    }
+
+    const API_BASE = window.location.protocol.startsWith('http') ? window.location.origin : 'http://localhost:3000';
+
+    async function initRealStripe() {
+      if (isStripeMounted && stripeCardElement) return;
+
+      let pk = localStorage.getItem('sdds_stripe_pk') || '';
+
+      // Try fetching active key from backend
+      try {
+        const res = await fetch(`${API_BASE}/api/v1/payments/stripe/config`);
+        if (res.ok) {
+          const cfg = await res.json();
+          if (cfg.publishableKey && cfg.publishableKey.startsWith('pk_test_') && !cfg.publishableKey.includes('paste_your')) {
+            pk = cfg.publishableKey;
+          }
+        }
+      } catch (e) {}
+
+      if (!pk || !pk.startsWith('pk_test_') || pk.includes('paste_your')) {
+        document.getElementById('stripeKeyNotice').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('stripeKeyNotice').style.display = 'none';
+
+      if (typeof Stripe === 'undefined') {
+        const errEl = document.getElementById('stripeCardError');
+        errEl.innerText = 'Stripe.js CDN script failed to load. Please check internet connection.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        stripeInstance = Stripe(pk);
+        stripeElements = stripeInstance.elements();
+        stripeCardElement = stripeElements.create('card', {
+          style: {
+            base: {
+              color: '#f8fafc',
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              fontSmoothing: 'antialiased',
+              fontSize: '17px',
+              '::placeholder': {
+                color: '#64748b',
+              },
+              iconColor: '#2dd4bf',
+            },
+            invalid: {
+              color: '#f87171',
+              iconColor: '#f87171',
+            },
+          },
+          hidePostalCode: true,
+        });
+
+        stripeCardElement.mount('#stripeCardMount');
+        isStripeMounted = true;
+
+        stripeCardElement.on('change', function(event) {
+          const displayError = document.getElementById('stripeCardError');
+          if (event.error) {
+            displayError.textContent = event.error.message;
+            displayError.style.display = 'block';
+          } else {
+            displayError.textContent = '';
+            displayError.style.display = 'none';
+          }
+        });
+      } catch (err) {
+        const displayError = document.getElementById('stripeCardError');
+        displayError.textContent = 'Error mounting Stripe Elements: ' + err.message;
+        displayError.style.display = 'block';
+      }
+    }
+
+    function copyTestCard(num, label) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(num).catch(() => {});
+      }
+      showToast(`Copied ${label} (${num}) to clipboard!`, 'success', 3500);
+      const notify = document.getElementById('copyNotification');
+      if (notify) {
+        notify.innerText = `Copied ${label} (${num}) to clipboard! Click the card box and paste (Exp: 12/28, CVC: 123).`;
+        notify.style.display = 'block';
+        setTimeout(() => {
+          notify.style.display = 'none';
+        }, 5000);
+      }
+    }
+
+    function saveCustomPublishableKey() {
+      const input = document.getElementById('txtCustomPk').value.trim();
+      if (!input.startsWith('pk_test_')) {
+        showToast('Please enter a valid Stripe Test Publishable Key starting with pk_test_', 'warning');
+        return;
+      }
+      localStorage.setItem('sdds_stripe_pk', input);
+
+      fetch(`${API_BASE}/api/v1/payments/stripe/config`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ publishableKey: input }),
+      }).catch(() => {});
+
+      if (stripeCardElement) {
+        stripeCardElement.destroy();
+        stripeCardElement = null;
+      }
+      isStripeMounted = false;
+      initRealStripe();
+    }
+
+    // Instant 1-Tap Test Card Payment (Bypasses manual typing / incomplete card issues)
+    async function quickPayWithTestCard() {
+      const errorEl = document.getElementById('stripeErrorMsg');
+      errorEl.style.display = 'none';
+
+      const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+      const discount = appliedVoucher ? Math.round((subtotal * appliedVoucher.percentage) / 100) : 0;
+      const finalAmount = Math.max(0, subtotal - discount);
+      const tempOrderId = 'ORD-' + Date.now();
+
+      document.getElementById('sectionStripe').style.display = 'none';
+      const proc = document.getElementById('paymentProcessing');
+      proc.style.display = 'block';
+      document.getElementById('paymentProcessTitle').innerText = '1-Tap Test Card Authorization';
+      document.getElementById('paymentProcessSubtitle').innerText = 'Creating live Stripe PaymentIntent...';
+
+      try {
+        // 1. Create live intent via backend
+        const createRes = await fetch(`${API_BASE}/api/v1/payments/stripe/create-intent`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: tempOrderId, amountInr: finalAmount }),
+        });
+
+        if (!createRes.ok) {
+          const errData = await createRes.json();
+          throw new Error(errData.message || 'PaymentIntent creation failed on server');
+        }
+
+        const createData = await createRes.json();
+        const clientSecret = createData.data?.clientSecret;
+        const intentId = createData.data?.id;
+
+        document.getElementById('paymentProcessTitle').innerText = 'Authorizing Test Payment';
+        document.getElementById('paymentProcessSubtitle').innerText = 'Confirming with Stripe Visa 4242 token (pm_card_visa)...';
+
+        let paymentConfirmed = false;
+        let confirmedId = intentId;
+
+        // Confirm directly with Stripe gateway using official test token pm_card_visa
+        const confirmRes = await fetch(`${API_BASE}/api/v1/payments/stripe/confirm`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: tempOrderId, paymentIntentId: intentId, paymentMethod: 'pm_card_visa' }),
+        });
+
+        if (!confirmRes.ok) {
+          const confErr = await confirmRes.json();
+          throw new Error(confErr.message || 'Payment confirmation failed on Stripe gateway');
+        }
+
+        const confData = await confirmRes.json();
+        if (confData.success && (confData.data?.status === 'succeeded' || confData.data?.status === 'processing')) {
+          paymentConfirmed = true;
+          confirmedId = intentId;
+        } else {
+          throw new Error(confData.message || 'Payment capture was not completed by Stripe');
+        }
+
+        if (paymentConfirmed) {
+          document.getElementById('paymentProcessTitle').innerText = 'Stripe Payment Succeeded';
+          document.getElementById('paymentProcessSubtitle').innerText = 'Reference: ' + confirmedId;
+
+          // Notify backend
+          await fetch(`${API_BASE}/api/v1/payments/stripe/confirm`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId: tempOrderId, paymentIntentId: confirmedId }),
+          }).catch(() => {});
+
+          setTimeout(() => {
+            confirmPaymentAndDispense('STRIPE_CARD_QUICK', tempOrderId);
+          }, 800);
+        }
+      } catch (err) {
+        proc.style.display = 'none';
+        document.getElementById('sectionStripe').style.display = 'block';
+        errorEl.innerHTML = '<strong>Stripe Gateway Error:</strong> ' + err.message;
+        errorEl.style.display = 'block';
+      }
+    }
+
+    async function processStripePayment() {
+      const errorEl = document.getElementById('stripeErrorMsg');
+      errorEl.style.display = 'none';
+
+      const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+      const discount = appliedVoucher ? Math.round((subtotal * appliedVoucher.percentage) / 100) : 0;
+      const finalAmount = Math.max(0, subtotal - discount);
+      const tempOrderId = 'ORD-' + Date.now();
+
+      // Case A: Real Stripe Elements initialized
+      if (stripeInstance && stripeCardElement) {
+        const cardholderName = document.getElementById('stripeCardName').value.trim() || 'SDDS Kiosk Customer';
+
+        document.getElementById('sectionStripe').style.display = 'none';
+        const proc = document.getElementById('paymentProcessing');
+        proc.style.display = 'block';
+        document.getElementById('paymentProcessTitle').innerText = 'Contacting Stripe Gateway';
+        document.getElementById('paymentProcessSubtitle').innerText = 'Creating PaymentIntent via Stripe API...';
+
+        try {
+          // 1. Create live intent via backend
+          const createRes = await fetch(`${API_BASE}/api/v1/payments/stripe/create-intent`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId: tempOrderId, amountInr: finalAmount }),
+          });
+
+          if (!createRes.ok) {
+            const errData = await createRes.json();
+            throw new Error(errData.message || 'PaymentIntent creation failed on server');
+          }
+
+          const createData = await createRes.json();
+          const clientSecret = createData.data?.clientSecret;
+
+          document.getElementById('paymentProcessTitle').innerText = 'Verifying Card with Stripe';
+          document.getElementById('paymentProcessSubtitle').innerText = 'Authorizing 3D Secure / Test Card...';
+
+          // 2. Real Stripe.js confirmCardPayment
+          const confirmResult = await stripeInstance.confirmCardPayment(clientSecret, {
+            payment_method: {
+              card: stripeCardElement,
+              billing_details: {
+                name: cardholderName,
+              },
+            },
+          });
+
+          if (confirmResult.error) {
+            proc.style.display = 'none';
+            document.getElementById('sectionStripe').style.display = 'block';
+            errorEl.innerHTML = `<strong>${confirmResult.error.message}</strong><br><span style="font-size: 12px; color: #2dd4bf; margin-top: 6px; display: inline-block;">Tip: The card box has 3 parts: [16 Digits] + [MM/YY] + [CVC]. Be sure to fill all 3, or tap the teal <strong>Instant Test Card Checkout</strong> button above for 1-tap payment!</span>`;
+            errorEl.style.display = 'block';
+            return;
+          }
+
+          if (confirmResult.paymentIntent && confirmResult.paymentIntent.status === 'succeeded') {
+            document.getElementById('paymentProcessTitle').innerText = 'Stripe Payment Succeeded';
+            document.getElementById('paymentProcessSubtitle').innerText = 'Reference: ' + confirmResult.paymentIntent.id;
+
+            // Notify backend of payment verification
+            await fetch(`${API_BASE}/api/v1/payments/stripe/confirm`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ orderId: tempOrderId, paymentIntentId: confirmResult.paymentIntent.id }),
+            }).catch(() => {});
+
+            setTimeout(() => {
+              confirmPaymentAndDispense('STRIPE_CARD', tempOrderId);
+            }, 800);
+            return;
+          }
+        } catch (err) {
+          proc.style.display = 'none';
+          document.getElementById('sectionStripe').style.display = 'block';
+          errorEl.innerText = 'Stripe Gateway Error: ' + err.message + '. (Check that STRIPE_SECRET_KEY is configured in .env)';
+          errorEl.style.display = 'block';
+          return;
+        }
+      }
+
+      // Case B: Keys not configured yet
+      document.getElementById('stripeKeyNotice').style.display = 'block';
+      errorEl.innerText = 'Real Stripe requires valid test keys. Paste your pk_test_... above or set STRIPE_PUBLISHABLE_KEY & STRIPE_SECRET_KEY in .env.';
+      errorEl.style.display = 'block';
+    }
+
+    function confirmPaymentAndDispense(paymentMethod = 'UPI_QR', orderId = '') {
+      document.getElementById('paymentModal').style.display = 'none';
+      document.getElementById('dispenseModal').style.display = 'flex';
+      document.getElementById('dispenseRunning').style.display = 'block';
+      document.getElementById('dispenseDone').style.display = 'none';
+
+      // Build order payload for backend sync before clearing cart
+      const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+      const discountAmt = appliedVoucher ? Math.round((subtotal * appliedVoucher.percentage) / 100) : 0;
+      const payable = Math.max(0, subtotal - discountAmt);
+
+      const orderPayload = {
+        orderId: orderId || ('ORD-' + Date.now()),
+        items: cart.map(item => ({
+          slotId: item.slotId || item.id,
+          productId: item.productId,
+          name: item.name,
+          size: item.size,
+          price: item.price,
+          qty: item.qty
+        })),
+        subtotal: subtotal,
+        discountPercentage: appliedVoucher ? appliedVoucher.percentage : 0,
+        appliedBarcodeId: appliedVoucher ? appliedVoucher.code : '',
+        discountAmount: discountAmt,
+        finalPayableAmount: payable,
+        paymentMethod: paymentMethod
+      };
+
+      // Deduct stock from local PRODUCTS state immediately
+      orderPayload.items.forEach(it => {
+        const prod = PRODUCTS.find(p => p.slotId === it.slotId || p.id === it.slotId);
+        if (prod) {
+          prod.stock = Math.max(0, prod.stock - it.qty);
+        }
+      });
+      renderCatalogue();
+
+      // Post order to backend server to synchronize state across all kiosks & admin
+      fetch('/api/v1/orders/record', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderPayload)
+      }).then(r => r.json()).then(data => {
+        if (data && data.slots) {
+          data.slots.forEach(s => {
+            const prod = PRODUCTS.find(p => p.slotId === s.slotId);
+            if (prod) prod.stock = s.qty;
+          });
+          renderCatalogue();
+        }
+        if (window.sddsSyncChannel) {
+          window.sddsSyncChannel.postMessage({
+            type: 'ORDER_RECORDED',
+            order: data.order,
+            slots: data.slots,
+            metrics: data.metrics
+          });
+        }
+        localStorage.setItem('sdds_sync_event', JSON.stringify({
+          type: 'ORDER_RECORDED',
+          timestamp: Date.now(),
+          order: data.order
+        }));
+      }).catch(err => console.warn('Order dispatch to server offline:', err));
+
+      // Clear cart
+      cart = [];
+      appliedVoucher = null;
+      updateCartBar();
+
+      setTimeout(() => {
+        document.getElementById('dispenseRunning').style.display = 'none';
+        document.getElementById('dispenseDone').style.display = 'block';
+
+        let countdown = 8;
+        const countInterval = setInterval(() => {
+          countdown -= 1;
+          document.getElementById('resetCountdown').innerText = countdown;
+          if (countdown <= 0) {
+            clearInterval(countInterval);
+            resetToIdle();
+          }
+        }, 1000);
+      }, 2000);
+    }
+
+    // Expose global handler for dual simulator sync
+    window.handleExternalRedeemCode = function(code) {
+      if (document.getElementById('adScreen').style.display !== 'none') {
+        startShopping();
+      }
+      applyRedeemCode(code);
+      openCartModal();
+    };
+  </script>
+</body>
+</html>

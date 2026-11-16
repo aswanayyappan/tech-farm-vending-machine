@@ -1,0 +1,211 @@
+<!DOCTYPE html><html class="h-full" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Smart Bin Kiosk - QR Code &amp; Instructions</title>
+<!-- Tailwind CSS v3 with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration for Custom Palette -->
+<script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: {
+              50: '#fefcf6',
+              100: '#faf3dd',
+              200: '#f3e8c2',
+            },
+            lime: {
+              bright: '#9ef01a',
+              chartreuse: '#ccff33',
+              glow: '#b8ff24'
+            },
+            forest: {
+              800: '#1e4830',
+              900: '#153e28',
+              950: '#0f2c1c'
+            },
+            slate: {
+              deep: '#1a2e22',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          boxShadow: {
+            'glow-lime': '0 0 25px -4px rgba(158, 240, 26, 0.45)',
+            'kiosk-card': '0 12px 35px -8px rgba(21, 62, 40, 0.08), 0 4px 12px -2px rgba(21, 62, 40, 0.04)',
+            'kiosk-elevated': '0 20px 40px -12px rgba(21, 62, 40, 0.16)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Decorative Layers & Print Animation -->
+<style data-purpose="kiosk-layout-effects">
+    /* Subtle paper dispensing feed animation */
+    @keyframes paperFeed {
+      0% { transform: translateY(-8px); opacity: 0.6; }
+      50% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-8px); opacity: 0.6; }
+    }
+    .animate-paper-feed {
+      animation: paperFeed 2.4s ease-in-out infinite;
+    }
+
+    /* Ambient wave mask fading upward */
+    .wave-bg-mask {
+      mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+      -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+    }
+
+    /* Tactile button pressed bounce simulation */
+    .touch-interactive:active {
+      transform: scale(0.97);
+    }
+  </style>
+<meta content="web_standard" name="shell-type">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"></head>
+<body class="h-full bg-cream-100 text-forest-950 font-sans select-none overflow-hidden relative flex flex-col justify-between antialiased">
+<!-- BEGIN: AmbientWaveBackground -->
+<!-- Decorative green wave artwork anchored along bottom with organic multiply blend -->
+<div class="absolute inset-x-0 bottom-0 pointer-events-none z-0 overflow-hidden h-[460px]" data-purpose="background-wave-graphic">
+<img alt="Organic Green Wave Graphic" class="w-full h-full object-cover object-bottom mix-blend-multiply opacity-35 wave-bg-mask transform scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB681oQGDd8EMkurywKINQTZ010A9UsO3ATfGF5OxwGXM_tBM2CkiwaEor8TAUNb_jSj8NW0DU8rpoC7W89zEpKw1HZ9-txZIfQktRB4nYgDrVjWWhBfhB98p5ULbJGTcBR1VDxnzAimYXQKaCfImbFn4s_q2h7X8HhoykV4ezTwc3xwcDLxX4gm1BYmNgiXv-9RIDVWibszfGri94Oe1LD6ZLInXugTgz1dMVwJRuCU_YSpzJDs1vbjA">
+</div>
+<!-- END: AmbientWaveBackground -->
+<!-- BEGIN: KioskHeader -->
+<header class="relative z-10 w-full px-8 pt-6 pb-3 flex items-center justify-between border-b border-forest-900/10 backdrop-blur-md bg-cream-50/70">
+<!-- Brand / Station Identification -->
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-2xl bg-forest-900 flex items-center justify-center text-lime-chartreuse shadow-md shadow-forest-950/15">
+<!-- Leaf / Recycling Geometric Icon -->
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+<path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-extrabold text-lg tracking-wider text-forest-950">ECOTOUCH</span>
+</div>
+</div>
+</div>
+<!-- Step Progress Indicator -->
+<!-- Status & Accessibility Controls -->
+<div class="flex items-center gap-3">
+<!-- Thermal Printer Live Status -->
+<!-- Language / Help Quick Touch -->
+<button aria-label="Select Language" class="touch-interactive px-3.5 py-1.5 rounded-xl bg-white border border-forest-900/15 text-forest-900 text-xs font-bold flex items-center gap-1.5 hover:bg-cream-100 transition shadow-sm" type="button">
+<span>EN</span>
+<svg class="w-3.5 h-3.5 text-forest-900/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</header>
+<!-- END: KioskHeader -->
+<!-- BEGIN: MainContent -->
+<main class="relative z-10 flex-1 px-8 py-5 flex flex-col justify-center max-w-7xl mx-auto w-full"><div class="flex flex-col w-full relative z-20 items-center justify-center py-2 px-4 max-w-4xl mx-auto">
+<!-- Floating Glow Atmosphere Layer -->
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary-container/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<!-- Hero Status / Dispense Card Container -->
+<div class="w-full bg-surface-container-lowest rounded-3xl shadow-2xl p-6 sm:p-8 flex flex-col items-center text-center relative overflow-hidden">
+<!-- Top Decorative Status Bar Accent -->
+<div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-primary via-primary-container to-secondary-container"></div>
+<!-- Success Pulsing Checkmark Node -->
+<div class="relative mb-4 flex items-center justify-center">
+<div class="absolute -inset-3 bg-primary-container/40 rounded-full blur-md animate-pulse"></div>
+<div class="relative w-20 h-20 rounded-full bg-surface-container flex items-center justify-center shadow-lg">
+<div class="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-primary-container shadow-inner">
+<span class="material-symbols-outlined text-4xl font-bold" style="font-variation-settings: &quot;FILL&quot; 1, &quot;wght&quot; 700;">check</span>
+</div>
+</div>
+</div>
+<!-- Headline & Subtitle -->
+<h1 class="font-extrabold text-4xl text-forest-950 tracking-tight uppercase mb-2">DISPENSE SUCCESSFUL!</h1>
+<p class="font-bold text-lg text-forest-900/80 max-w-xl mb-6">Payment verified &amp; coils actuated. Please collect your items from the lower retrieval bin.</p>
+<!-- Active Hatch Notification Pill Banner -->
+<div class="w-full max-w-2xl bg-forest-950 text-lime-bright px-6 py-4 rounded-full flex items-center justify-center gap-3 shadow-lg mb-6 border border-lime-bright/20"><span class="relative flex h-3.5 w-3.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-bright opacity-75"></span><span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-lime-bright"></span></span><span class="font-extrabold text-base tracking-wider uppercase">HATCH UNLOCKED — PLEASE COLLECT ITEMS NOW</span><span class="material-symbols-outlined text-2xl text-lime-bright animate-bounce">south</span></div>
+<!-- Central Receipt & Telemetry Ledger Card -->
+<div class="w-full max-w-2xl bg-white rounded-3xl p-6 sm:p-8 text-left shadow-2xl border border-forest-900/15 mb-4"><div class="flex flex-wrap items-center justify-between pb-5 border-b border-forest-900/10 gap-3"><div class="flex items-center gap-2.5"><div class="w-10 h-10 rounded-xl bg-forest-900 flex items-center justify-center text-lime-bright shadow-sm"><span class="material-symbols-outlined text-2xl">receipt_long</span></div><div><span class="font-black text-lg text-forest-950 tracking-wider block uppercase">TRANSACTION RECEIPT</span><span class="font-bold text-xs text-forest-900/60 font-mono">ID: pay_U0oI5C83SgfLcM</span></div></div><div class="flex items-center gap-3"><span class="bg-cream-100 text-forest-900 px-3.5 py-1.5 rounded-full font-bold text-sm border border-forest-900/10">Just now</span></div></div><div class="py-4 space-y-4"><div class="flex items-center justify-between py-2 border-b border-forest-900/10"><div class="flex items-center gap-3.5"><span class="w-8 h-8 rounded-xl bg-forest-900/10 flex items-center justify-center font-black text-sm text-forest-950">1</span><div><div class="font-black text-lg text-forest-950">MamyPoko Pants Standard</div><span class="font-bold text-xs bg-lime-bright/30 text-forest-950 px-2.5 py-0.5 rounded-md inline-block mt-0.5">Pack M • Medium</span></div></div><span class="font-black text-2xl text-forest-950">₹220</span></div><div class="flex items-center justify-between py-2 border-b border-forest-900/10"><div class="flex items-center gap-3.5"><span class="w-8 h-8 rounded-xl bg-forest-900/10 flex items-center justify-center font-black text-sm text-forest-950">2</span><div><div class="font-black text-lg text-forest-950">Pampers Active Baby Pants</div><span class="font-bold text-xs bg-lime-bright/30 text-forest-950 px-2.5 py-0.5 rounded-md inline-block mt-0.5">Pack L • Large</span></div></div><span class="font-black text-2xl text-forest-950">₹310</span></div><div class="flex items-center justify-between py-2 border-b border-forest-900/10"><div class="flex items-center gap-3.5"><span class="w-8 h-8 rounded-xl bg-forest-900/10 flex items-center justify-center font-black text-sm text-forest-950">3</span><div><div class="font-black text-lg text-forest-950">Friends Premium Adult Diapers</div><span class="font-bold text-xs bg-lime-bright/30 text-forest-950 px-2.5 py-0.5 rounded-md inline-block mt-0.5">Pack XL • Extra Large</span></div></div><span class="font-black text-2xl text-forest-950">₹450</span></div></div><div class="mt-4 pt-5 pb-5 px-6 bg-forest-950 rounded-2xl flex items-center justify-between shadow-md text-white"><div class="flex flex-col"><span class="text-xs font-bold uppercase tracking-wider text-lime-bright/90">Total Settlement</span><span class="font-extrabold text-2xl text-white">Amount Paid</span></div><div class="text-right"><span class="inline-block bg-lime-bright px-5 py-2 rounded-xl text-forest-950 font-black text-3xl shadow-sm tracking-tight">₹980</span></div></div><div class="mt-6 pt-5 border-t border-forest-900/10"><button class="w-full py-4 px-8 rounded-2xl bg-lime-bright hover:bg-lime-chartreuse text-forest-950 transition-all flex items-center justify-center gap-3 shadow-lg active:scale-98 group cursor-pointer border-2 border-forest-900/20" id="btn-collect-finish" type="button"><span class="font-black text-xl tracking-wider uppercase">COLLECT &amp; FINISH</span><div class="w-10 h-10 rounded-full bg-forest-950 text-lime-bright flex items-center justify-center group-hover:translate-x-1 transition-transform shadow-md"><span class="material-symbols-outlined text-2xl font-bold">arrow_forward</span></div></button></div></div>
+<!-- Kiosk Micro-Action Bar & Live Countdown -->
+<div class="w-full max-w-2xl flex flex-col sm:flex-row items-center gap-4 justify-center"></div>
+<!-- Primary High-Affordance Finish Kiosk Button -->
+
+</div>
+<!-- Client-side Interactive Timer & Feedback Script -->
+<script>
+    (function initDispenseKiosk() {
+      let secondsLeft = 9;
+      const totalSeconds = 9;
+      const countdownEl = document.getElementById('kiosk-countdown');
+      const timerPath = document.getElementById('kiosk-timer-path');
+      const finishBtn = document.getElementById('btn-collect-finish');
+      const printBtn = document.getElementById('btn-print-receipt');
+      const smsBtn = document.getElementById('btn-sms-receipt');
+
+      const interval = setInterval(() => {
+        secondsLeft -= 1;
+        if (countdownEl) {
+          countdownEl.textContent = Math.max(secondsLeft, 0);
+        }
+        if (timerPath) {
+          const percentage = Math.max((secondsLeft / totalSeconds) * 100, 0);
+          timerPath.setAttribute('stroke-dasharray', `${percentage}, 100`);
+        }
+        if (secondsLeft <= 0) {
+          clearInterval(interval);
+          handleFinish();
+        }
+      }, 1000);
+
+      function handleFinish() {
+        if (finishBtn) {
+          finishBtn.classList.add('opacity-75');
+          finishBtn.innerHTML = `
+            <span class="font-headline-md text-headline-md font-extrabold tracking-wider uppercase">SESSION COMPLETED</span>
+            <span class="material-symbols-outlined text-2xl animate-spin">sync</span>
+          `;
+        }
+        setTimeout(() => {
+          if (window.history.length > 1) {
+            window.history.back();
+          } else {
+            window.location.reload();
+          }
+        }, 600);
+      }
+
+      if (finishBtn) {
+        finishBtn.addEventListener('click', () => {
+          clearInterval(interval);
+          handleFinish();
+        });
+      }
+
+      if (printBtn) {
+        printBtn.addEventListener('click', () => {
+          printBtn.classList.add('bg-primary-container', 'text-on-primary-fixed');
+          printBtn.innerHTML = `<span class="material-symbols-outlined text-lg animate-spin">refresh</span><span>Printing...</span>`;
+          setTimeout(() => {
+            printBtn.innerHTML = `<span class="material-symbols-outlined text-lg text-primary">done</span><span>Printed</span>`;
+          }, 1200);
+        });
+      }
+
+      if (smsBtn) {
+        smsBtn.addEventListener('click', () => {
+          const phone = prompt('Enter your 10-digit mobile number for SMS receipt:');
+          if (phone) {
+            smsBtn.innerHTML = `<span class="material-symbols-outlined text-lg text-primary">mark_chat_read</span><span>SMS Sent!</span>`;
+          }
+        });
+      }
+    })();
+  </script>
+</div></main>
+<!-- END: MainContent -->
+<!-- BEGIN: BottomActionBar -->
+
+<!-- END: BottomActionBar -->
+
+
+</body></html>

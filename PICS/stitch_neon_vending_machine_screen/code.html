@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+
+<html lang="nl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ZUPLY - Slimme Versautomaat Kiosk</title>
+<!-- Load Tailwind CSS v3 with forms & container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              lime: '#9ef01a',
+              chartreuse: '#ccff33',
+              dark: '#0f172a',
+              card: '#ffffff',
+              surface: '#f8fafc',
+              border: '#e2e8f0',
+              accent: '#70e000'
+            }
+          },
+          boxShadow: {
+            'touch': '0 8px 24px -4px rgba(158, 240, 26, 0.18), 0 2px 8px -2px rgba(0, 0, 0, 0.05)',
+            'card-hover': '0 12px 28px -6px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(158, 240, 26, 0.25)',
+          }
+        }
+      }
+    }
+  </script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style data-purpose="custom-scrollbars">
+    /* Hide scrollbars for clean kiosk touch swipe UI */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style data-purpose="touch-kiosk-feel">
+    /* Prevent accidental text selecting on touch surfaces */
+    body {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .touch-ripple:active {
+      transform: scale(0.97);
+      transition: transform 0.1s ease-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col font-sans">
+<!-- BEGIN: MainHeader -->
+<header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm" data-purpose="kiosk-top-navigation">
+<div class="max-w-[1920px] mx-auto px-6 py-3 flex items-center justify-between gap-4">
+<!-- Brand Logo Section -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2.5">
+<!-- Minimalist brand square logo with #9ef01a and #ccff33 accents -->
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#9ef01a] via-[#ccff33] to-emerald-400 p-[2.5px] shadow-sm flex items-center justify-center">
+<div class="w-full h-full bg-slate-900 rounded-[9px] flex items-center justify-center">
+<span class="w-3.5 h-3.5 rounded-sm bg-[#ccff33] rotate-45 transform"></span>
+</div>
+</div>
+<div>
+<span class="text-2xl font-black tracking-wider text-slate-900">ZUPLY<span class="text-[#70e000]">.</span></span>
+<span class="hidden sm:inline-block ml-2 text-xs font-semibold uppercase tracking-wider bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full border border-slate-200">Kiosk 04 • Verspunt</span>
+</div>
+</div>
+</div>
+<!-- Center Status / Kiosk Clock -->
+<div class="hidden md:flex items-center gap-6 text-sm text-slate-500" data-purpose="system-status">
+<div class="flex items-center gap-2 bg-slate-50 px-3.5 py-1.5 rounded-full border border-slate-200/80">
+<span class="w-2.5 h-2.5 rounded-full bg-[#9ef01a] animate-pulse"></span>
+<span class="font-medium text-slate-700">Automaat Online</span>
+</div>
+<div class="flex items-center gap-1.5 font-medium text-slate-600">
+<i class="fa-regular fa-clock text-slate-400"></i>
+<span id="kiosk-clock">14:32</span>
+</div>
+<!-- Language Selector -->
+<button class="flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg border border-slate-200 touch-ripple transition-colors">
+<span class="text-base leading-none">🇳🇱</span>
+<span>NL</span>
+<i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+</button>
+</div>
+<!-- Action Checkout CTA Button -->
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-3 bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-black px-6 py-3 rounded-2xl shadow-touch border border-[#70e000]/40 transition-all duration-200 touch-ripple" data-purpose="checkout-button" id="checkout-header-btn">
+<div class="relative">
+<i class="fa-solid fa-cart-shopping text-xl"></i>
+<span class="absolute -top-2 -right-2.5 bg-slate-950 text-[#ccff33] text-xs font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
+              3
+            </span>
+</div>
+<span class="text-base tracking-wide uppercase">Afrekenen</span>
+<span class="bg-black/10 px-2 py-0.5 rounded-md font-mono text-sm">€ 11,97</span>
+</button>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainLayout -->
+<main class="flex-1 max-w-[1920px] w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- BEGIN: LeftSideCartAndStatusPanel -->
+<aside class="lg:col-span-4 xl:col-span-4 bg-white rounded-3xl p-5 md:p-6 border border-slate-200 shadow-sm flex flex-col gap-6" data-purpose="live-order-panel">
+<!-- Panel Header -->
+<div class="flex items-center justify-between border-b border-slate-100 pb-4">
+<div>
+<h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+<i class="fa-solid fa-bag-shopping text-[#70e000]"></i>
+            Huidige Bestelling
+          </h2>
+<p class="text-xs text-slate-400">Geselecteerde automaatvakken</p>
+</div>
+<span class="text-xs font-semibold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full border border-emerald-200">
+          3 artikelen
+        </span>
+</div>
+<!-- Item Basket List -->
+<div class="space-y-3" data-purpose="basket-items-list">
+<!-- Basket Item 1: Completed status (14G) -->
+<div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 hover:border-slate-300 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl shrink-0">
+<i class="fa-solid fa-carrot text-purple-600"></i>
+</div>
+<div>
+<div class="font-bold text-slate-800 text-sm leading-snug">Gesneden rode kool</div>
+<div class="text-xs text-slate-500 font-medium">500gr • Vers gesneden</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-mono font-bold bg-[#ccff33]/40 text-slate-800 px-2 py-0.5 rounded border border-[#9ef01a]">14G</span>
+<span class="w-7 h-7 rounded-full bg-[#9ef01a] text-slate-950 flex items-center justify-center text-xs font-bold shadow-sm" title="Vak geopend &amp; gereed">
+<i class="fa-solid fa-check"></i>
+</span>
+</div>
+</div>
+<!-- Basket Item 2: Dispensing in Progress (with spinner) -->
+<div class="p-3.5 rounded-2xl bg-[#9ef01a]/10 border-2 border-[#9ef01a] flex flex-col gap-2 relative overflow-hidden shadow-sm">
+<div class="flex items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shrink-0">
+<i class="fa-solid fa-bowl-rice text-amber-600"></i>
+</div>
+<div>
+<div class="font-bold text-slate-900 text-sm leading-snug">Pasta groenten</div>
+<div class="text-xs text-slate-600 font-medium">250gr • Roerbakmix</div>
+</div>
+</div>
+<!-- Dispense Spinner -->
+<div class="flex items-center justify-center w-7 h-7">
+<i class="fa-solid fa-circle-notch text-[#70e000] text-xl animate-spin"></i>
+</div>
+</div>
+<!-- Sub status alert -->
+<div class="flex items-center gap-2 text-xs font-semibold text-slate-700 bg-white/80 py-1.5 px-3 rounded-xl border border-[#9ef01a]/50">
+<i class="fa-solid fa-box-open text-emerald-600"></i>
+<span>Uitgifte starten op nummer <span class="font-black text-slate-900 font-mono text-sm underline decoration-[#9ef01a] decoration-2">340</span></span>
+</div>
+</div>
+<!-- Basket Item 3: Queued -->
+<div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 hover:border-slate-300 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-yellow-100 text-yellow-700 flex items-center justify-center text-xl shrink-0">
+<i class="fa-solid fa-cheese text-amber-500"></i>
+</div>
+<div>
+<div class="font-bold text-slate-800 text-sm leading-snug">Boerenkaas, jong</div>
+<div class="text-xs text-slate-500 font-medium">Punt ca. 450gr</div>
+</div>
+</div>
+<div class="text-right">
+<span class="text-xs font-bold text-slate-400 bg-slate-200/70 px-2 py-0.5 rounded">Gereserveerd</span>
+</div>
+</div>
+</div>
+<!-- Financial Balance & Totals Section -->
+<div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/90 space-y-3" data-purpose="totals-breakdown">
+<div class="flex justify-between items-center text-xs text-slate-500">
+<span>Subtotaal</span>
+<span class="font-mono">€ 10,98</span>
+</div>
+<div class="flex justify-between items-center text-xs text-slate-500">
+<span>Inbegrepen 9% BTW</span>
+<span class="font-mono">€ 0,99 BTW</span>
+</div>
+<div class="border-t border-slate-200 pt-3 flex justify-between items-baseline">
+<div>
+<div class="text-xs font-bold uppercase tracking-wider text-slate-400">Totaal</div>
+<div class="text-2xl font-black text-slate-900 tracking-tight">€ 11,97</div>
+</div>
+<div class="text-right">
+<div class="text-xs font-semibold text-slate-500">Huidig Saldo / Te betalen</div>
+<div class="text-lg font-black text-emerald-600 font-mono">€ 9,18</div>
+</div>
+</div>
+</div>
+<!-- Touch Quick Payment Options -->
+<div class="space-y-2.5 pt-1" data-purpose="quick-pay-actions">
+<button class="w-full py-4 bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 rounded-2xl font-black text-base flex items-center justify-center gap-3 shadow-touch border border-[#70e000] touch-ripple transition-all">
+<i class="fa-regular fa-credit-card text-lg"></i>
+<span>PIN OF CONTACTLOOS BETALEN</span>
+</button>
+<button class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 border border-slate-300/80 touch-ripple transition-colors">
+<i class="fa-solid fa-qrcode text-slate-500"></i>
+<span>Scan Klantenkaart / Waardebon</span>
+</button>
+</div>
+<!-- Instruction Helper Tip -->
+<div class="p-3 bg-slate-100 rounded-xl text-xs text-slate-600 flex items-start gap-2.5 border border-slate-200">
+<i class="fa-solid fa-circle-info text-[#70e000] text-sm mt-0.5"></i>
+<span>Houd uw pinpas of mobiele telefoon tegen de kaartlezer rechts naast het scherm na afronding.</span>
+</div>
+</aside>
+<!-- END: LeftSideCartAndStatusPanel -->
+<!-- BEGIN: MainCatalogArea -->
+<div class="lg:col-span-8 xl:col-span-8 flex flex-col gap-6" data-purpose="kiosk-product-section">
+<!-- Category Filter Scroll Bar (As magnified in reference loupe) -->
+<div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm" data-purpose="category-tabs">
+<div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1 px-1">
+<!-- Category: Alles -->
+<button class="px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 whitespace-nowrap bg-slate-100 hover:bg-slate-200 text-slate-700 touch-ripple transition-all">
+<i class="fa-solid fa-border-all text-slate-500"></i>
+<span>Alles</span>
+</button>
+<!-- Category: Citrus -->
+<button class="px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 whitespace-nowrap bg-slate-100 hover:bg-slate-200 text-slate-700 touch-ripple transition-all">
+<i class="fa-solid fa-lemon text-amber-500"></i>
+<span>Citrus</span>
+</button>
+<!-- Category: Fruit (ACTIVE in #ccff33 with #9ef01a border) -->
+<button class="px-5 py-3 rounded-xl text-sm font-black flex items-center gap-2.5 whitespace-nowrap bg-[#ccff33] text-slate-950 border-2 border-[#9ef01a] shadow-sm touch-ripple ring-2 ring-[#ccff33]/40">
+<i class="fa-solid fa-apple-whole text-emerald-800"></i>
+<span>Fruit</span>
+</button>
+<!-- Category: Gesneden groenten & soepen -->
+<button class="px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 whitespace-nowrap bg-slate-100 hover:bg-slate-200 text-slate-700 touch-ripple transition-all">
+<i class="fa-solid fa-bowl-food text-slate-500"></i>
+<span>Gesneden groenten &amp; soepen</span>
+</button>
+<!-- Category: Verspakket -->
+<button class="px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 whitespace-nowrap bg-slate-100 hover:bg-slate-200 text-slate-700 touch-ripple transition-all">
+<i class="fa-solid fa-box text-slate-500"></i>
+<span>Verspakket</span>
+</button>
+<!-- Category: Zuivel & Kaas -->
+<button class="px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 whitespace-nowrap bg-slate-100 hover:bg-slate-200 text-slate-700 touch-ripple transition-all">
+<i class="fa-solid fa-cheese text-slate-500"></i>
+<span>Zuivel &amp; Kaas</span>
+</button>
+<!-- Category: Kant-en-klaar -->
+<button class="px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 whitespace-nowrap bg-slate-100 hover:bg-slate-200 text-slate-700 touch-ripple transition-all">
+<i class="fa-solid fa-utensils text-slate-500"></i>
+<span>Kant-en-klaar</span>
+</button>
+</div>
+</div>
+<!-- Main Product Catalog Grid -->
+<div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4" data-purpose="product-grid" id="product-container">
+<!-- Product Card 1: Ovenschotel wortel -->
+<div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-col justify-between hover:shadow-card-hover transition-all duration-200 group">
+<div class="relative bg-amber-50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center mb-3">
+<img alt="Ovenschotel wortel 1 kg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL-NI5aqm12gQKUXYrun6pqMTmhUd70PyGP3FE8_glO3-mt7kjlOgR4IflE4ck25YrLt92-bG_0iXRyQB2751U9Y6f3t6YVsgblTs7-zvM9H_bkO9o5cmbv3BazS_SGeCVzF9NrUgYXi1WXmc5zsqTQiHligrpmhrPvSwTjm55hqAo8_7r0g1XCfD55SsWOa-jUTgMVDjysFzisd-wO5Wr8s8kyU0cSuO0BvJgfves"/>
+<span class="absolute top-2 right-2 bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2 py-0.5 rounded-full">
+              1 kg
+            </span>
+</div>
+<div class="space-y-1 mb-3">
+<h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">Ovenschotel wortel | 1 kg</h3>
+<p class="text-xs text-slate-500">Klaar voor de oven</p>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-base font-black text-slate-900">€ 5,85</span>
+<button aria-label="Voeg toe aan bestelling" class="w-10 h-10 rounded-xl bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-bold flex items-center justify-center touch-ripple shadow-sm">
+<i class="fa-solid fa-plus text-sm"></i>
+</button>
+</div>
+</div>
+<!-- Product Card 2: Kiste groenten -->
+<div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-col justify-between hover:shadow-card-hover transition-all duration-200 group">
+<div class="relative bg-emerald-50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center mb-3">
+<img alt="Kiste groenten" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvpiW65FKy3RXvlwCkhTmTJXie1acFeO6zWI9i8adAnL2FRvgBn6bMQKy6t1XAnflvPgRJ_5oZC22w4KNYO15drejxYu3GX0PhiGjehTLAC1Q5KQIbhgalLaE6Qb8lidIzI38p--apouwTcB-eLUSDbjiHu6WMTrkuqTOj_5HScFyi0QmtmmjNaLmbkfMFwxAtMiVM1_Bj6XzcnkBAE1nuMM-cRcBoTKBXicqJba2N"/>
+<span class="absolute top-2 left-2 bg-[#9ef01a] text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-md">
+              Populair
+            </span>
+</div>
+<div class="space-y-1 mb-3">
+<h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">Kiste groenten</h3>
+<p class="text-xs text-slate-500">Seizoensmix lokaal</p>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-base font-black text-slate-900">€ 7,49</span>
+<button aria-label="Voeg toe aan bestelling" class="w-10 h-10 rounded-xl bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-bold flex items-center justify-center touch-ripple shadow-sm">
+<i class="fa-solid fa-plus text-sm"></i>
+</button>
+</div>
+</div>
+<!-- Product Card 3: Vers fruit en snackbakje mango -->
+<div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-col justify-between hover:shadow-card-hover transition-all duration-200 group">
+<div class="relative bg-orange-50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center mb-3">
+<img alt="Vers fruit en snackbakje mango" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4i1_4XXh7B75pkza9jcHzkTeq2Rjz2yOggbq1rL6__qzCePthXuafeG_SsqcfySBXdDeY5Rs1KmJDaf9ugfdlbczMN03Dya3PULnjq-C6xTExpBCEdrgxsYLCDEc0QMlPHJYaE5H7ongfaox9e85IuY04AQvzXjmAtahe6kgZm_dR7cwTHYCnQ9vJbJn3f8FdefoWkEHkSz25RqOqabz4W3cpV2otiH2e_ndL_i77"/>
+<span class="absolute top-2 right-2 bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2 py-0.5 rounded-full">
+              250g
+            </span>
+</div>
+<div class="space-y-1 mb-3">
+<h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">Vers fruit en snackbakje mango</h3>
+<p class="text-xs text-slate-500">Direct eetklaar</p>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-base font-black text-slate-900">€ 2,75</span>
+<button aria-label="Voeg toe aan bestelling" class="w-10 h-10 rounded-xl bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-bold flex items-center justify-center touch-ripple shadow-sm">
+<i class="fa-solid fa-plus text-sm"></i>
+</button>
+</div>
+</div>
+<!-- Product Card 4: Gezond tussendoortje stapel -->
+<div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-col justify-between hover:shadow-card-hover transition-all duration-200 group">
+<div class="relative bg-rose-50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center mb-3">
+<img alt="Gezond tussendoortje stapel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9r3V2pTJk7AEHm8DCGAUdSIAKX5UHSonBx73J5jLKjqLZloiIXe2pq-t0-G9STxRA4zwr5SCjFaVNKpGCV-4X0qkdIAvSlru-lgKHkcl2n0PNJow5CgNmphizJUdQRrFogJbepvfxm-lIcpfUzXndhIFkHd9vOYw-A8K2T0PRBkyIRYaUs3wWuMDe7L9j70tPvqzGNqkISmrVjq1CzwMjft-Qm8yNwnj5qzi6CUsB"/>
+</div>
+<div class="space-y-1 mb-3">
+<h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">Gezond tussendoortje stapel</h3>
+<p class="text-xs text-slate-500">Appel, peer &amp; mandarijn</p>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-base font-black text-slate-900">€ 3,75</span>
+<button aria-label="Voeg toe aan bestelling" class="w-10 h-10 rounded-xl bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-bold flex items-center justify-center touch-ripple shadow-sm">
+<i class="fa-solid fa-plus text-sm"></i>
+</button>
+</div>
+</div>
+<!-- Product Card 5: Boerenkaas, jong -->
+<div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-col justify-between hover:shadow-card-hover transition-all duration-200 group">
+<div class="relative bg-yellow-50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center mb-3">
+<img alt="Boerenkaas jong" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFHvzztJ79a39rQKDc_kONuWWOVUWTfAAyMDJsZcaZeefBAVTyG6KiCaUWskWsK_xXpkgx-60L2eAR5MWGxFHEhUDy2FHELaoRsgBSNeeNtnj8o4pn1HZI1d110-VunpwRCaXB_GeP5EVmC_0FbqFygEKc__uPOrLU5nOmuTyL6rQULWFBYXeCmBxmQCGW8AZsi-WhGXMNlmwhjXUi9se7uAK3cLwizeH42GCbVyf9"/>
+</div>
+<div class="space-y-1 mb-3">
+<h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">Boerenkaas, jong</h3>
+<p class="text-xs text-slate-500">Lokaal bereid • romig</p>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-base font-black text-slate-900">€ 3,49</span>
+<button aria-label="Voeg toe aan bestelling" class="w-10 h-10 rounded-xl bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-bold flex items-center justify-center touch-ripple shadow-sm">
+<i class="fa-solid fa-plus text-sm"></i>
+</button>
+</div>
+</div>
+<!-- Product Card 6: Huisgemaakte pompoensoep -->
+<div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-col justify-between hover:shadow-card-hover transition-all duration-200 group">
+<div class="relative bg-orange-50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center mb-3">
+<img alt="Pompoensoep met linzen 1L" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKgOeVcYwuf5CwRbuAmwjdfQBcID7XjRNZalhp8luSnUzbYFvh8dIG2dRBk6IrXdd8dPwNxNTvP6Zaqt-8IqzViXyikkHumbT_HZot-wwKUuPos1ot2uOoWAWNj1yPebTFuME_9f4spmVCNim7GJzv8EsAcMUkMt6D2XwWqG-hiQmHJyj9YRkKXzWGkjtGm2VCUNosAUowm_Yr9FcTeoqfVHboUlrN5sAM51JPGE58"/>
+<span class="absolute top-2 right-2 bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2 py-0.5 rounded-full">
+              1 Liter
+            </span>
+</div>
+<div class="space-y-1 mb-3">
+<h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">Huisgemaakte pompoensoep met rode linzen (1 L)</h3>
+<p class="text-xs text-slate-500">Vers bereid op boerderij</p>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-base font-black text-slate-900">€ 7,75</span>
+<button aria-label="Voeg toe aan bestelling" class="w-10 h-10 rounded-xl bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-bold flex items-center justify-center touch-ripple shadow-sm">
+<i class="fa-solid fa-plus text-sm"></i>
+</button>
+</div>
+</div>
+<!-- Product Card 7: Pittige zoete tomaten paprika soeppakketje -->
+<div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-col justify-between hover:shadow-card-hover transition-all duration-200 group">
+<div class="relative bg-red-50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center mb-3">
+<img alt="Pittige zoete tomaten paprika soeppakketje" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxnWyKlyIJjHcaeBjIUUyAzc-VCdZ7vXSPG8r1Am9LMeIp8IgrdIPpDJDXlER15eC8ESKdI9EdIYu3T1TwM8WBxgkZZD0oPjaBARlXGyPwvo2PH5ieb1XYukwcwAobtZl2NFunNCv_N938fNJF1DB4--HOSM75DONkp5Zo3m0dOYTWqlivGBy1n-83hWgcAR1u7bOL6mwHi4I2kaQ9VNB0AkyruMa9tjNJkCNhrUV0"/>
+</div>
+<div class="space-y-1 mb-3">
+<h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">Pittige zoete tomaten paprika soeppakketje (1 L)</h3>
+<p class="text-xs text-slate-500">Inclusief verse kruiden</p>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-base font-black text-slate-900">€ 7,75</span>
+<button aria-label="Voeg toe aan bestelling" class="w-10 h-10 rounded-xl bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-bold flex items-center justify-center touch-ripple shadow-sm">
+<i class="fa-solid fa-plus text-sm"></i>
+</button>
+</div>
+</div>
+<!-- Product Card 8: Verse tomatensaus -->
+<div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-col justify-between hover:shadow-card-hover transition-all duration-200 group">
+<div class="relative bg-red-50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center mb-3">
+<img alt="Verse tomatensaus 1 L" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9qPKeDU6GKvCwvdLgEp_5lnFWYVuBlSAYFJbGjSEN5N6H4XxpPM6kMr9QTKklzOkBaXLmnPDXRNeNmu31IeGP5fS2AG4AquDVGeuTbyduw-RH2PmllWgGL4sPEo0_BfE2gdjew214P7wIWjuuPZQEULbreDluOMBOD-EB5wK7ssBAwYSDWja2Z9uE3A3Gh6SFQYiL3oInxSvUnYKRB-A_40ZKT7k3Xqg_Vw40NGpF"/>
+</div>
+<div class="space-y-1 mb-3">
+<h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">Verse tomatensaus (1 L)</h3>
+<p class="text-xs text-slate-500">Zongerijpt • zonder suikers</p>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-base font-black text-slate-900">€ 8,99</span>
+<button aria-label="Voeg toe aan bestelling" class="w-10 h-10 rounded-xl bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-bold flex items-center justify-center touch-ripple shadow-sm">
+<i class="fa-solid fa-plus text-sm"></i>
+</button>
+</div>
+</div>
+<!-- Product Card 9: Zeeuwse handpeer Conference -->
+<div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-col justify-between hover:shadow-card-hover transition-all duration-200 group">
+<div class="relative bg-lime-50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center mb-3">
+<img alt="Zeeuwse handpeer Conference (1 kilo)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_RREsDA7UymgD-hdmDvjx_QBixqJp75_Yvs34SHW0YqC8IltPYI_Zu0nvECwcgnbtgzAtKMMZBEbK5UXqvdVu3FPaqtEscF6m5ohWXQfqnmhxeJQbtHi28lMm2H3DZiuBgGzX2YTdGFtsAo0URsFYfIZ3YO4ihNg593470YAeal5_ORIFp4SSW1VYeoPOjn1YYUgZVul277WzLpvnegQPxWOLK6ivi9uwPIQvW_qE"/>
+<span class="absolute top-2 right-2 bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2 py-0.5 rounded-full">
+              1 kg
+            </span>
+</div>
+<div class="space-y-1 mb-3">
+<h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">Zeeuwse handpeer Conference (1 kilo)</h3>
+<p class="text-xs text-slate-500">Zoet, sappig &amp; knapperig</p>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-base font-black text-slate-900">€ 2,25</span>
+<button aria-label="Voeg toe aan bestelling" class="w-10 h-10 rounded-xl bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-bold flex items-center justify-center touch-ripple shadow-sm">
+<i class="fa-solid fa-plus text-sm"></i>
+</button>
+</div>
+</div>
+<!-- Product Card 10: Zeeuwse handpeer Doyenné du Comice -->
+<div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-col justify-between hover:shadow-card-hover transition-all duration-200 group">
+<div class="relative bg-amber-50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center mb-3">
+<img alt="Zeeuwse handpeer Doyenné du Comice" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWFgpy53Kr_CVdAp734FtRzU60vQGz9xxV93QOF26lBDf-OEwij1_eayc8v1lFmHct0sEkAtwuhntmW-c6jjstkc_71VhF1n-X1gQhPSbzUALfSUGPnu62Iimnot-2s6iMaN-ZeLQaLGSX3QBxPGeAh7yG2iTmzIbj5o-ZTPTAKtz9chYdkEjN5p0vqN9OfzDe9mtxFkx3mxm0ZEop3Kc-CrkGbVB1qX2nZLS6M24K"/>
+</div>
+<div class="space-y-1 mb-3">
+<h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">Zeeuwse handpeer Doyenné du Comice (4 stuks)</h3>
+<p class="text-xs text-slate-500">Heerlijk aromatisch</p>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-base font-black text-slate-900">€ 2,35</span>
+<button aria-label="Voeg toe aan bestelling" class="w-10 h-10 rounded-xl bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-bold flex items-center justify-center touch-ripple shadow-sm">
+<i class="fa-solid fa-plus text-sm"></i>
+</button>
+</div>
+</div>
+<!-- Product Card 11: Lokale appeltjes (Elstar) -->
+<div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-col justify-between hover:shadow-card-hover transition-all duration-200 group">
+<div class="relative bg-rose-50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center mb-3">
+<img alt="Lokale appeltjes (Elstar)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmVWnpSDmSe53_wcXwh-Oy-JTjggvHJYrFeti5nLHgZrheO7iOr_DmIrxC9-28oThIbgFyj5iwTbH2nXaUvh583d53sKPrsJU4gJKn7wA0VdqOFKqZPIZDboofZZ8IiR7yq6QUw91FMOxsjHjEWC27gkUcppdu4lUjCJDv4HUtvgCUvN5dXyNaV6hLTvPE6PKIBBLgvS8noWJYdk37J57JaKGjzbKH2FD7SSmUIC34"/>
+<span class="absolute top-2 left-2 bg-[#ccff33] text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-md">
+              Lokale Oogst
+            </span>
+</div>
+<div class="space-y-1 mb-3">
+<h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">Lokale appeltjes (Elstar, hand)</h3>
+<p class="text-xs text-slate-500">Friszoet uit Zeeland</p>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-base font-black text-slate-900">€ 1,99</span>
+<button aria-label="Voeg toe aan bestelling" class="w-10 h-10 rounded-xl bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-bold flex items-center justify-center touch-ripple shadow-sm">
+<i class="fa-solid fa-plus text-sm"></i>
+</button>
+</div>
+</div>
+<!-- Product Card 12: Verse Gesneden Rode Kool Extra Pack -->
+<div class="bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-col justify-between hover:shadow-card-hover transition-all duration-200 group">
+<div class="relative bg-purple-50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center mb-3">
+<img alt="Gesneden rode kool 500gr" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFZtWgT3nkLwwN6DD5j0LHp3JW9gcdyx0HHA6a2LvgShzmOzDAEOhcry1Oyoyy0-oRJkChOJ1tuthYclWwm_FzHRc_mupeQ8MnzlhrYbXBklueTLjA7Qre8RRjL8l1ZQSdxj9O1Q1AxlorpKD9hlCV4WQ5yBm6HQZDKMM2EozLsjr2u6CeCm7sDNFbVlr25PJbWQ6ZvN6hOf4y97_wTqKhRfuHmgyZZ2mf8m1czFbm"/>
+<span class="absolute top-2 right-2 bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2 py-0.5 rounded-full">
+              500g
+            </span>
+</div>
+<div class="space-y-1 mb-3">
+<h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">Gesneden rode kool | 500gr</h3>
+<p class="text-xs text-slate-500">Vak 14G • Dagvers</p>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-base font-black text-slate-900">€ 1,89</span>
+<button aria-label="Voeg toe aan bestelling" class="w-10 h-10 rounded-xl bg-[#9ef01a] hover:bg-[#ccff33] text-slate-950 font-bold flex items-center justify-center touch-ripple shadow-sm">
+<i class="fa-solid fa-plus text-sm"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- END: MainCatalogArea -->
+</main>
+<!-- END: MainLayout -->
+<!-- BEGIN: KioskFooterStatus -->
+<footer class="bg-white border-t border-slate-200 mt-auto py-3 px-6" data-purpose="kiosk-hardware-bar">
+<div class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-4 text-xs font-semibold text-slate-500">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1.5 text-slate-700">
+<i class="fa-solid fa-temperature-half text-[#70e000]"></i> Automaat Koeling: <strong>+3.8 °C</strong>
+</span>
+<span class="hidden sm:inline-block text-slate-300">|</span>
+<span class="flex items-center gap-1.5 text-slate-700">
+<i class="fa-solid fa-shield-halved text-[#70e000]"></i> Hygiëne Certificaat Actief
+        </span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-slate-400">ZUPLY Smart Locker System v4.8</span>
+<button class="text-slate-600 hover:text-slate-900 flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-lg">
+<i class="fa-solid fa-headset text-slate-400"></i> Hulp nodig?
+        </button>
+</div>
+</div>
+</footer>
+<!-- END: KioskFooterStatus -->
+<!-- Simple Time Updater Script for Realistic Touch Display -->
+<script data-purpose="time-update">
+    function updateClock() {
+      const clockElement = document.getElementById('kiosk-clock');
+      if (clockElement) {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        clockElement.textContent = `${hours}:${minutes}`;
+      }
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
+  </script>
+</body></html>
