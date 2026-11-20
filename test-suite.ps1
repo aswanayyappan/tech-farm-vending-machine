@@ -290,7 +290,12 @@ $criticalFiles = @(
     "functions\vending\RazorpayService_createOrder.md",
     "functions\vending\RazorpayService_verifySignature.md",
     "functions\vending\Kiosk_executeRazorpayPayment.md",
+    "functions\vending\Kiosk_endUserSession.md",
+    "functions\bin\BinPage4_renderThermalTicketQr.md",
+    "functions\admin\AdminPortal_renderCreamNeonInterface.md",
+    "changes\CHG-20261116-0051-fix-end-session-overhaul-admin-ui-and-thermal-qr.md",
     "PICS\stick_qr_bag.png",
+    "PICS\stick on the plastic image.png",
     "recordings",
     "index.html"
 )
@@ -369,6 +374,15 @@ Assert-Test "run-all.html removed legacy viewBinPage3 section from DOM" (!($runA
 Assert-Test "run-all.html completeBinDeposit routes directly to goToVendingPage3()" ($runAllContent -match 'function completeBinDeposit[\s\S]*?goToVendingPage3\(\)')
 Assert-Test "start-server.ps1 provides /api/v1/health endpoint" ($serverHealthRaw -match '"status":\s*"healthy"' -or (curl.exe -s http://localhost:3000/api/v1/health) -match 'healthy')
 Assert-Test "start-server.ps1 health endpoint reports camera and loadCell calibration" ((curl.exe -s http://localhost:3000/api/v1/health) -match 'HX711' -and (curl.exe -s http://localhost:3000/api/v1/health) -match '320x240')
+
+# CHG-20261116-0051 Assertions (Thermal Ticket Dispenser, Live Held Time & Cream Neon Admin Portal)
+$adminContent = Get-Content (Join-Path $PSScriptRoot "packages\vending-frontend\public\admin.html") -Raw
+Assert-Test "run-all.html Bin Page 4 contains thermal ticket emergence animation" ($runAllContent -match 'thermal-ticket-emerge' -and $runAllContent -match '@keyframes printEmerge')
+Assert-Test "run-all.html Bin Page 4 displays live duration and total held time badges" ($runAllContent -match 'id="binPage4Duration"' -and $runAllContent -match 'id="binPage4HeldSeconds"')
+Assert-Test "run-all.html Bin Page 4 Step 1 links to 'stick on the plastic image.png'" ($runAllContent -match 'PICS/stick on the plastic image\.png')
+Assert-Test "run-all.html viewTerminalStage contains End Session touch button" ($runAllContent -match 'id="viewTerminalStage"[\s\S]*?endUserSession\(''USER_ABORTED''\)')
+Assert-Test "packages/vending-frontend/public/admin.html adopts Cream and Neon design tokens" ($adminContent -match '--bg-main:\s*#faf3dd' -and $adminContent -match '--secondary:\s*#9ef01a')
+Assert-Test "packages/vending-frontend/public/admin.html wires parent returnToPage2 and endUserSession" ($adminContent -match 'handleReturnToKiosk' -and $adminContent -match 'handleEndSession')
 
 Assert-Test "index.html is synchronized with run-all.html" ($runAllContent.Length -eq $indexContent.Length)
 

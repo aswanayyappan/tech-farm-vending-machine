@@ -146,6 +146,13 @@
       background: #faf3dd !important;
       color: #0f2419 !important;
     }
+    body.page1-active .page1-container {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      z-index: 2000 !important;
+      pointer-events: auto !important;
+    }
 
     .master-frame.page1-mode {
       background: transparent !important;
@@ -1488,6 +1495,24 @@
     }
     .animate-paper-feed {
       animation: paperFeed 2.4s ease-in-out infinite;
+    }
+
+    @keyframes printEmerge {
+      0% {
+        transform: translateY(-38px);
+        opacity: 0.25;
+      }
+      60% {
+        transform: translateY(-4px);
+        opacity: 0.92;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    .thermal-ticket-emerge {
+      animation: printEmerge 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     .bin4-container {
@@ -3771,8 +3796,8 @@
 
         <!-- Cards Dual Container -->
         <div class="bin4-grid">
-          <!-- Card 1: GET YOUR QR CODE -->
-          <section class="bin4-card">
+          <!-- Card 1: GET YOUR QR CODE (Authentic Thermal Ticket Dispenser) -->
+          <section class="bin4-card" style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
               <!-- Card Header -->
               <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid rgba(21, 62, 40, 0.1);">
@@ -3781,63 +3806,86 @@
                     A
                   </div>
                   <h2 style="font-size: 16px; font-weight: 900; letter-spacing: 0.5px; color: #0f2c1c; text-transform: uppercase; margin: 0;">
-                    GET YOUR QR CODE
+                    THERMAL QR TICKET DISPENSER
                   </h2>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px; background: rgba(21, 62, 40, 0.08); padding: 4px 10px; border-radius: 20px;">
+                  <span style="width: 7px; height: 7px; border-radius: 50%; background: #9ef01a; box-shadow: 0 0 6px #9ef01a; animation: pulse 1.5s infinite;"></span>
+                  <span style="font-size: 10px; font-weight: 800; color: #153e28; letter-spacing: 0.5px;">PRINT HEAD READY</span>
                 </div>
               </div>
 
-              <!-- Dual Display: QR & Thermal Mini Panel -->
-              <div style="margin-top: 20px; display: flex; flex-direction: row; align-items: center; justify-content: space-around; gap: 16px; background: rgba(250, 243, 221, 0.8); padding: 18px; border-radius: 18px; border: 1px solid rgba(21, 62, 40, 0.1);">
-                <!-- Crisp Dynamic QR Code Display -->
-                <div style="display: flex; flex-direction: column; align-items: center; position: relative;">
-                  <div style="padding: 10px; background: #ffffff; border-radius: 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); border: 2px solid rgba(21, 62, 40, 0.15); position: relative; min-width: 140px; min-height: 140px; display: flex; align-items: center; justify-content: center;">
-                    <div id="binPage4QrMatrix" style="display: flex; align-items: center; justify-content: center; width: 126px; height: 126px;">
-                      <!-- Dynamically rendered scannable SVG from renderBinPage4QrCode() -->
+              <!-- Thermal Hardware Mouth & Dispensing Paper Ticket -->
+              <div style="margin-top: 14px; display: flex; flex-direction: column; align-items: center; width: 100%;">
+                <!-- Hardware Printer Bezel Mouth Slot -->
+                <div style="width: 90%; max-width: 320px; height: 18px; background: #0f2c1c; border-radius: 8px 8px 0 0; border: 2px solid #1e4830; border-bottom: none; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 -4px 12px rgba(0,0,0,0.15); z-index: 2;">
+                  <div style="width: 80%; height: 5px; background: #000000; border-radius: 3px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.9);"></div>
+                  <div class="animate-paper-feed" style="position: absolute; right: 10px; width: 6px; height: 6px; border-radius: 50%; background: #9ef01a; box-shadow: 0 0 6px #9ef01a;"></div>
+                </div>
+
+                <!-- Emerging Thermal Paper Ticket -->
+                <div class="thermal-ticket-emerge" style="width: 88%; max-width: 300px; background: #ffffff; border: 1.5px solid rgba(21, 62, 40, 0.2); border-top: none; box-shadow: 0 10px 25px rgba(0,0,0,0.12); padding: 12px 14px 14px; position: relative; border-radius: 0 0 4px 4px; z-index: 1;">
+                  <!-- Perforated top hint -->
+                  <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; border-top: 2px dashed #94a3b8;"></div>
+
+                  <!-- Ticket Header -->
+                  <div style="text-align: center; border-bottom: 1px dashed #cbd5e1; padding-bottom: 6px; margin-bottom: 8px;">
+                    <div style="font-size: 9px; font-weight: 900; letter-spacing: 1px; color: #153e28; text-transform: uppercase;">
+                      TECH-FARM ECO-DISPOSAL TICKET
                     </div>
-                    <div style="position: absolute; bottom: -8px; left: 0; right: 0; display: flex; justify-content: center;">
-                      <span id="binPage4SessionIdTag" style="background: #153e28; color: #faf3dd; font-size: 9px; font-family: monospace; font-weight: 800; padding: 2px 8px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); letter-spacing: 0.5px;">
+                    <div style="font-size: 8px; color: #64748b; font-weight: 700;">
+                      STATION: SDDS-BIN-01 · AUTOMATIC SENSOR HATCH
+                    </div>
+                  </div>
+
+                  <!-- Live Session Time & Held Duration Badges -->
+                  <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 10px; margin-bottom: 8px;">
+                    <div style="display: flex; flex-direction: column;">
+                      <span style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">SESSION START</span>
+                      <span id="binPage4StartTime" style="font-family: monospace; font-size: 11px; font-weight: 900; color: #0f172a;">--:--:--</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                      <span style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">ACTIVE DURATION</span>
+                      <span id="binPage4Duration" style="font-family: monospace; font-size: 12px; font-weight: 900; color: #059669;">[00:00]</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                      <span style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">TOTAL HELD</span>
+                      <span id="binPage4HeldSeconds" style="background: #153e28; color: #9ef01a; font-family: monospace; font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 4px;">1s</span>
+                    </div>
+                  </div>
+
+                  <!-- Crisp Dynamic QR Code Display -->
+                  <div style="display: flex; flex-direction: column; align-items: center; position: relative; margin: 4px 0;">
+                    <div style="padding: 6px; background: #ffffff; border-radius: 10px; border: 1.5px solid #0f2c1c; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(0,0,0,0.06);">
+                      <div id="binPage4QrMatrix" style="display: flex; align-items: center; justify-content: center; width: 136px; height: 136px;">
+                        <!-- Scannable SVG rendered by renderBinPage4QrCode() -->
+                      </div>
+                    </div>
+                    <div style="margin-top: 5px;">
+                      <span id="binPage4SessionIdTag" style="background: #153e28; color: #faf3dd; font-size: 9px; font-family: monospace; font-weight: 800; padding: 2px 8px; border-radius: 6px; letter-spacing: 0.5px;">
                         ID: SESS-LIVE
                       </span>
                     </div>
                   </div>
-                </div>
 
-                <!-- Divider Line -->
-                <div style="width: 1px; height: 130px; background: rgba(21, 62, 40, 0.1);"></div>
-
-                <!-- Thermal Printer Graphic & Animated Sticker Feed -->
-                <div style="display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 160px;">
-                  <div style="position: relative; width: 90px; height: 90px; background: #0f2c1c; border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(21, 62, 40, 0.2); box-shadow: 0 8px 18px rgba(15, 44, 28, 0.25); overflow: hidden;">
-                    <!-- Printer Slot -->
-                    <div style="position: absolute; top: 18px; width: 60px; height: 5px; background: #1e4830; border-radius: 4px;"></div>
-                    <svg width="40" height="40" style="position: absolute; top: 10px; color: rgba(250, 243, 221, 0.35);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
-                    </svg>
-                    <!-- Dispensing Tag Animation -->
-                    <div class="animate-paper-feed" style="position: absolute; bottom: 4px; width: 52px; height: 42px; background: #ffffff; border-radius: 4px 4px 0 0; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border: 1px solid rgba(21, 62, 40, 0.2); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3px;">
-                      <div style="width: 24px; height: 24px; background: rgba(21, 62, 40, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 3px;">
-                        <svg width="18" height="18" fill="#0f2c1c" viewBox="0 0 24 24">
-                          <rect height="6" width="6" x="2" y="2"></rect>
-                          <rect height="6" width="6" x="16" y="2"></rect>
-                          <rect height="6" width="6" x="2" y="16"></rect>
-                          <rect height="4" width="4" x="10" y="10"></rect>
-                        </svg>
-                      </div>
-                      <div style="width: 32px; height: 2px; background: rgba(21, 62, 40, 0.4); border-radius: 2px;"></div>
+                  <!-- Peeling Instruction Watermark -->
+                  <div style="text-align: center; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #cbd5e1;">
+                    <div style="font-size: 9px; font-weight: 900; color: #0f2c1c; letter-spacing: 0.5px;">
+                      ★ PEEL &amp; STICK ON DIAPER POUCH ★
                     </div>
                   </div>
-                  <!-- Thermal Dispenser Notice -->
-                  <span style="margin-top: 8px; font-size: 11px; font-weight: 900; text-transform: uppercase; color: #153e28; letter-spacing: 0.5px;">Thermal Dispenser</span>
-                  <p style="font-size: 10px; line-height: 1.3; color: rgba(21, 62, 40, 0.7); margin-top: 2px; font-weight: 600;">A peel-and-stick paper QR will print fast below</p>
+
+                  <!-- Perforated Bottom Edge Hint -->
+                  <div style="position: absolute; bottom: -4px; left: 0; right: 0; height: 3px; border-bottom: 2px dashed #94a3b8;"></div>
                 </div>
               </div>
             </div>
 
             <!-- Card Footer Caption -->
-            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(21, 62, 40, 0.1); display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(21, 62, 40, 0.1); display: flex; align-items: center; justify-content: center; gap: 8px;">
               <div style="width: 8px; height: 8px; border-radius: 50%; background: #153e28;"></div>
-              <p style="font-size: 12px; font-weight: 800; color: #0f2c1c; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">
-                GRAB YOUR PRINTED QR TAG
+              <p style="font-size: 11px; font-weight: 800; color: #0f2c1c; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">
+                GRAB YOUR PRINTED THERMAL QR TAG
               </p>
             </div>
           </section>
@@ -3869,7 +3917,7 @@
                   </p>
                   <!-- Graphic: Bag with Hand Sticking Tag -->
                   <div style="width: 100%; height: 110px; background: rgba(255, 255, 255, 0.9); border-radius: 12px; border: 1px solid rgba(21, 62, 40, 0.1); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
-                    <img src="PICS/stick_qr_bag.png" alt="Stick QR on Plastic Instructional Diagram" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+                    <img src="PICS/stick on the plastic image.png" onerror="this.src='PICS/stick_qr_bag.png'" alt="Stick QR on Plastic Instructional Diagram" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
                   </div>
                 </div>
 
@@ -4143,9 +4191,15 @@
        ======================================================================== -->
   <div id="viewTerminalStage" class="viewer-container">
     <div class="viewer-bar">
-      <button class="btn-viewer-back" onclick="returnToPage2()">
-        <span>← Back to Menu</span>
-      </button>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button class="btn-viewer-back" onclick="returnToPage2()">
+          <span>← Back to Menu</span>
+        </button>
+        <button onclick="endUserSession('USER_ABORTED')" class="kiosk-btn-session-end" title="Cancel & Return to Welcome Screen" style="padding: 6px 14px; border-radius: 10px; background: #fee2e2; border: 1.5px solid #fca5a5; color: #b91c1c; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; touch-action: manipulation;">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span>END SESSION</span>
+        </button>
+      </div>
 
       <div style="font-size: 13px; font-weight: 800; color: #f8fafc;" id="lblViewerTitle">
         Smart Diaper Terminal
@@ -4938,101 +4992,165 @@
     });
 
     function endUserSession(reason = 'USER_ABORTED') {
-      finalizeUserSessionRecording(reason);
+      try {
+        finalizeUserSessionRecording(reason);
+      } catch (err) {
+        console.warn('finalizeUserSessionRecording warning:', err);
+      }
 
-      if (sessionTimerInterval) {
-        clearInterval(sessionTimerInterval);
-        sessionTimerInterval = null;
-      }
-      if (sessionInactivityTimer) {
-        clearTimeout(sessionInactivityTimer);
-        sessionInactivityTimer = null;
-      }
+      try {
+        if (sessionTimerInterval) {
+          clearInterval(sessionTimerInterval);
+          sessionTimerInterval = null;
+        }
+      } catch (err) {}
+
+      try {
+        if (sessionInactivityTimer) {
+          clearTimeout(sessionInactivityTimer);
+          sessionInactivityTimer = null;
+        }
+      } catch (err) {}
+
+      try {
+        if (typeof binPage4TimerInterval !== 'undefined' && binPage4TimerInterval) {
+          clearInterval(binPage4TimerInterval);
+          binPage4TimerInterval = null;
+        }
+      } catch (err) {}
 
       const durationSeconds = sessionStartTime ? Math.floor((Date.now() - sessionStartTime.getTime()) / 1000) : 0;
       const terminatedId = currentSessionId;
       const endTime = new Date().toISOString();
 
       if (terminatedId) {
-        fetch('/api/v1/sessions/end', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sessionId: terminatedId,
-            endTime: endTime,
-            durationSeconds: durationSeconds,
-            reason: reason
-          })
-        }).catch(() => {});
+        try {
+          fetch('/api/v1/sessions/end', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sessionId: terminatedId,
+              endTime: endTime,
+              durationSeconds: durationSeconds,
+              reason: reason
+            })
+          }).catch(() => {});
+        } catch (err) {}
       }
 
       currentSessionId = '';
       sessionStartTime = null;
 
       // Capture Optical Snapshot at Session Termination
-      captureSessionSnapshot(`SESSION_END_${reason}`);
+      try {
+        captureSessionSnapshot(`SESSION_END_${reason}`);
+      } catch (err) {}
 
       // Revert Camera Badge & Hide End Session Button
-      const dot = document.getElementById('cameraLensDot');
-      const statusText = document.getElementById('cameraStatusText');
-      const timerText = document.getElementById('sessionTimerText');
-      const btnEnd = document.getElementById('btnEndSession');
+      try {
+        const dot = document.getElementById('cameraLensDot');
+        const statusText = document.getElementById('cameraStatusText');
+        const timerText = document.getElementById('sessionTimerText');
+        const btnEnd = document.getElementById('btnEndSession');
 
-      if (dot) dot.classList.remove('recording');
-      if (statusText) statusText.innerText = 'CAM LIVE • MONITORING';
-      if (timerText) {
-        timerText.style.display = 'none';
-        timerText.innerText = '[00:00]';
-      }
-      if (btnEnd) btnEnd.style.display = 'none';
+        if (dot) dot.classList.remove('recording');
+        if (statusText) statusText.innerText = 'CAM LIVE • MONITORING';
+        if (timerText) {
+          timerText.style.display = 'none';
+          timerText.innerText = '[00:00]';
+        }
+        if (btnEnd) btnEnd.style.display = 'none';
+      } catch (err) {}
 
       // Revert Floating HUD
-      const hudDot = document.getElementById('hudRecDot');
-      if (hudDot) hudDot.classList.remove('recording');
-      const hudTitle = document.getElementById('hudTitleText');
-      if (hudTitle) hudTitle.innerText = 'OPTICAL SENSOR 01';
+      try {
+        const hudDot = document.getElementById('hudRecDot');
+        if (hudDot) hudDot.classList.remove('recording');
+        const hudTitle = document.getElementById('hudTitleText');
+        if (hudTitle) hudTitle.innerText = 'OPTICAL SENSOR 01';
+      } catch (err) {}
 
       // Reset Diaper States
-      ['small', 'medium', 'large', 'xl', 'adult'].forEach(k => {
-        vendingState[k] = 0;
-        const vEl = document.getElementById('vendingCount' + (k === 'xl' ? 'XL' : (k.charAt(0).toUpperCase() + k.slice(1))));
-        if (vEl) vEl.innerText = '0';
+      try {
+        if (typeof vendingState !== 'undefined' && typeof binState !== 'undefined') {
+          ['small', 'medium', 'large', 'xl', 'adult'].forEach(k => {
+            vendingState[k] = 0;
+            const vEl = document.getElementById('vendingCount' + (k === 'xl' ? 'XL' : (k.charAt(0).toUpperCase() + k.slice(1))));
+            if (vEl) vEl.innerText = '0';
 
-        binState[k] = 0;
-        const bEl = document.getElementById('binCount' + (k === 'xl' ? 'XL' : (k.charAt(0).toUpperCase() + k.slice(1))));
-        if (bEl) bEl.innerText = '0';
-      });
-      binState.dontKnow = false;
-      const radio = document.getElementById('binDontKnowRadio');
-      if (radio) radio.classList.remove('active');
+            binState[k] = 0;
+            const bEl = document.getElementById('binCount' + (k === 'xl' ? 'XL' : (k.charAt(0).toUpperCase() + k.slice(1))));
+            if (bEl) bEl.innerText = '0';
+          });
+          binState.dontKnow = false;
+          const radio = document.getElementById('binDontKnowRadio');
+          if (radio) radio.classList.remove('active');
+        }
+      } catch (err) {}
 
-      updateVendingSubtotal();
+      try {
+        if (typeof updateVendingSubtotal === 'function') updateVendingSubtotal();
+      } catch (err) {}
       currentDiscountPct = 0;
       appliedVoucherCode = '';
 
-      const promoInput = document.getElementById('vendingPage4PromoInput');
-      if (promoInput) promoInput.value = '';
-      const promoFb = document.getElementById('vendingPage4PromoFeedback');
-      if (promoFb) promoFb.style.display = 'none';
+      try {
+        const promoInput = document.getElementById('vendingPage4PromoInput');
+        if (promoInput) promoInput.value = '';
+        const promoFb = document.getElementById('vendingPage4PromoFeedback');
+        if (promoFb) promoFb.style.display = 'none';
+      } catch (err) {}
 
-      // Reset Neon Cart & Voucher Engine
-      neonCartItems = [];
-      renderNeonBasket();
+      // Reset Neon Cart & Voucher Engine safely
+      try {
+        if (typeof neonCartItems !== 'undefined') {
+          neonCartItems = [];
+          if (typeof renderNeonBasket === 'function') renderNeonBasket();
+        }
+      } catch (err) {}
       window.binDepositVoucherPercent = 0;
       window.binDepositVoucherCode = '';
       window.latestBinVoucherCode = '';
-      const neonVInput = document.getElementById('neonRedeemCodeInput');
-      if (neonVInput) neonVInput.value = '';
-      const neonVFb = document.getElementById('neonVoucherFeedback');
-      if (neonVFb) neonVFb.style.display = 'none';
-      const neonVRow = document.getElementById('neonVoucherRow');
-      if (neonVRow) neonVRow.style.display = 'none';
+
+      try {
+        const neonVInput = document.getElementById('neonRedeemCodeInput');
+        if (neonVInput) neonVInput.value = '';
+        const neonVFb = document.getElementById('neonVoucherFeedback');
+        if (neonVFb) neonVFb.style.display = 'none';
+        const neonVRow = document.getElementById('neonVoucherRow');
+        if (neonVRow) neonVRow.style.display = 'none';
+      } catch (err) {}
+
+      // Clear embedded viewer iframe if active
+      try {
+        const terminalIframe = document.getElementById('terminalIframe');
+        if (terminalIframe) terminalIframe.src = 'about:blank';
+      } catch (err) {}
 
       // Hide all modals & success windows
-      closeKioskSuccessWindowClean();
-      closeSettingsDrawer();
+      try {
+        if (typeof closeKioskSuccessWindowClean === 'function') closeKioskSuccessWindowClean();
+      } catch (err) {}
+      try {
+        if (typeof closeSettingsDrawer === 'function') closeSettingsDrawer();
+      } catch (err) {}
 
-      goToPage1();
+      // Navigate cleanly to Page 1
+      try {
+        goToPage1();
+      } catch (err) {
+        console.error('Error in goToPage1 fallback:', err);
+        hideAllViews();
+        document.body.classList.add('page1-active');
+        const p1 = document.getElementById('viewPage1');
+        if (p1) {
+          p1.style.setProperty('display', 'flex', 'important');
+          p1.style.setProperty('visibility', 'visible', 'important');
+          p1.style.setProperty('opacity', '1', 'important');
+          p1.style.setProperty('z-index', '2000', 'important');
+          p1.style.setProperty('pointer-events', 'auto', 'important');
+        }
+      }
     }
 
     const ALL_KIOSK_VIEW_IDS = [
@@ -5092,6 +5210,20 @@
       showView('viewPage1');
       currentTerminalMode = 'home';
 
+      const p1 = document.getElementById('viewPage1');
+      if (p1) {
+        p1.style.setProperty('display', 'flex', 'important');
+        p1.style.setProperty('visibility', 'visible', 'important');
+        p1.style.setProperty('opacity', '1', 'important');
+        p1.style.setProperty('z-index', '2000', 'important');
+        p1.style.setProperty('pointer-events', 'auto', 'important');
+      }
+
+      try {
+        const terminalIframe = document.getElementById('terminalIframe');
+        if (terminalIframe) terminalIframe.src = 'about:blank';
+      } catch (err) {}
+
       const dot = document.getElementById('cameraLensDot');
       const statusText = document.getElementById('cameraStatusText');
       const timerText = document.getElementById('sessionTimerText');
@@ -5114,6 +5246,10 @@
       if (sessionInactivityTimer) {
         clearTimeout(sessionInactivityTimer);
         sessionInactivityTimer = null;
+      }
+      if (typeof binPage4TimerInterval !== 'undefined' && binPage4TimerInterval) {
+        clearInterval(binPage4TimerInterval);
+        binPage4TimerInterval = null;
       }
       currentSessionId = '';
       sessionStartTime = null;
@@ -6708,22 +6844,59 @@
       }
     }
 
+    let binPage4TimerInterval = null;
+
     function renderBinPage4QrCode() {
-      var container = document.getElementById('binPage4QrMatrix');
+      const container = document.getElementById('binPage4QrMatrix');
       if (!container) return;
 
-      var sess = currentSessionId || ("SESS-" + Date.now().toString(36).toUpperCase());
-      var elapsedSec = sessionStartTime ? Math.max(1, Math.round((new Date() - sessionStartTime) / 1000)) : 1;
-      var totalDiapers = (binState.small || 0) + (binState.medium || 0) + (binState.large || 0) + (binState.xl || 0) + (binState.adult || 0);
-      var diaperBreakdown = binState.dontKnow ? "UNKNOWN" : ("S:" + binState.small + ",M:" + binState.medium + ",L:" + binState.large + ",XL:" + binState.xl + ",A:" + binState.adult);
-      var token = "TKN-" + Date.now().toString(36).toUpperCase();
+      if (binPage4TimerInterval) {
+        clearInterval(binPage4TimerInterval);
+        binPage4TimerInterval = null;
+      }
 
-      var payload = "SDDS-DEPOSIT\nID:" + sess + "\nTOKEN:" + token + "\nDIAPERS:" + diaperBreakdown + "\nCOUNT:" + totalDiapers + "\nCAM:REC_ACTIVE";
+      function updateBinPage4Ticket() {
+        const sess = currentSessionId || ("SESS-" + Date.now().toString(36).toUpperCase());
+        const startStr = sessionStartTime ? sessionStartTime.toTimeString().substring(0, 8) : new Date().toTimeString().substring(0, 8);
+        const elapsedSec = sessionStartTime ? Math.max(1, Math.round((new Date() - sessionStartTime) / 1000)) : 1;
+        const mm = Math.floor(elapsedSec / 60).toString().padStart(2, '0');
+        const ss = (elapsedSec % 60).toString().padStart(2, '0');
+        const durationFormatted = `[${mm}:${ss}]`;
 
-      container.innerHTML = generateScannableQrSvg(payload, 126);
+        const totalDiapers = (binState.small || 0) + (binState.medium || 0) + (binState.large || 0) + (binState.xl || 0) + (binState.adult || 0);
+        const diaperBreakdown = binState.dontKnow ? "UNKNOWN" : ("S:" + binState.small + ",M:" + binState.medium + ",L:" + binState.large + ",XL:" + binState.xl + ",A:" + binState.adult);
+        const token = "TKN-" + Date.now().toString(36).toUpperCase();
 
-      var sessTag = document.getElementById('binPage4SessionIdTag');
-      if (sessTag) sessTag.innerText = "ID: " + sess;
+        const payload = "SDDS-DEPOSIT\nID:" + sess + "\nTOKEN:" + token + "\nSTART:" + startStr + "\nDURATION:" + durationFormatted + "\nHELD_SEC:" + elapsedSec + "\nDIAPERS:" + diaperBreakdown + "\nCOUNT:" + totalDiapers + "\nSTATION:BIN-01";
+
+        container.innerHTML = generateScannableQrSvg(payload, 136);
+
+        const sessTag = document.getElementById('binPage4SessionIdTag');
+        if (sessTag) sessTag.innerText = "ID: " + sess;
+
+        const startEl = document.getElementById('binPage4StartTime');
+        if (startEl) startEl.innerText = startStr;
+
+        const durEl = document.getElementById('binPage4Duration');
+        if (durEl) durEl.innerText = durationFormatted;
+
+        const heldEl = document.getElementById('binPage4HeldSeconds');
+        if (heldEl) heldEl.innerText = `${elapsedSec}s`;
+      }
+
+      // Initial ticket render
+      updateBinPage4Ticket();
+
+      // Live interval: update duration & held time every second while on Bin Page 4
+      binPage4TimerInterval = setInterval(() => {
+        const view = document.getElementById('viewBinPage4');
+        if (view && view.classList.contains('kiosk-view-active')) {
+          updateBinPage4Ticket();
+        } else {
+          clearInterval(binPage4TimerInterval);
+          binPage4TimerInterval = null;
+        }
+      }, 1000);
     }
 
     function renderVendingPage3QrCode() {

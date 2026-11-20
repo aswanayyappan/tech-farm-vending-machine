@@ -203,8 +203,12 @@
       <span class="badge-v5">SDDS V5</span>
       <h1 style="font-size: 18px; font-weight: 800;">Central Admin & Telemetry Hub</h1>
     </div>
-    <div style="font-size: 12px; color: var(--text-muted);">
-      Terminal: <strong style="color: #fff;">PORTAL-V5-MAIN</strong>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <button type="button" class="btn-action" onclick="if(window.parent && window.parent.returnToPage2) { window.parent.returnToPage2(); } else { window.location.href='../../../run-all.html'; }">← Back to Menu</button>
+      <button type="button" class="btn-action" style="background:#fee2e2; border-color:#fca5a5; color:#b91c1c; font-weight:800;" onclick="if(window.parent && window.parent.endUserSession) { window.parent.endUserSession('ADMIN_EXIT'); } else { window.location.href='../../../run-all.html'; }">END SESSION</button>
+      <div style="font-size: 12px; color: var(--text-muted); margin-left: 6px;">
+        Terminal: <strong style="color: #fff;">PORTAL-V5-MAIN</strong>
+      </div>
     </div>
   </header>
 
