@@ -5895,6 +5895,13 @@
 
     // Return to Page 2
     function returnToPage2() {
+      const stage = document.getElementById('viewTerminalStage');
+      if (stage) {
+        const viewerBar = stage.querySelector('.viewer-bar');
+        if (viewerBar) {
+          viewerBar.style.display = 'flex';
+        }
+      }
       showView('viewPage2');
       currentTerminalMode = 'menu';
     }
@@ -8244,6 +8251,15 @@
       const title = document.getElementById('lblViewerTitle');
       const verBadge = document.getElementById('badgeActiveVersion');
       const content = document.getElementById('viewerContent');
+      const viewerBar = stage ? stage.querySelector('.viewer-bar') : null;
+
+      // Clean Admin Portal Isolation: When accessing the Admin Panel, hide the simulator viewer bar
+      // so admin.html renders cleanly full-screen with its own integrated header and controls
+      if (mode === 'admin') {
+        if (viewerBar) viewerBar.style.display = 'none';
+      } else {
+        if (viewerBar) viewerBar.style.display = 'flex';
+      }
 
       verBadge.innerText = (currentSystemVersion === 'v5') ? 'V5 PRD BASELINE' : 'V1 DIRECT DISPOSAL';
       verBadge.style.background = (currentSystemVersion === 'v5') ? '#0284c7' : '#059669';

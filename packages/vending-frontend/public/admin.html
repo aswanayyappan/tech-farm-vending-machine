@@ -648,15 +648,15 @@
     <div class="brand-block">
       <div class="brand-badge">SDDS ADMIN</div>
       <div>
-        <h1 class="brand-title">Vending Machine Control Center</h1>
-        <p style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Unit #VM-KGP-01 · IIT Kharagpur Hub</p>
+        <h1 class="brand-title">SDDS Dual-Terminal Administrator &amp; Telemetry Hub</h1>
+        <p style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Smart Diaper Collection Bin &bull; Neon Diaper Vending &bull; Cloud Synchronization</p>
       </div>
     </div>
 
     <div class="header-right">
-      <div class="status-badge">
+      <div class="status-badge" style="background-color: rgba(16, 185, 129, 0.12); border-color: #10b981;">
         <div class="status-dot"></div>
-        <span>CONTROLLER CONNECTED</span>
+        <span id="badgeCloudSync">CLOUD REPLICATION STABLE</span>
       </div>
       <button type="button" class="btn-link" onclick="handleReturnToKiosk()">← Back to Menu</button>
       <button type="button" class="btn-link btn-end-session" onclick="handleEndSession()">END SESSION</button>
@@ -703,18 +703,25 @@
           <div class="kpi-sub">Smart recovery discount incentives</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-title">ESP32 Telemetry</div>
-          <div class="kpi-value" style="font-size: 26px; color: #059669;">ONLINE</div>
-          <div class="kpi-sub">Heartbeat: 12ms latency</div>
+          <div class="kpi-title">Cloud Outbox Queue</div>
+          <div class="kpi-value" style="color: #0284c7;"><span id="kpiOutboxPending">0</span> <span style="font-size: 16px; font-weight: 700; color: var(--text-muted);">pending</span></div>
+          <div class="kpi-sub" style="color: #059669;">Circuit Breaker: CLOSED (Healthy)</div>
         </div>
       </div>
 
       <div class="panel">
         <div class="panel-header">
-          <h2 class="panel-title">Active System Alerts &amp; Diagnostics</h2>
-          <button class="btn-action" onclick="refreshMetrics()">Refresh Status</button>
+          <h2 class="panel-title">Active System Alerts &amp; Cloud Synchronization</h2>
+          <div style="display: flex; gap: 8px;">
+            <button id="btnTriggerSync" class="btn-action" style="background: #0f2c1c; color: #9ef01a; border-color: #9ef01a;" onclick="triggerCloudSyncPush()">⚡ Sync Now to Cloud</button>
+            <button class="btn-action" onclick="refreshMetrics()">Refresh Status</button>
+          </div>
         </div>
         <div id="alertList" style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="padding: 12px 16px; background: rgba(14, 165, 233, 0.12); border-left: 4px solid #0284c7; border-radius: 8px; font-size: 13.5px; font-weight: 700; color: #0369a1; display: flex; justify-content: space-between; align-items: center;">
+            <span><i class="fa-solid fa-cloud-arrow-up" style="margin-right: 8px;"></i> Cloud Replication Engine: Local outbox connected to central PostgreSQL 16 store with Redis 7.2 Redlock.</span>
+            <span style="font-size: 11px; background: #0284c7; color: #fff; padding: 2px 8px; border-radius: 4px;">ACTIVE</span>
+          </div>
           <div style="padding: 12px 16px; background: rgba(245, 158, 11, 0.12); border-left: 4px solid #f59e0b; border-radius: 8px; font-size: 13.5px; font-weight: 700; color: #92400e;">
             Channel SLOT_A2 (MamyPoko Size M): Stock at 2 units. Recommended refill (+8 packs).
           </div>
@@ -1152,11 +1159,49 @@
           }
         }
 
+        // Fetch Cloud Synchronization & Outbox Queue Status
+        const resSync = await fetch(`${API_BASE}/api/v1/sync/status`).catch(() => null);
+        if (resSync && resSync.ok) {
+          const sJson = await resSync.json();
+          if (document.getElementById('kpiOutboxPending')) {
+            document.getElementById('kpiOutboxPending').innerText = sJson.pendingCount || 0;
+          }
+          if (document.getElementById('badgeCloudSync')) {
+            document.getElementById('badgeCloudSync').innerText = sJson.circuitBreaker === 'CLOSED' ? 'CLOUD REPLICATION STABLE' : 'CLOUD SYNC OFFLINE';
+          }
+        }
+
         renderOrders();
       } catch (err) {
         console.warn('Backend loadData error (using local cache):', err);
         renderSlots();
         renderOrders();
+      }
+    }
+
+    // Trigger Edge Cloud Sync Push
+    async function triggerCloudSyncPush() {
+      const btn = document.getElementById('btnTriggerSync');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = 'Syncing to Cloud...';
+      }
+      try {
+        const res = await fetch(`${API_BASE}/api/v1/sync/push`, { method: 'POST' });
+        if (res.ok) {
+          const json = await res.json();
+          logTerminal(`[CLOUD SYNC] Batch pushed successfully. Synced: ${json.syncedCount} events | Token: ${json.ackToken}`);
+          await loadDataFromBackend();
+        } else {
+          logTerminal(`[CLOUD SYNC] Cloud sync request returned status ${res.status}`);
+        }
+      } catch (e) {
+        logTerminal(`[CLOUD SYNC] Network error pushing outbox: ${e.message}`);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = '⚡ Sync Now to Cloud';
+        }
       }
     }
 
