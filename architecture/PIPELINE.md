@@ -1,224 +1,428 @@
-# SDDS End-to-End System Pipeline & Architecture Specification
+# SDDS Software System Architecture & Enterprise Pipeline Specification
 
-> **Document Version**: 2.0.0  
-> **Target System**: Smart Diaper Disposal System (SDDS) Dual-Kiosk Platform  
-> **Scope**: Smart Diaper Collection Bin, Optical Computer Vision Scanner, HX711 Load Cell, Dispensing Vending Machine, Razorpay UPI Gateway, Local Storage, and Central Admin Portal.
+> **Document Version**: 3.0.0  
+> **Target Systems**: Smart Diaper Disposal System (SDDS) Dual-Kiosk Platform, Cloud Backend, Redis Cache, API Gateway, Payment Infrastructure, and Central Admin Portal.  
+> **Scope**: Pure Software Architecture, Microservices, Caching Layer, Persistence Engine, Real-time Synchronization, and Security Boundaries.
 
 ---
 
-## 1. Executive Pipeline Architecture
+## 1. Global Software System Architecture & Integration
 
-The SDDS Dual-Kiosk operates as a tightly integrated, deterministic cyber-physical system. The entire physical-to-digital lifecycle consists of **8 deterministic pipeline stages**:
+The SDDS platform is architected as an event-driven, distributed kiosk software architecture designed for sub-millisecond edge response, high availability, zero memory leaks, and seamless cloud synchronization.
 
 ```mermaid
 flowchart TD
-    subgraph STAGE_1 ["Stage 1: Bin Waste Intake & Tag Printing"]
-        A["Customer Selects Diaper Size/Type"] --> B["Pure-JS ISO/IEC 18004 Engine"]
-        B --> C["Thermal Printer: Adhesive QR Emerges with Session & Held Timer"]
+    subgraph CLIENT_TIER ["1. Client Kiosk UI Tier (Touchscreen Web Runtime)"]
+        UI_MAIN["Dual-Kiosk Single Page Application (HTML5 / Next.js / TypeScript)"]
+        UI_RTC["WebRTC 320x240 @ 10fps Surveillance Stream Encoder"]
+        UI_SYNC["BroadcastChannel('sdds_realtime_sync') Cross-Tab Bus"]
+        UI_CACHE["LocalStorage Offline Fallback State Cache"]
     end
 
-    subgraph STAGE_2 ["Stage 2: Dedicated Optical QR & CV Verification"]
-        C --> D["Action: SCAN THE QR CODE →"]
-        D --> E["viewBinScanPage: Live Camera Viewfinder (320x240 @ 10fps)"]
-        E --> F["Optical Reticle & Animated Laser Sweep"]
-        F --> G["Optical Matching / Fast 'Fake Accept' Bypass"]
-        G --> H["✓ Cryptographic Match • Solenoid Energized • Hatch Unsealed"]
+    subgraph GATEWAY_TIER ["2. API Gateway & Edge Reverse Proxy Tier"]
+        GW_PROXY["Reverse Proxy & Load Balancer (Port 3000 / Nginx / Express)"]
+        GW_SEC["TLS 1.3 Termination & Request Sanitization (Zod Schemas)"]
+        GW_RATE["Token-Bucket Rate Limiter & Anti-DDoS Filter"]
     end
 
-    subgraph STAGE_3 ["Stage 3: HX711 Load Cell Tare & Mass Weighing"]
-        H --> I["Hatch Door Unlatches"]
-        I --> J["Customer Drops Diapers on Scale Tray"]
-        J --> K["HX711 24-bit ADC Samples 0g → 420g with Anti-Jitter Filtering"]
-        K --> L["Mass Stabilized & Intake Door Auto-Sealed"]
+    subgraph CACHE_TIER ["3. In-Memory Cache & Pub/Sub Tier (Redis)"]
+        REDIS_SESS["Redis Session & QR Token Store (TTL Expiry)"]
+        REDIS_BUS["Redis Pub/Sub Realtime Cross-Kiosk Event Bus"]
+        REDIS_HOT["Hot Inventory & Concurrent Lock Manager (Redlock)"]
     end
 
-    subgraph STAGE_4 ["Stage 4: Dynamic Eco-Voucher Minting"]
-        L --> M["Formula Engine: min(25%, 5% + floor((mass - 50) / 50))"]
-        M --> N["Mint Alphanumeric Voucher: ECO-20-XXXX"]
-        N --> O["POST /api/v1/bin/disposal (Local State & Server Persist)"]
+    subgraph MICROSERVICES_TIER ["4. Core Application Microservices Tier"]
+        SVC_REWARD["Disposal & Dynamic Reward Engine (Formula & Minting)"]
+        SVC_INV["Catalog & Slot Inventory Management Service"]
+        SVC_ORDER["Order & Dispensing Lifecycle State Machine"]
+        SVC_SURV["Surveillance Chunk Ingestion & Transcoding Service"]
     end
 
-    subgraph STAGE_5 ["Stage 5: Dual-Kiosk Secure Voucher Handover"]
-        O --> P["CTA: TRANSFER REWARD TO VENDING MACHINE (20% OFF) →"]
-        P --> Q["BroadcastChannel('sdds_realtime_sync')"]
-        Q --> R["Neon Vending Screen: Voucher Pre-Filled & 20% Auto-Applied"]
+    subgraph DB_TIER ["5. Database & Persistence Tier (MongoDB / PostgreSQL)"]
+        DB_PRIMARY["Primary ACID Transactional Database (PostgreSQL / MongoDB)"]
+        DB_LOCAL["Edge Atomic Mutex State Engine (data/sdds-state.json)"]
     end
 
-    subgraph STAGE_6 ["Stage 6: Razorpay UPI Payment Gateway"]
-        R --> S["Checkout: Customer selects UPI QR / Card"]
-        S --> T["POST /api/v1/payments/razorpay/create-order"]
-        T --> U["Dynamic UPI QR Generated (Paise conversion)"]
-        U --> V["HMAC SHA-256 Webhook Verification on Payment"]
+    subgraph PAYMENT_TIER ["6. Payment Gateway Integration Tier"]
+        PG_RZP["Razorpay UPI Dynamic QR / Order Engine"]
+        PG_STRIPE["Stripe Elements / PaymentIntent Engine"]
+        PG_WEBHOOK["HMAC SHA-256 Webhook Cryptographic Verification"]
     end
 
-    subgraph STAGE_7 ["Stage 7: GPIO Helical Dispenser Stepper Motors"]
-        V --> W["Hardware Driver Energizes Steppers (Slots A1–B4)"]
-        W --> X["Helical Spiral Rotates 360° to Drop Diaper Pack"]
-        X --> Y["High-Speed IR Beam Break Confirms Physical Drop"]
+    subgraph CLOUD_TIER ["7. Cloud Ingestion & Object Storage Tier"]
+        CLOUD_S3["AWS S3 / Cloudflare R2 Optical Video Blob Storage"]
+        CLOUD_TELEMETRY["MQTT / WebSocket Cloud Telemetry Forwarder"]
     end
 
-    subgraph STAGE_8 ["Stage 8: Local Storage & Central Admin Sync"]
-        Y --> Z["POST /api/v1/recordings/chunk (60s chunks saved to recordings/)"]
-        Z --> AA["Atomic State Commit in data/sdds-state.json"]
-        AA --> AB["Central Admin Portal (admin.html): Unified Audit Ledger"]
+    subgraph ADMIN_TIER ["8. Central Admin & Observability Tier"]
+        ADM_PORTAL["Central Admin Web Portal (admin.html Unified Ledger)"]
+        ADM_PROM["Prometheus Metrics (/api/v1/metrics) & Health (/health)"]
+        ADM_GRAF["Grafana Operational Telemetry Dashboards"]
     end
+
+    %% Tier Connections
+    CLIENT_TIER -->|HTTPS / WSS| GATEWAY_TIER
+    GATEWAY_TIER -->|Sub-millisecond TCP| CACHE_TIER
+    GATEWAY_TIER -->|Internal REST / gRPC| MICROSERVICES_TIER
+    MICROSERVICES_TIER <-->|Read / Write / PubSub| CACHE_TIER
+    MICROSERVICES_TIER -->|ACID Transactions| DB_TIER
+    MICROSERVICES_TIER -->|REST API / Webhooks| PAYMENT_TIER
+    MICROSERVICES_TIER -->|Chunked Multipart Upload| CLOUD_TIER
+    MICROSERVICES_TIER -->|Audit Events & Telemetry| ADMIN_TIER
+    DB_TIER -->|Change Streams / CDC| ADMIN_TIER
 ```
 
 ---
 
-## 2. Stage-by-Stage Detailed Breakdown
-
-### Stage 1: Bin Waste Intake & Thermal Tag Generation
-- **Upstream Caller**: Customer touchscreen interaction on `viewPage2` selecting "Smart Diaper Collection Bin", followed by diaper size and quantity specification on `viewBinPage4`.
-- **Hardware Peripherals**:
-  - Embedded thermal printer mechanism with paper feed motor.
-- **Software Logic**:
-  - Native JavaScript QR matrix generator produces pure SVG ISO/IEC 18004 2D matrix.
-  - Generates unique Session ID (`SESS-XXXX`) and adhesive ticket token (`TKN-XXXX`).
-  - Measures user session elapsed time and total paper held duration in seconds (`binPage4HeldSeconds`).
-  - Animates realistic thermal ticket emergence (`@keyframes printEmerge`).
-- **REST Endpoints**:
-  - `POST /api/v1/sessions/start` with payload `{ terminal: 'BIN', timestamp: ISO8601 }`.
+## 2. Individual Subsystem Pipelines (Deep-Dive Specifications)
 
 ---
 
-### Stage 2: Dedicated Optical QR & Computer Vision Verification Screen
-- **Upstream Caller**: Customer taps `SCAN THE QR CODE →` on Bin Page 4.
-- **Kiosk View**: Dedicated full-screen view `#viewBinScanPage` (`goToBinScanPage()`).
-- **Hardware Peripherals**:
-  - Optical USB/MIPI CMOS camera aperture located adjacent to the bin intake hatch.
-  - 12V DC Solenoid door strike latch.
-- **Software Logic**:
-  - Webcam stream bound to high-visibility `<video id="binScanCameraFeed">` with CSS mirror transform (`scaleX(-1)`).
-  - Stream constrained to low memory footprint: 320×240 resolution @ 10fps (90 kbps).
-  - Vertical laser scanline sweep animation (`@keyframes laserSweep`) within corner targeting reticles.
-  - Optical computer vision decoder detects ticket barcode/QR tag.
-  - **Client Demo & Test Feature**: Includes high-contrast `[⚡ FAKE ACCEPT / SIMULATE SCAN QR]` touch button for rapid one-touch verification.
-  - Upon verification: Status flashes green `✓ TAG VERIFIED • SOLENOID ENERGIZED`, actuates solenoid, and transitions smoothly to Stage 3.
+### Pipeline A: Client Kiosk Touch UI & Media Capture Pipeline
+
+#### 1. Architecture & Operational Rationale
+Operates directly on commercial touchscreen hardware (1920×1080 / 1280×800 touch kiosks). Must provide deterministic state machines, instant tap feedback, zero memory leaks, and background optical surveillance streaming.
+
+```mermaid
+flowchart LR
+    Touch["Touch Input Event"] --> StateMachine["Kiosk State Machine"]
+    StateMachine --> DOMRenderer["Atomic View Switcher (showView)"]
+    Camera["Webcam Device"] --> CanvasCapture["320x240 Canvas Stream"]
+    CanvasCapture --> MediaRecorder["MediaRecorder (WebM / MP4 @ 90kbps)"]
+    MediaRecorder --> ChunkBuffer["60-Second Video Slices"]
+    ChunkBuffer --> Base64Encoder["Base64 Stream Pipeline"]
+    Base64Encoder --> RESTPost["POST /api/v1/recordings/chunk"]
+```
+
+#### 2. Key Architectural Components
+- **Deterministic State Machine**: Mutually-exclusive views (`viewPage1`, `viewPage2`, `viewBinPage4`, `viewBinScanPage`, `viewBinWeightPage`, `viewVendingPage3`, `viewVendingPage4`, `viewServerProcessing`) governed by atomic `showView(viewId)` ensuring zero DOM overlap.
+- **Ultra-Low-Footprint Optical Surveillance**:
+  - Resolution locked to `320×240` at `10fps` (target bitrate: `90 kbps`).
+  - Slices recorded video into 60-second chunks using `MediaRecorder.ondataavailable`.
+  - Zero memory accumulation: frames streamed directly to the backend.
+- **Cross-Dashboard Realtime Synchronization**:
+  - `BroadcastChannel('sdds_realtime_sync')` enables instant multi-window synchronization between the customer kiosk and operator admin portal.
 
 ---
 
-### Stage 3: HX711 24-bit ADC Load Cell Tare & Mass Weighing
-- **Upstream Caller**: Intake hatch solenoid release event.
-- **Hardware Peripherals**:
-  - 4-wire strain gauge load cell mounted beneath stainless steel intake tray.
-  - HX711 24-bit Analog-to-Digital Converter (ADC) chip with dual-channel differential inputs.
-- **Software Logic**:
-  - Automatic zero-tare baseline calibration upon hatch opening.
-  - Continuous 10Hz sampling as diapers are deposited onto the scale tray.
-  - Digital low-pass filtering eliminates vibrational noise and mechanical jitter.
-  - Weight settles deterministically (simulated default: 420g; customized per bag content).
-  - Hatch automatically seals upon weight stability confirmation.
+### Pipeline B: API Gateway, Security & Reverse Proxy Pipeline
+
+#### 1. Architecture & Operational Rationale
+Acts as the single secure entry point into the SDDS server cluster. Handles SSL/TLS termination, request sanitization, IP rate-limiting, and microservice route dispatching.
+
+```mermaid
+flowchart TD
+    Inbound["Inbound HTTPS Client Request"] --> RateLimiter["Token-Bucket Rate Limiter (100 req/min)"]
+    RateLimiter --> CORSSecurity["CORS & Origin Security Validation"]
+    CORSSecurity --> TLS["TLS 1.3 Termination & HTTP/2 Decoding"]
+    TLS --> InputValidator["Runtime Schema Sanitization (Zod / Validator)"]
+    InputValidator --> AuthFilter["Admin PIN & Session Guard Filter"]
+    AuthFilter --> Router["Reverse Proxy Dispatcher Router"]
+    Router --> BinService["/api/v1/bin/* -> Disposal Service"]
+    Router --> OrderService["/api/v1/orders/* -> Order Service"]
+    Router --> PaymentService["/api/v1/payments/* -> Payment Gateway"]
+    Router --> AdminService["/api/v1/admin/* -> Telemetry Service"]
+```
+
+#### 2. Security Boundaries & Input Sanitization
+- **Strict Runtime Schemas**: Every inbound request body is validated against typed schemas (`Validator.sanitizeString`, `Validator.validateInteger`).
+- **Path Traversal Defense**: All file writes in `/api/v1/recordings/chunk` are sanitized with `path.basename()` to eliminate directory traversal vulnerabilities (`../../`).
+- **PIN Authentication**: Protected admin endpoints require the `X-Admin-PIN` header (constant-time verification to prevent timing attacks).
 
 ---
 
-### Stage 4: Dynamic Eco-Reward Discount Engine
-- **Upstream Caller**: Stabilized mass reading from HX711 ADC.
-- **Business Incentive Formula**:
-  $$\text{Discount \%} = \min\left(25\%,\; 5\% + \left\lfloor\frac{\text{Mass (g)} - 50}{50}\right\rfloor\right)$$
-  - Mass $< 50\text{g}$: Disqualified ($0\%$).
-  - Mass $= 50\text{g}$: Base reward ($5\%$).
-  - Mass $= 150\text{g}$: $7\%$.
-  - Mass $= 280\text{g}$: $9\%$.
-  - Mass $= 420\text{g}$: $12\%$.
-  - Mass $\ge 1050\text{g}$: Maximum capped incentive ($25\%$).
-- **Voucher Generation**:
-  - Mints cryptographically verifiable alphanumeric token: `ECO-<PCT>-<4HEX>` (e.g. `ECO-20-4A91`).
-- **REST Endpoints**:
-  - `POST /api/v1/bin/disposal` with `{ weightGrams: 420, rewardPercentage: 20, redeemCode: "ECO-20-4A91" }`.
+### Pipeline C: In-Memory Caching & Distributed Pub/Sub Pipeline (Redis)
+
+#### 1. Architecture & Operational Rationale
+Redis provides ultra-fast in-memory caching, distributed concurrency locking (Redlock), and real-time event broadcasting between edge kiosks and cloud servers.
+
+```mermaid
+flowchart LR
+    subgraph REDIS_DATA_STRUCTURES ["Redis In-Memory Key Spaces"]
+        Sessions["Key: 'sess:{sessionId}' (String / Hash, TTL: 300s)"]
+        Tokens["Key: 'token:{qrCode}' (Hash, Single-Use Expiry)"]
+        Inventory["Key: 'inv:slots' (Hash: slotId -> qty)"]
+        RateLimits["Key: 'ratelimit:{ip}' (Integer Increment, TTL: 60s)"]
+    end
+
+    subgraph REDIS_PUBSUB ["Redis Pub/Sub Event Channels"]
+        ChanDisp["Channel: 'sdds:disposals'"]
+        ChanOrders["Channel: 'sdds:orders'"]
+        ChanSync["Channel: 'sdds:inventory_sync'"]
+    end
+
+    KioskClient["Kiosk Action"] --> Sessions
+    KioskClient --> Tokens
+    Microservice["Backend Service"] --> ChanDisp
+    Microservice --> ChanOrders
+    ChanDisp --> AdminPortal["Admin Portal Live Listener"]
+    ChanOrders --> AdminPortal
+```
+
+#### 2. Key Data Models & TTL Strategy
+- **Session Tokens**: Keys stored with a 5-minute sliding TTL. If untouched, Redis automatically expires the session, releasing locks and garbage collecting state.
+- **Single-Use Vouchers**: Stored as hashes with status flag `REDEEMED: false`. Atomic `HSETNX` prevents race conditions and double-spending across multiple vending machines.
+- **Distributed Concurrency Locking**: Redlock algorithm guarantees that only one transaction can decrement a specific vending coil slot inventory at any single instant.
 
 ---
 
-### Stage 5: Dual-Kiosk Secure Handover to Vending Machine
-- **Upstream Caller**: Customer taps `TRANSFER REWARD TO VENDING MACHINE (20% OFF) →` on the weighing card.
-- **Sequence**:
-  - Transfer is **only accessible after weight calculation is verified**.
-  - Closes weighing view and executes `goToVendingPage3()`.
-  - Dispatches cross-dashboard synchronization event via `BroadcastChannel('sdds_realtime_sync')` and `localStorage` fallback.
-  - Pre-fills `neonRedeemCodeInput` with minted voucher code and invokes `applyNeonRedeemCode()`.
-  - Basket recalculates line items, showing explicit gross amount, percentage discount deduction, and net payable total.
+### Pipeline D: Core Business Microservices Pipeline
+
+#### 1. Architecture & Operational Rationale
+Three distinct microservices isolate business logic, reward calculation, and transaction state handling.
+
+```mermaid
+flowchart TD
+    subgraph DISPOSAL_SERVICE ["Disposal & Dynamic Reward Microservice"]
+        MassIn["Input Diaper Mass (g)"] --> FormulaMath["min(25%, 5% + floor((mass - 50)/50))"]
+        FormulaMath --> TokenGen["Crypto Alphanumeric Generator (ECO-XX-XXXX)"]
+        TokenGen --> VoucherLedger["Record Voucher Entity in DB"]
+    end
+
+    subgraph INVENTORY_SERVICE ["Catalog & Slot Inventory Microservice"]
+        CatalogQuery["Catalogue Query (Baby / Adult / Size)"] --> SlotFilter["Query Operational Spiral Slots"]
+        SlotFilter --> StockCheck["Check Quantity > 0"]
+        StockCheck --> DecrementStock["Atomic Inventory Decrement (qty = qty - 1)"]
+    end
+
+    subgraph ORDER_SERVICE ["Order & Dispensing Lifecycle State Machine"]
+        CreateOrder["POST /api/v1/orders"] --> PENDING["Status: PENDING_PAYMENT"]
+        PENDING --> PaymentCallback["Webhook: Payment Verified"]
+        PaymentCallback --> VERIFIED["Status: PAYMENT_VERIFIED"]
+        VERIFIED --> DispenseCMD["Trigger GPIO Helical Motor"]
+        DispenseCMD --> DropConfirm["IR Sensor Beam Break"]
+        DropConfirm --> COMPLETED["Status: COMPLETED"]
+    end
+```
+
+#### 2. Microservice Mathematical & Business Contracts
+- **Dynamic Reward Engine**:
+  $$R(\text{mass}) = \begin{cases} 
+      0\% & \text{if } \text{mass} < 50\text{g} \\
+      \min\left(25\%,\; 5\% + \left\lfloor\frac{\text{mass} - 50}{50}\right\rfloor\right) & \text{if } \text{mass} \ge 50\text{g}
+  \end{cases}$$
+- **Order Lifecycle States**:
+  $$\text{CREATED} \longrightarrow \text{PENDING\_PAYMENT} \longrightarrow \text{PAYMENT\_VERIFIED} \longrightarrow \text{DISPENSING} \longrightarrow \text{COMPLETED}$$
 
 ---
 
-### Stage 6: Razorpay UPI Payment Gateway & Cryptographic Verification
-- **Upstream Caller**: Customer clicks `PAY ₹XXX WITH UPI / CARD` on `viewVendingPage3` or `viewVendingPage4`.
-- **Currency Transformation**:
-  $$\text{Paise} = \text{Amount (₹)} \times 100$$
-- **REST Endpoints**:
-  - `POST /api/v1/payments/razorpay/create-order` creates order entity with unique receipt ID.
-  - Returns live `keyId`, `orderId`, and currency metadata.
-  - Dynamic UPI QR SVG generated on-screen with embedded payment URI.
-  - Webhook listener validates signature via HMAC SHA-256:
-    $$\text{HMAC-SHA256}(\text{order\_id} + "|" + \text{payment\_id},\; \text{secret})$$
+### Pipeline E: Transactional Database & Persistence Pipeline (MongoDB / PostgreSQL)
+
+#### 1. Architecture & Operational Rationale
+Provides ACID-compliant persistence for transaction histories, financial settlements, customer disposal logs, and system audits.
+
+```mermaid
+flowchart LR
+    WriteReq["Persistence Request"] --> DBConnPool["Connection Pool Manager (Max 20 Conns)"]
+    DBConnPool --> TxnManager["ACID Transaction Manager"]
+    TxnManager --> OrdersCol["Collection: orders (Indexed: id, status, createdAt)"]
+    TxnManager --> DisposalsCol["Collection: disposals (Indexed: id, code, createdAt)"]
+    TxnManager --> InventoryCol["Collection: inventory (Indexed: machineId, slotId)"]
+    TxnManager --> LocalBackup["Edge Mutex Backup (data/sdds-state.json)"]
+```
+
+#### 2. Schema Models & Data Contracts
+- **Order Document Schema**:
+  ```typescript
+  interface Order {
+    id: string;               // e.g. "ORD-20261120-0091"
+    machineId: string;        // e.g. "KIOSK-04"
+    items: OrderItem[];       // Product items, quantities, and prices
+    grossAmountInr: number;   // Gross subtotal before deductions
+    discountPercent: number;  // Eco-reward voucher discount percentage
+    finalPayableInr: number;  // Net settled amount paid
+    paymentMethod: 'RAZORPAY_UPI' | 'STRIPE_CARD' | 'CASH';
+    paymentReference: string; // Razorpay payment ID or Stripe Intent ID
+    status: 'COMPLETED' | 'DISPENSING' | 'FAILED';
+    createdAt: Date;
+  }
+  ```
+- **Disposal Document Schema**:
+  ```typescript
+  interface DisposalRecord {
+    id: string;               // e.g. "DISP-20261120-1035"
+    sessionId: string;        // e.g. "SESS-8839"
+    weightGrams: number;      // Calibrated diaper mass (e.g. 420g)
+    discountPct: number;      // Calculated incentive percentage (e.g. 20%)
+    voucherCode: string;      // Cryptographic voucher token (e.g. "ECO-20-4A91")
+    redeemed: boolean;        // Settlement flag in vending catalog
+    createdAt: Date;
+  }
+  ```
 
 ---
 
-### Stage 7: GPIO Helical Dispenser Stepper Motors & IR Drop Sensor
-- **Upstream Caller**: Verified payment transaction confirmation.
-- **Hardware Peripherals**:
-  - ESP32-WROOM-32D Microcontroller via UART/Serial bus (`COM3` / 115200 baud).
-  - 8-Channel ULN2803A Darlington Transistor Array driving 24V DC helical coil motors (Slots A1 to B4).
-  - High-speed Infrared (IR) emitter-receiver phototransistor beam across retrieval chute.
-- **Execution Logic**:
-  - Sequentially addresses designated slots.
-  - Pulses stepper motor through a full 360-degree helical revolution.
-  - Product pack unseats from spiral and falls through retrieval chute.
-  - IR optical beam break confirms physical product departure (100% anti-theft drop detection).
-  - Decrements slot stock inventory atomically.
+### Pipeline F: Payment Gateway Integration Pipeline (Razorpay / Stripe)
+
+#### 1. Architecture & Operational Rationale
+Facilitates frictionless digital payments via UPI QR codes (Google Pay, PhonePe, Paytm, BHIM) and international cards with zero unhandled webhooks.
+
+```mermaid
+flowchart TD
+    CartFinal["Cart Checkout Finalized"] --> ConvertPaise["Convert Amount to Paise (₹ * 100)"]
+    ConvertPaise --> RzpCreate["POST /api/v1/payments/razorpay/create-order"]
+    RzpCreate --> UPI_QR["Generate Scannable Dynamic UPI QR SVG"]
+    UPI_QR --> CustomerScans["Customer Scans QR on UPI Mobile App"]
+    CustomerScans --> BankAuth["Bank / UPI Network Authorizes Transaction"]
+    BankAuth --> Webhook["Inbound Razorpay Webhook Event: payment.captured"]
+    Webhook --> HMACValidate["Verify HMAC SHA-256 Signature (Key Secret)"]
+    HMACValidate --> StatusUpdate["Update Order Status -> PAYMENT_VERIFIED"]
+    StatusUpdate --> TriggerDispense["Authorize Product Dispensing"]
+```
+
+#### 2. Cryptographic Security Standards
+- **HMAC SHA-256 Signature Verification**:
+  $$\text{Expected Signature} = \text{Crypto.createHmac}('sha256', \text{secret}).\text{update}(\text{order\_id} + "|" + \text{payment\_id}).\text{digest}('hex')$$
+- **Idempotency Safeguard**: Every incoming webhook verifies whether the payment ID has already been credited to eliminate double-crediting or duplicate dispensing.
 
 ---
 
-### Stage 8: Local Storage & Central Admin System Audit Logging
-- **Upstream Caller**: Session completion and dispense confirmation.
-- **Persistence Layer**:
-  - Video chunks flushed incrementally to disk via `POST /api/v1/recordings/chunk` into `recordings/`.
-  - Atomic JSON persistence in `data/sdds-state.json` with file-locking mutex.
-- **Central Admin Portal (`admin.html`)**:
-  - Tab 3 ("Unified System Audit Ledger") aggregates both Smart Bin disposals and Vending Machine orders into a single real-time ledger.
-  - Filter pills allow instant auditing:
-    - `[All System Events]`
-    - `[Smart Bin Deposits & QR Scans]`
-    - `[Vending Machine Orders]`
-  - Displays Module badge (`BIN` / `VEND`), Event ID, Timestamp, Diaper Mass / Item detail, Gross / Mass, Discount / Voucher, and Net Action.
+### Pipeline G: Cloud Surveillance & Chunked Video Ingestion Pipeline
+
+#### 1. Architecture & Operational Rationale
+Captures optical proof of proper diaper deposits and anti-vandalism surveillance without overflowing kiosk disk storage or consuming network bandwidth.
+
+```mermaid
+flowchart LR
+    KioskRecorder["Client MediaRecorder"] --> Slices["60-Second WebM / MP4 Video Slices"]
+    Slices --> ChunkAPI["POST /api/v1/recordings/chunk"]
+    ChunkAPI --> Sanitizer["Filename Sanitization (Defend Path Traversal)"]
+    Sanitizer --> LocalSpool["Local Storage Spool (recordings/)"]
+    LocalSpool --> S3Uploader["Async Multipart Uploader Engine"]
+    S3Uploader --> CloudS3["AWS S3 / Cloudflare R2 Cloud Storage"]
+    CloudS3 --> RetentionPolicy["30-Day Auto-Expiration Lifecycle"]
+```
 
 ---
 
-## 3. Hardware Pinout & Interconnect Table
+### Pipeline H: Central Observability, Metrics & Admin Audit Pipeline
 
-| Subsystem | Peripheral Component | Controller Pin | Electrical Interface | Protocol / Timing |
-|---|---|---|---|---|
-| **Smart Bin** | HX711 Load Cell DT (Data) | GPIO 21 | Digital Input | 24-bit Serial Bit-Bang |
-| **Smart Bin** | HX711 Load Cell SCK (Clock) | GPIO 22 | Digital Output | 50kHz Shift Clock |
-| **Smart Bin** | Intake Solenoid Hatch Strike | GPIO 26 | Open-Collector Driver | 12V DC 800mA Pulse (300ms) |
-| **Smart Bin** | Optical Camera Lens | USB 2.0 / UVC | Differential USB | 320x240 @ 10fps (90 kbps) |
-| **Smart Bin** | Thermal Ticket Printer | UART2 TX (GPIO 17) | Serial TTL | 9600 baud, 8N1 |
-| **Vending** | Coil Stepper Motors A1–A4 | GPIO 13, 14, 27, 33 | Darlington Driver Array | 24V DC Unipolar Stepper Pulse |
-| **Vending** | Coil Stepper Motors B1–B4 | GPIO 25, 32, 18, 19 | Darlington Driver Array | 24V DC Unipolar Stepper Pulse |
-| **Vending** | Chute IR Beam Detector | GPIO 35 (ADC1_CH7) | Analog / Comparator Interrupt | Low-active Drop Detect (< 5ms) |
-| **System** | Status & Heartbeat LED | GPIO 2 | Digital Output | 1Hz Heartbeat Blink |
+#### 1. Architecture & Operational Rationale
+Empowers operators and machine engineers to monitor multi-kiosk health, live inventory levels, sales velocity, and diaper waste diversion metrics in real time.
 
----
-
-## 4. REST API Endpoint Catalog
-
-| Method | Path | Description | Security / Auth |
-|---|---|---|---|
-| `GET` | `/api/v1/health` | Service health, camera telemetry, load cell calibration | Public |
-| `POST` | `/api/v1/sessions/start` | Initializes user session & tracking ID | Session Guard |
-| `POST` | `/api/v1/sessions/end` | Closes active session, logs optical snapshot | Session Guard |
-| `POST` | `/api/v1/bin/disposal` | Logs diaper mass intake & voucher token | Schema Validated |
-| `GET` | `/api/v1/bin/metrics` | Returns total weight (kg/g) and vouchers issued | Public |
-| `GET` | `/api/v1/inventory` | Returns active 8-slot quantity matrix | Public |
-| `POST` | `/api/v1/payments/razorpay/create-order` | Creates Razorpay order in INR Paise | Rate Limited |
-| `POST` | `/api/v1/payments/razorpay/verify` | HMAC SHA-256 signature verification | Cryptographic |
-| `POST` | `/api/v1/recordings/chunk` | Flushes base64 video chunk to local storage | Path-Traversal Defense |
-| `GET` | `/api/v1/admin/orders` | Unified transaction ledger (Orders & Bin Disposals) | Admin PIN / Session |
-| `POST` | `/api/v1/admin/inventory/restock` | Replenishes slot capacity up to max | Admin PIN (8888) |
-| `POST` | `/api/v1/admin/diagnostics/dispense-test` | Diagnostic stepper coil motor pulse test | Admin PIN (8888) |
+```mermaid
+flowchart TD
+    MetricsPoller["Prometheus Metrics Poller (/api/v1/admin/metrics)"] --> Aggregator["Core Metrics Aggregator"]
+    Aggregator --> SalesKPI["Gross Sales Today (₹)"]
+    Aggregator --> WasteKPI["Diaper Waste Diverted (kg / g)"]
+    Aggregator --> VouchersKPI["Eco-Vouchers Issued & Redeemed"]
+    Aggregator --> TelemetryKPI["ESP32 Bus Latency & Hardware Pings"]
+    Aggregator --> UnifiedTable["Unified System Audit Ledger (admin.html Tab 3)"]
+    UnifiedTable --> FilterAll["[All System Events] Filter"]
+    UnifiedTable --> FilterBin["[Smart Bin Deposits & Scans] Filter"]
+    UnifiedTable --> FilterVend["[Vending Machine Orders] Filter"]
+```
 
 ---
 
-## 5. Reliability & Fallback Architecture
-1. **Camera Loss Fallback**: If physical webcam access is denied or unavailable on the kiosk display, the system falls back to the high-contrast `[⚡ FAKE ACCEPT / SIMULATE SCAN QR]` button, ensuring uninterrupted customer progression and zero blocking errors.
-2. **Offline Local Resilience**: All voucher minting, load cell math, and cart deductions operate client-side and commit to local JSON state (`data/sdds-state.json`), enabling uninterrupted operation during network drops.
-3. **Session Hygiene**: 60-second inactivity watchdog resets abandoned sessions to the idle ad screen, automatically sealing all hatch solenoids and clearing temporary cart buffers.
+## 3. End-to-End System Integration Workflows (Sequence Diagrams)
+
+### Workflow 1: Smart Bin Waste Intake, Optical CV Verification & Voucher Handover
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Customer as Customer (Touch Kiosk)
+    participant KioskUI as Client Kiosk UI
+    participant APIGW as API Gateway
+    participant Redis as Redis Cache
+    participant SvcBin as Bin Disposal Service
+    participant Database as MongoDB / PostgreSQL
+
+    Customer->>KioskUI: Selects Diaper Size & Specifications (viewBinPage4)
+    KioskUI->>APIGW: POST /api/v1/sessions/start
+    APIGW->>Redis: HSET sess:{sessionId} active=true
+    KioskUI->>Customer: Prints Thermal Adhesive QR Ticket with Hold Timer
+    Customer->>KioskUI: Taps "SCAN THE QR CODE →"
+    KioskUI->>KioskUI: Navigates to viewBinScanPage (Live Camera Mirroring)
+    Customer->>KioskUI: Holds QR Tag to Camera / Taps "Fake Accept"
+    KioskUI->>APIGW: POST /api/v1/bin/verify-qr
+    APIGW->>Redis: HGET token:{qrTag}
+    Redis-->>APIGW: Token Validated
+    APIGW-->>KioskUI: 200 OK (Unseal Hatch Solenoid)
+    KioskUI->>KioskUI: Navigates to viewBinWeightPage (Dedicated Full View)
+    Customer->>KioskUI: Drops Diapers on Tray
+    KioskUI->>KioskUI: Load Cell Counts 0g -> 420g (Stabilized)
+    KioskUI->>SvcBin: POST /api/v1/bin/disposal { weight: 420g }
+    SvcBin->>SvcBin: Calculates Incentive: min(25, 5 + floor(370/50)) = 20%
+    SvcBin->>SvcBin: Mints Token: ECO-20-4A91
+    SvcBin->>Database: INSERT into disposals
+    SvcBin->>Redis: HSET voucher:ECO-20-4A91 discount=20 redeemed=false
+    SvcBin-->>KioskUI: 201 Created { voucherCode: "ECO-20-4A91", discount: "20%" }
+    KioskUI->>Customer: Displays Eco-Voucher Card (20% OFF)
+    Customer->>KioskUI: Taps "TRANSFER REWARD TO VENDING MACHINE (20% OFF) →"
+    KioskUI->>KioskUI: Navigates to viewVendingPage3 (Voucher Pre-Applied in Basket)
+```
+
+---
+
+### Workflow 2: Vending Catalog Purchase, Razorpay Webhook & Dispense Authorization
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Customer as Customer
+    participant KioskUI as Vending Kiosk UI
+    participant APIGW as API Gateway
+    participant SvcOrder as Order Service
+    participant Razorpay as Razorpay API
+    participant SvcDispense as Dispensing Engine
+    participant AdminPortal as Central Admin Portal
+
+    Customer->>KioskUI: Adds Diaper Packs to Basket (Voucher 20% Applied)
+    Customer->>KioskUI: Taps "PAY ₹176 WITH UPI"
+    KioskUI->>APIGW: POST /api/v1/payments/razorpay/create-order { amount: 176 }
+    APIGW->>SvcOrder: createOrderEntity()
+    SvcOrder->>Razorpay: POST /v1/orders { amount: 17600 (Paise) }
+    Razorpay-->>SvcOrder: { id: "order_K8s9f2", status: "created" }
+    SvcOrder-->>KioskUI: Returns Order Entity & Dynamic QR Payload
+    KioskUI->>Customer: Displays Dynamic UPI QR Code
+    Customer->>Razorpay: Scans & Authorizes Payment on UPI Mobile App
+    Razorpay->>APIGW: Webhook: payment.captured (HMAC SHA-256 Signed)
+    APIGW->>SvcOrder: verifyWebhookSignature()
+    SvcOrder->>SvcOrder: Validates HMAC SHA-256 == true
+    SvcOrder->>SvcDispense: authorizeDispense(slotId: "A1")
+    SvcDispense->>SvcDispense: Energize Stepper Helical Motor (360° Rotation)
+    SvcDispense->>SvcDispense: IR Chute Sensor Confirms Drop Break
+    SvcDispense-->>KioskUI: Dispense Confirmed
+    KioskUI->>Customer: Displays Fullscreen Success Receipt Window
+    SvcOrder->>AdminPortal: Broadcast: ORDER_RECORDED via BroadcastChannel
+    AdminPortal->>AdminPortal: Real-Time Table Row Appended to Unified Audit Ledger
+```
+
+---
+
+### Workflow 3: Dual-Kiosk Real-Time Cross-Sync & Operator Audit Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant BinKiosk as Smart Bin Kiosk
+    participant SyncBus as BroadcastChannel / Storage Event
+    participant VendKiosk as Vending Kiosk
+    participant AdminHub as Central Admin Portal (admin.html)
+
+    BinKiosk->>BinKiosk: Customer deposits 420g -> ECO-20-4A91 Minted
+    BinKiosk->>SyncBus: postMessage({ type: 'VOUCHER_ISSUED', voucher: 'ECO-20-4A91', pct: 20 })
+    SyncBus-->>VendKiosk: Auto-populates Voucher into basket
+    SyncBus-->>AdminHub: Updates Diaper Waste Diverted (+420g) & Vouchers Issued (+1)
+    AdminHub->>AdminHub: Logs SMART BIN Event in Unified Audit Ledger
+    VendKiosk->>VendKiosk: Customer completes purchase -> ORD-20261120-0091
+    VendKiosk->>SyncBus: postMessage({ type: 'ORDER_RECORDED', orderId: 'ORD-20261120-0091' })
+    SyncBus-->>AdminHub: Increments Gross Sales Today (+₹176) & Packs Dispensed (+1)
+    AdminHub->>AdminHub: Logs VENDING Event in Unified Audit Ledger
+```
+
+---
+
+## 4. Software Performance & Scalability Targets
+
+| Metric | Target Specification | Enforcement Mechanism |
+|---|---|---|
+| **API Gateway Latency** | $< 15\text{ms}$ (99th percentile) | Asynchronous non-blocking Node.js / PowerShell I/O |
+| **Redis Cache Retrieval** | $< 1.5\text{ms}$ | In-memory key-value lookups with pipelining |
+| **Video Chunk Stream** | $90\text{ kbps}$ @ $320\times 240$ | Hardware-accelerated canvas transcoding |
+| **Concurrent Kiosks** | Up to 100 edge nodes per gateway | Connection pooling & Redis distributed pub/sub |
+| **Database Transaction Lock** | $< 25\text{ms}$ | ACID row-level locking & MongoDB document atomic writes |
+| **Kiosk State Transition** | $60\text{ fps}$ smooth CSS animations | Hardware-accelerated transforms & zero layout thrashing |
+| **Session Inactivity Timeout** | $60\text{ seconds}$ deterministic reset | Background watchdog clearing sensitive state |

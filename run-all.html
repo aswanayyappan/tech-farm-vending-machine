@@ -3474,130 +3474,130 @@
             </span>
           </div>
 
-          <!-- Step 1: Diaper Intake & Thermal QR Ticket Generation -->
-          <div id="pipeNodeTagGen" class="server-pipeline-node">
+          <!-- Step 1: Client Kiosk UI & WebRTC Stream Capture -->
+          <div id="pipeNodeClientUI" class="server-pipeline-node">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(14, 165, 233, 0.15); color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-              <i class="fa-solid fa-qrcode"></i>
+              <i class="fa-solid fa-desktop"></i>
             </div>
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">1. Bin Waste Info &amp; Thermal Tag Print</span>
-                <span style="font-size: 11px; font-weight: 800; color: #0284c7;">ISO/IEC 18004</span>
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">1. Client Kiosk UI &amp; WebRTC Stream</span>
+                <span style="font-size: 11px; font-weight: 800; color: #0284c7;">Frontend Runtime</span>
               </div>
               <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Customer inputs diaper size/type. Embedded thermal printer generates scannable adhesive ticket with Session ID, cryptographic token, and hold duration counter.
+                Touchscreen SPA runtime (HTML5/Next.js). Encodes 320x240 @ 10fps surveillance stream. Manages local UI state machine and cross-tab <code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">BroadcastChannel</code> event bus.
               </p>
             </div>
           </div>
 
-          <!-- Step 2: Optical QR & Computer Vision Verification -->
-          <div id="pipeNodeQrCv" class="server-pipeline-node">
-            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); color: #059669; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-              <i class="fa-solid fa-camera"></i>
+          <!-- Step 2: Edge API Gateway & Reverse Proxy -->
+          <div id="pipeNodeGateway" class="server-pipeline-node">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(34, 197, 94, 0.15); color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+              <i class="fa-solid fa-network-wired"></i>
             </div>
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">2. Optical QR &amp; Computer Vision Verification</span>
-                <span style="font-size: 11px; font-weight: 800; color: #059669;">Laser CV Stream</span>
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">2. Edge API Gateway &amp; Reverse Proxy</span>
+                <span style="font-size: 11px; font-weight: 800; color: #16a34a;">Express / Port 3000</span>
               </div>
               <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Optical camera / scanner sensor inspects adhesive QR tag (320x240 @ 10fps), verifies cryptographic token, and triggers solenoid latch to open bin intake door.
+                Reverse proxy with token-bucket rate limiting (100 req/min), CORS security, path-traversal sanitization, TLS termination, and microservice route dispatching.
               </p>
             </div>
           </div>
 
-          <!-- Step 3: HX711 Load Cell Tare & Mass Weighing -->
-          <div id="pipeNodeTare" class="server-pipeline-node">
+          <!-- Step 3: Redis In-Memory Cache & Pub/Sub -->
+          <div id="pipeNodeRedis" class="server-pipeline-node">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(239, 68, 68, 0.15); color: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">3. Redis In-Memory Cache &amp; Pub/Sub</span>
+                <span style="font-size: 11px; font-weight: 800; color: #dc2626;">Sub-millisecond</span>
+              </div>
+              <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
+                Hot key-value caching for active sessions (<code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">sess:TTL</code>), single-use QR token verification, distributed Redlock concurrency locks, and real-time Pub/Sub event broadcasting.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 4: Core Application Microservices -->
+          <div id="pipeNodeMicroservices" class="server-pipeline-node">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(234, 179, 8, 0.15); color: #ca8a04; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-              <i class="fa-solid fa-scale-balanced"></i>
+              <i class="fa-solid fa-cubes"></i>
             </div>
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">3. HX711 24-bit ADC Tare &amp; Mass Weighing</span>
-                <span style="font-size: 11px; font-weight: 800; color: #ca8a04;">0g – 2500g</span>
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">4. Core Business Microservices</span>
+                <span style="font-size: 11px; font-weight: 800; color: #ca8a04;">Reward &amp; Orders</span>
               </div>
               <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Calibrated load cell samples weight trajectory in real time, executes anti-jitter digital filter, settles diaper mass (e.g. 420g), and seals intake door.
+                Independent microservices execute dynamic discount formula <code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">min(25%, 5% + (w-50)/50)</code>, mint tamper-proof vouchers, and manage order dispensing lifecycle state machines.
               </p>
             </div>
           </div>
 
-          <!-- Step 4: Dynamic Eco-Reward Discount Engine -->
-          <div id="pipeNodeVoucher" class="server-pipeline-node">
+          <!-- Step 5: Database & Persistence Layer -->
+          <div id="pipeNodeDatabase" class="server-pipeline-node">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(168, 85, 247, 0.15); color: #9333ea; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-              <i class="fa-solid fa-ticket"></i>
+              <i class="fa-solid fa-database"></i>
             </div>
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">4. Dynamic Eco-Reward Discount Engine</span>
-                <span style="font-size: 11px; font-weight: 800; color: #9333ea;">min(25%, 5% + (w-50)/50)</span>
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">5. Database &amp; ACID Persistence</span>
+                <span style="font-size: 11px; font-weight: 800; color: #9333ea;">MongoDB / Postgres</span>
               </div>
               <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Calculates fair percentage incentive from diaper mass. Mints unique tamper-proof alphanumeric voucher token (<code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">POST /api/v1/bin/disposal</code>).
+                ACID transactional store for orders, disposals, and inventory slots. Atomic local file mutex persistence in <code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">data/sdds-state.json</code> provides 100% offline edge resilience.
               </p>
             </div>
           </div>
 
-          <!-- Step 5: Dual-Kiosk Secure Handover to Vending Machine -->
-          <div id="pipeNodeHandover" class="server-pipeline-node">
-            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(59, 130, 246, 0.15); color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-              <i class="fa-solid fa-arrow-right-arrow-left"></i>
-            </div>
-            <div style="flex: 1;">
-              <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">5. Secure Handover to Vending Machine</span>
-                <span style="font-size: 11px; font-weight: 800; color: #2563eb;">Auto-Redemption</span>
-              </div>
-              <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Customer taps handover CTA. System transitions to Neon Vending, injects voucher token, validates checksum, and instantly discounts payable amount in cart.
-              </p>
-            </div>
-          </div>
-
-          <!-- Step 6: Payment Gateway Webhook & Cryptographic Verification -->
-          <div id="pipeNodePayment" class="server-pipeline-node">
+          <!-- Step 6: Payment Gateway Integration -->
+          <div id="pipeNodePayments" class="server-pipeline-node">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(99, 102, 241, 0.15); color: #4f46e5; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-credit-card"></i>
             </div>
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">6. Razorpay UPI / Card Cryptographic Security</span>
-                <span style="font-size: 11px; font-weight: 800; color: #4f46e5;">HMAC SHA-256</span>
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">6. Payment Gateway Integration</span>
+                <span style="font-size: 11px; font-weight: 800; color: #4f46e5;">Razorpay / Stripe</span>
               </div>
               <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Handles dynamic UPI QR generation (<code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">POST /api/v1/payments/razorpay/create-order</code>) and verifies cryptographic signatures before authorizing product delivery.
+                Generates dynamic UPI QR codes with paise currency conversion. Asynchronous webhook handlers verify HMAC SHA-256 cryptographic signatures before authorizing order fulfillment.
               </p>
             </div>
           </div>
 
-          <!-- Step 7: Hardware Dispenser Coils & IR Drop Sensor -->
-          <div id="pipeNodeCoils" class="server-pipeline-node">
-            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); color: #059669; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-              <i class="fa-solid fa-gears"></i>
+          <!-- Step 7: Cloud Storage & Surveillance Ingestion -->
+          <div id="pipeNodeCloud" class="server-pipeline-node">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(59, 130, 246, 0.15); color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
             </div>
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">7. GPIO Dispenser Coils &amp; IR Drop Sensor</span>
-                <span style="font-size: 11px; font-weight: 800; color: #059669;">Slots A1–B4</span>
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">7. Cloud Storage &amp; Video Ingestion</span>
+                <span style="font-size: 11px; font-weight: 800; color: #2563eb;">AWS S3 / Cloud Blob</span>
               </div>
               <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Sequentially energizes helical dispenser stepper motors to drop diaper packs into retrieval hopper. High-speed IR optical beam confirms physical drop before inventory decrement.
+                Multipart ingestion pipeline uploads 60-second video chunk slices (<code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">POST /api/v1/recordings/chunk</code>) to cloud object storage with 30-day lifecycle expiration.
               </p>
             </div>
           </div>
 
-          <!-- Step 8: Local Storing & Central Admin Synchronization -->
-          <div id="pipeNodeStorage" class="server-pipeline-node">
+          <!-- Step 8: Observability & Central Admin Portal -->
+          <div id="pipeNodeObservability" class="server-pipeline-node">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(15, 23, 42, 0.15); color: #0f172a; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-              <i class="fa-solid fa-hard-drive"></i>
+              <i class="fa-solid fa-chart-line"></i>
             </div>
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">8. Local Storing &amp; Dual-Kiosk Admin Logging</span>
-                <span style="font-size: 11px; font-weight: 800; color: #0f172a;">sdds-state.json</span>
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">8. Central Admin &amp; Observability</span>
+                <span style="font-size: 11px; font-weight: 800; color: #0f172a;">Prometheus / Ledger</span>
               </div>
               <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Video chunks flushed to disk (<code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">POST /api/v1/recordings/chunk</code>). Atomic state updates broadcast to operator's Unified Admin Ledger in real time.
+                Prometheus telemetry endpoints (<code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">/metrics</code>) and unified audit ledger stream real-time events across multi-kiosk deployments to <code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">admin.html</code>.
               </p>
             </div>
           </div>
@@ -3619,70 +3619,70 @@
             </button>
           </div>
 
-          <!-- Action Buttons (Full 8 Stages) -->
+          <!-- Action Buttons (Pure Software Pipeline Stages) -->
           <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px;">
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('bin_tag')">
+            <button class="server-sim-btn" onclick="simulateServerPipelineStep('client_ui')">
               <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-qrcode" style="color: #0284c7;"></i>
-                <span>1. Bin Waste Info &amp; Thermal Tag Print</span>
+                <i class="fa-solid fa-desktop" style="color: #0284c7;"></i>
+                <span>1. Client Kiosk UI &amp; WebRTC Stream</span>
               </span>
-              <span style="font-size: 11px; font-family: monospace; background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px;">POST /sessions/start</span>
+              <span style="font-size: 11px; font-family: monospace; background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px;">DOM_STATE</span>
             </button>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('bin_qr_scan')">
+            <button class="server-sim-btn" onclick="simulateServerPipelineStep('api_gateway')">
               <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-camera" style="color: #059669;"></i>
-                <span>2. Optical QR Scanner &amp; CV Verification</span>
+                <i class="fa-solid fa-network-wired" style="color: #16a34a;"></i>
+                <span>2. API Gateway Routing &amp; Reverse Proxy</span>
               </span>
-              <span style="font-size: 11px; font-family: monospace; background: #dcfce7; color: #166534; padding: 3px 8px; border-radius: 6px;">TAG_VERIFIED</span>
+              <span style="font-size: 11px; font-family: monospace; background: #dcfce7; color: #166534; padding: 3px 8px; border-radius: 6px;">PORT 3000</span>
             </button>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('load_cell')">
+            <button class="server-sim-btn" onclick="simulateServerPipelineStep('redis_cache')">
               <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-scale-balanced" style="color: #ca8a04;"></i>
-                <span>3. HX711 Load Cell Tare &amp; Mass Weighing (420g)</span>
+                <i class="fa-solid fa-bolt" style="color: #dc2626;"></i>
+                <span>3. Redis Cache Store &amp; Pub/Sub Broadcast</span>
               </span>
-              <span style="font-size: 11px; font-family: monospace; background: #fef08a; color: #854d0e; padding: 3px 8px; border-radius: 6px;">ADC SAMPLING</span>
+              <span style="font-size: 11px; font-family: monospace; background: #fee2e2; color: #b91c1c; padding: 3px 8px; border-radius: 6px;">IN_MEMORY</span>
             </button>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('voucher')">
+            <button class="server-sim-btn" onclick="simulateServerPipelineStep('microservices')">
               <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-ticket" style="color: #9333ea;"></i>
-                <span>4. Mint Dynamic Eco-Reward Voucher (20%)</span>
+                <i class="fa-solid fa-cubes" style="color: #ca8a04;"></i>
+                <span>4. Microservice Disposal &amp; Reward Logic</span>
               </span>
-              <span style="font-size: 11px; font-family: monospace; background: #f3e8ff; color: #6b21a8; padding: 3px 8px; border-radius: 6px;">POST /bin/disposal</span>
+              <span style="font-size: 11px; font-family: monospace; background: #fef08a; color: #854d0e; padding: 3px 8px; border-radius: 6px;">FORMULA_MINT</span>
             </button>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('handover')">
+            <button class="server-sim-btn" onclick="simulateServerPipelineStep('database')">
               <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-arrow-right-arrow-left" style="color: #2563eb;"></i>
-                <span>5. Dual-Kiosk Secure Voucher Handover</span>
+                <i class="fa-solid fa-database" style="color: #9333ea;"></i>
+                <span>5. Database ACID Transaction Commit</span>
               </span>
-              <span style="font-size: 11px; font-family: monospace; background: #dbeafe; color: #1e40af; padding: 3px 8px; border-radius: 6px;">BROADCAST_SYNC</span>
+              <span style="font-size: 11px; font-family: monospace; background: #f3e8ff; color: #6b21a8; padding: 3px 8px; border-radius: 6px;">ACID_STORE</span>
             </button>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('razorpay')">
+            <button class="server-sim-btn" onclick="simulateServerPipelineStep('payments')">
               <span style="display: flex; align-items: center; gap: 10px;">
                 <i class="fa-solid fa-credit-card" style="color: #4f46e5;"></i>
-                <span>6. Razorpay UPI Order &amp; HMAC Webhook</span>
+                <span>6. Razorpay UPI Payment &amp; HMAC Webhook</span>
               </span>
               <span style="font-size: 11px; font-family: monospace; background: #e0e7ff; color: #3730a3; padding: 3px 8px; border-radius: 6px;">POST /create-order</span>
             </button>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('coils')">
+            <button class="server-sim-btn" onclick="simulateServerPipelineStep('cloud_s3')">
               <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-gears" style="color: #059669;"></i>
-                <span>7. Actuate Dispenser Stepper Motors (A1, A2)</span>
+                <i class="fa-solid fa-cloud-arrow-up" style="color: #2563eb;"></i>
+                <span>7. Cloud S3 Video Chunk Archival</span>
               </span>
-              <span style="font-size: 11px; font-family: monospace; background: #dcfce7; color: #166534; padding: 3px 8px; border-radius: 6px;">GPIO SEQUENCER</span>
+              <span style="font-size: 11px; font-family: monospace; background: #dbeafe; color: #1e40af; padding: 3px 8px; border-radius: 6px;">S3_MULTIPART</span>
             </button>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('storage_chunk')">
+            <button class="server-sim-btn" onclick="simulateServerPipelineStep('observability')">
               <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-hard-drive" style="color: #0f172a;"></i>
-                <span>8. Local Video Storing &amp; Admin Audit Sync</span>
+                <i class="fa-solid fa-chart-line" style="color: #0f172a;"></i>
+                <span>8. Prometheus Metrics &amp; Admin Audit Sync</span>
               </span>
-              <span style="font-size: 11px; font-family: monospace; background: #f1f5f9; color: #0f172a; padding: 3px 8px; border-radius: 6px;">POST /recordings/chunk</span>
+              <span style="font-size: 11px; font-family: monospace; background: #f1f5f9; color: #0f172a; padding: 3px 8px; border-radius: 6px;">GET /metrics</span>
             </button>
           </div>
 
@@ -4275,6 +4275,176 @@
           </span>
           <button class="bin4-btn-done" onclick="simulateAcceptScanQr()" type="button" aria-label="Accept and proceed to scale">
             <span>ACCEPT &amp; WEIGH</span>
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: #0f2c1c; color: #9ef01a; display: flex; align-items: center; justify-content: center;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
+                <path d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </button>
+        </div>
+      </footer>
+    </section>
+
+    <!-- ======================================================================
+         PAGE 6: DEDICATED FULL-PAGE WEIGHT & ECO-REWARD CALCULATION SCREEN
+         ====================================================================== -->
+    <section id="viewBinWeightPage" class="bin4-container" style="display: none;">
+      <!-- Grounding Ambient Wave Artwork -->
+      <div style="position: absolute; inset: auto 0 0 0; width: 100vw; height: clamp(260px, 42vh, 460px); pointer-events: none; z-index: 0; overflow: hidden;">
+        <img src="PICS/intoimage.png" alt="Organic Green Wave Graphic" style="width: 100%; height: 100%; object-fit: cover; object-position: bottom center; mix-blend-mode: multiply; opacity: 0.35; mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%); transform: scale(1.05);">
+      </div>
+
+      <!-- Kiosk Header -->
+      <header class="bin4-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 44px; height: 44px; border-radius: 16px; background: #153e28; display: flex; align-items: center; justify-content: center; color: #ccff33; box-shadow: 0 4px 12px rgba(15, 44, 28, 0.2);">
+            <i class="fa-solid fa-weight-scale" style="font-size: 22px;"></i>
+          </div>
+          <div>
+            <div style="font-weight: 900; font-size: 18px; letter-spacing: 1.5px; color: #0f2c1c;">ECOTOUCH</div>
+            <div style="font-size: 11px; font-weight: 700; color: #153e28; opacity: 0.8; letter-spacing: 0.5px;">STAGE 3 OF 3: LOAD CELL SCALE &amp; ECO-REWARD</div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button onclick="goToBinScanPage()" class="bin4-btn-back" type="button" style="padding: 8px 14px; font-size: 13px; font-weight: 800; border-radius: 12px; background: #ffffff; border: 1.5px solid rgba(21, 62, 40, 0.2); color: #0f2c1c; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>BACK TO SCANNER</span>
+          </button>
+          <button onclick="endUserSession('USER_ABORTED')" class="bin4-btn-session-end" type="button" style="padding: 8px 14px; font-size: 13px; font-weight: 800; border-radius: 12px; background: #fee2e2; border: 1.5px solid #ef4444; color: #b91c1c; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-power-off"></i>
+            <span>END SESSION</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Body Grid: Dual Equal Columns -->
+      <main class="bin4-body-grid">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; position: relative; z-index: 1;">
+          
+          <!-- Left Card: Digital Scale & Load Cell Intake -->
+          <section class="bin4-card" style="display: flex; flex-direction: column; justify-content: space-between; padding: 24px;">
+            <div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid rgba(21, 62, 40, 0.1);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 11px; font-weight: 900; background: #153e28; color: #ccff33; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;">
+                    LOAD CELL SCALE
+                  </span>
+                </div>
+                <span id="pageWeightHatchPill" style="font-size: 11px; font-weight: 900; background: #dcfce7; color: #166534; padding: 3px 10px; border-radius: 20px;">
+                  ✓ HATCH UNSEALED
+                </span>
+              </div>
+
+              <!-- Digital Readout Display Box -->
+              <div style="margin-top: 24px; padding: 28px 20px; background: rgba(21, 62, 40, 0.04); border: 2.5px solid rgba(21, 62, 40, 0.15); border-radius: 20px; text-align: center;">
+                <div style="font-size: 11.5px; font-weight: 900; color: #153e28; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">
+                  STABILIZED DIAPER MASS
+                </div>
+                <div style="font-size: 68px; font-weight: 900; color: #0f2c1c; font-family: monospace; letter-spacing: -2px; display: flex; align-items: baseline; justify-content: center; gap: 6px;">
+                  <span id="pageLiveDepositWeight">0</span>
+                  <span style="font-size: 26px; font-weight: 800; color: #153e28;">g</span>
+                </div>
+                <div id="pageWeightSubtext" style="font-size: 13.5px; font-weight: 700; color: #475569; margin-top: 8px;">
+                  Intake hatch open. Place diaper on scale tray...
+                </div>
+
+                <!-- Animated Stabilizing Progress Bar -->
+                <div style="width: 100%; height: 8px; background: rgba(21, 62, 40, 0.1); border-radius: 4px; overflow: hidden; margin-top: 16px;">
+                  <div id="pageWeightProgressBar" style="width: 0%; height: 100%; background: #9ef01a; transition: width 0.1s ease;"></div>
+                </div>
+              </div>
+
+              <!-- Hardware Specs List -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;">
+                <div style="background: #ffffff; padding: 12px; border-radius: 12px; border: 1px solid rgba(21, 62, 40, 0.1);">
+                  <div style="font-size: 11px; font-weight: 800; color: #64748b;">ADC SENSOR</div>
+                  <div style="font-size: 13px; font-weight: 900; color: #0f2c1c; margin-top: 2px;">HX711 24-Bit</div>
+                </div>
+                <div style="background: #ffffff; padding: 12px; border-radius: 12px; border: 1px solid rgba(21, 62, 40, 0.1);">
+                  <div style="font-size: 11px; font-weight: 800; color: #64748b;">TARE BASELINE</div>
+                  <div style="font-size: 13px; font-weight: 900; color: #059669; margin-top: 2px;">0.0g Calibrated</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 20px; font-size: 12px; color: #64748b; font-weight: 700; text-align: center;">
+              Magnetic solenoid locks automatically upon mass stabilization to ensure zero odor leakage.
+            </div>
+          </section>
+
+          <!-- Right Card: Eco-Reward Voucher & Transfer to Vending -->
+          <section class="bin4-card" style="display: flex; flex-direction: column; justify-content: space-between; padding: 24px;">
+            <div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid rgba(21, 62, 40, 0.1);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 11px; font-weight: 900; background: #059669; color: #ffffff; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;">
+                    ECO-REWARD CALCULATION
+                  </span>
+                </div>
+                <span style="font-size: 11px; font-weight: 900; background: #e0f2fe; color: #0369a1; padding: 3px 10px; border-radius: 20px;">
+                  DYNAMIC INCENTIVE
+                </span>
+              </div>
+
+              <!-- Formula Explainer Banner -->
+              <div style="margin-top: 18px; padding: 14px; background: rgba(21, 62, 40, 0.05); border: 1.5px dashed rgba(21, 62, 40, 0.2); border-radius: 14px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <span style="font-size: 12px; font-weight: 900; color: #153e28;">REWARD FORMULA:</span>
+                  <code style="font-size: 12.5px; font-weight: 900; background: #ffffff; color: #0f2c1c; padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(21, 62, 40, 0.15);">min(25%, 5% + ⌊(w - 50)/50⌋)</code>
+                </div>
+                <p style="font-size: 11.5px; color: #475569; font-weight: 600; margin: 6px 0 0 0; line-height: 1.4;">
+                  Base 5% reward on diaper deposits exceeding 50g, scaling up to 25% discount. Redeemable immediately at the adjacent SDDS Smart Vending Machine.
+                </p>
+              </div>
+
+              <!-- Voucher Result Card -->
+              <div id="pageWeightVoucherResultBox" style="margin-top: 20px; display: none;">
+                <div style="display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #0f2c1c, #153e28); color: #9ef01a; padding: 20px 24px; border-radius: 18px; box-shadow: 0 8px 24px rgba(15, 44, 28, 0.25);">
+                  <div>
+                    <div style="font-size: 11px; font-weight: 800; letter-spacing: 1px; color: #a7f3d0; text-transform: uppercase;">EARNED VOUCHER DISCOUNT</div>
+                    <div id="pageWeightDiscountPct" style="font-size: 38px; font-weight: 900; letter-spacing: -1px; color: #9ef01a; margin-top: 2px;">20% OFF</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div style="font-size: 11px; font-weight: 800; letter-spacing: 1px; color: #a7f3d0; text-transform: uppercase;">REDEEM CODE</div>
+                    <div id="pageWeightRedeemCode" style="font-family: monospace; font-size: 20px; font-weight: 900; color: #ffffff; background: rgba(255,255,255,0.12); padding: 6px 12px; border-radius: 8px; letter-spacing: 1px; margin-top: 4px;">ECO-20-4F8A</div>
+                  </div>
+                </div>
+
+                <!-- Primary Transfer Button -->
+                <button id="btnPageWeightUseInVending" type="button" onclick="transferVoucherToVending()" style="width: 100%; min-height: 58px; border-radius: 16px; background: #0f2c1c; color: #9ef01a; border: 2.5px solid #9ef01a; font-size: 15px; font-weight: 900; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 20px rgba(15, 44, 28, 0.3); touch-action: manipulation; margin-top: 18px; transition: transform 0.15s ease;">
+                  <i class="fa-solid fa-gift" style="font-size: 18px; color: #9ef01a;"></i>
+                  <span>TRANSFER REWARD TO VENDING MACHINE (20% OFF) →</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Bottom Session Controls -->
+            <div style="margin-top: 24px; display: flex; gap: 12px;">
+              <button type="button" onclick="endUserSession('COMPLETED_BIN')" style="flex: 1; min-height: 48px; border-radius: 12px; background: #f1f5f9; color: #475569; border: 1.5px solid #cbd5e1; font-size: 13.5px; font-weight: 800; cursor: pointer;">
+                COLLECT TICKET &amp; EXIT
+              </button>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- Bottom Action Bar -->
+      <footer class="bin4-footer">
+        <button class="bin4-btn-back" onclick="goToBinScanPage()" type="button" aria-label="Return to Scan Page">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6"></path>
+          </svg>
+          <span>BACK TO SCANNER</span>
+        </button>
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span style="font-size: 13px; font-weight: 800; color: #153e28; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-check-circle" style="color: #9ef01a;"></i>
+            <span>WEIGHT RECORDED</span>
+          </span>
+          <button class="bin4-btn-done" onclick="transferVoucherToVending()" type="button" aria-label="Transfer discount to vending machine">
+            <span>GO TO VENDING</span>
             <div style="width: 32px; height: 32px; border-radius: 50%; background: #0f2c1c; color: #9ef01a; display: flex; align-items: center; justify-content: center;">
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
                 <path d="M9 5l7 7-7 7"></path>
@@ -5528,7 +5698,7 @@
 
     const ALL_KIOSK_VIEW_IDS = [
       'viewPage1', 'viewPage2', 'viewVendingPage3',
-      'viewBinPage4', 'viewBinScanPage', 'viewVendingPage4', 'viewTerminalStage', 'viewServerProcessing'
+      'viewBinPage4', 'viewBinScanPage', 'viewBinWeightPage', 'viewVendingPage4', 'viewTerminalStage', 'viewServerProcessing'
     ];
 
     function hideAllViews() {
@@ -6786,11 +6956,104 @@
       }
       if (modalTargetLabel) modalTargetLabel.innerText = 'QR VERIFIED!';
 
-      // Seamless transition to Stage 3: HX711 Load Cell Mass Weighing Modal
+      // Seamless transition to Stage 3: Dedicated Full-Page Weight & Eco-Reward Screen
       setTimeout(() => {
         closeBinQrScannerModal();
-        openIntegratedBinModal();
+        goToBinWeightPage();
       }, 700);
+    }
+
+    let binWeightTimer = null;
+
+    // Dedicated Page 6: Load Cell Mass Weighing & Eco-Reward Calculation Screen
+    function goToBinWeightPage() {
+      if (binScannerTimeout) clearTimeout(binScannerTimeout);
+      showView('viewBinWeightPage');
+      currentTerminalMode = 'bin_weight';
+
+      const weightDisplay = document.getElementById('pageLiveDepositWeight');
+      const subtext = document.getElementById('pageWeightSubtext');
+      const hatchPill = document.getElementById('pageWeightHatchPill');
+      const progressBar = document.getElementById('pageWeightProgressBar');
+      const voucherBox = document.getElementById('pageWeightVoucherResultBox');
+      const btnUse = document.getElementById('btnPageWeightUseInVending');
+      const discountPctEl = document.getElementById('pageWeightDiscountPct');
+      const codeEl = document.getElementById('pageWeightRedeemCode');
+
+      if (voucherBox) voucherBox.style.display = 'none';
+      if (btnUse) btnUse.style.display = 'none';
+      if (progressBar) progressBar.style.width = '0%';
+      if (weightDisplay) weightDisplay.innerText = '0';
+      if (subtext) subtext.innerText = 'Intake hatch unsealed. Reading HX711 load cell...';
+      if (hatchPill) {
+        hatchPill.innerText = '✓ HATCH UNSEALED';
+        hatchPill.style.background = '#dcfce7';
+        hatchPill.style.color = '#166534';
+      }
+
+      // Target weight calculation based on deposited sizes or default 420g
+      const targetWeight = (binState.small * 180) + 
+                           (binState.medium * 240) + 
+                           (binState.large * 300) + 
+                           (binState.xl * 360) + 
+                           (binState.adult * 480) || 420;
+
+      let curr = 0;
+      const step = Math.ceil(targetWeight / 20);
+
+      if (binWeightTimer) clearInterval(binWeightTimer);
+      binWeightTimer = setInterval(() => {
+        curr += step;
+        if (curr >= targetWeight) {
+          curr = targetWeight;
+          clearInterval(binWeightTimer);
+          if (subtext) subtext.innerText = 'Load cell stabilized. Hatch auto-sealed.';
+          if (hatchPill) {
+            hatchPill.innerText = '🔒 HATCH AUTO-SEALED';
+            hatchPill.style.background = '#f1f5f9';
+            hatchPill.style.color = '#475569';
+          }
+          if (progressBar) progressBar.style.width = '100%';
+
+          // Calculate Formula: min(25, 5 + floor((w - 50)/50))
+          const additional = Math.max(0, targetWeight - 50);
+          const pct = Math.min(25, 5 + Math.floor(additional / 50));
+          const randHex = Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+          const code = `ECO-${pct.toString().padStart(2, '0')}-${randHex}`;
+
+          window.latestBinVoucherCode = code;
+          window.binDepositVoucherCode = code;
+          window.binDepositVoucherPercent = pct;
+
+          if (discountPctEl) discountPctEl.innerText = `${pct}% OFF`;
+          if (codeEl) codeEl.innerText = code;
+          if (voucherBox) voucherBox.style.display = 'block';
+          if (btnUse) {
+            btnUse.style.display = 'flex';
+            btnUse.innerHTML = `<i class="fa-solid fa-gift" style="font-size: 18px; color: #9ef01a;"></i> <span>TRANSFER REWARD TO VENDING MACHINE (${pct}% OFF) →</span>`;
+          }
+
+          // Also populate legacy modal elements if present
+          const modalWeight = document.getElementById('liveDepositWeight');
+          const modalCode = document.getElementById('binIssuedCodeText');
+          const modalPct = document.getElementById('binIssuedDiscountPct');
+          if (modalWeight) modalWeight.innerText = targetWeight;
+          if (modalCode) modalCode.innerText = code;
+          if (modalPct) modalPct.innerText = `${pct}%`;
+
+          // Report to edge backend
+          fetch('/api/v1/bin/disposal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ weightGrams: targetWeight, rewardPercentage: pct, redeemCode: code })
+          }).catch(() => {});
+        }
+        if (weightDisplay) weightDisplay.innerText = curr;
+        if (progressBar && targetWeight > 0) {
+          progressBar.style.width = Math.min(100, Math.round((curr / targetWeight) * 100)) + '%';
+        }
+      }, 50);
+    }
     }
 
     // Bin Page 4 Done fallback alias
@@ -7999,36 +8262,56 @@
     }
 
     async function simulateServerPipelineStep(step) {
-      if (step === 'bin_tag') {
-        flashPipelineNode('pipeNodeTagGen');
-        const sessId = 'SESS-' + Date.now().toString(36).toUpperCase().slice(-4);
-        const ticketToken = 'TKN-' + Math.floor(Math.random() * 8999 + 1000);
-        appendServerConsoleLog('THERMAL_PRINTER', 'EXEC', 'generateBinThermalTicket()', 200, {
-          sessionId: sessId,
-          cryptographicToken: ticketToken,
-          encodingFormat: 'ISO/IEC 18004 QR',
-          paperState: 'EMERGED_SUCCESS',
-          heldTimerRunning: true
+      if (step === 'client_ui' || step === 'bin_tag') {
+        flashPipelineNode('pipeNodeClientUI');
+        const sessId = (window.binSessionTracking && window.binSessionTracking.sessionId) || ('SESS-' + Date.now().toString(36).toUpperCase().slice(-4));
+        appendServerConsoleLog('CLIENT_UI', 'WEBRTC_CAPTURE', 'navigator.mediaDevices.getUserMedia()', 200, {
+          streamResolution: '320x240 @ 10fps',
+          bitrateBudget: '90 kbps (Rule 3)',
+          localStateBus: 'BroadcastChannel("sdds_realtime_sync")',
+          activeSessionId: sessId,
+          kioskState: 'ACTIVE_INTERACTION'
         });
-      } else if (step === 'bin_qr_scan') {
-        flashPipelineNode('pipeNodeQrCv');
-        const scanToken = 'TKN-' + Math.floor(Math.random() * 8999 + 1000);
-        appendServerConsoleLog('CV_SCANNER', 'OPTICAL_MATCH', '/api/v1/bin/verify-qr', 200, {
-          cameraSensor: '320x240 @ 10fps',
-          scannedToken: scanToken,
-          verificationResult: 'TOKEN_VALIDATED',
-          solenoidAction: 'INTAKE_HATCH_UNSEALED',
-          hatchState: 'OPEN'
+      } else if (step === 'api_gateway' || step === 'bin_qr_scan') {
+        flashPipelineNode('pipeNodeGateway');
+        appendServerConsoleLog('API_GATEWAY', 'REVERSE_PROXY', 'http://localhost:3000/api/v1/*', 200, {
+          gatewayPort: 3000,
+          rateLimitAllowance: '100 req/min (Token Bucket)',
+          corsOrigin: 'ALLOW_LOCAL_KIOSK',
+          tlsTermination: 'EDGE_OFFLOAD',
+          pathTraversalSanitized: true
         });
-      } else if (step === 'load_cell') {
-        flashPipelineNode('pipeNodeTare');
+      } else if (step === 'redis_cache') {
+        flashPipelineNode('pipeNodeRedis');
+        const sessKey = 'sess:' + Date.now().toString(36).slice(-4);
+        appendServerConsoleLog('REDIS_CACHE', 'EXEC', 'redisClient.set(key, val, EX, 60)', 200, {
+          operation: 'SET_HOT_SESSION',
+          cacheKey: sessKey,
+          ttlSeconds: 60,
+          concurrencyLock: 'Redlock::ACQUIRED',
+          pubsubChannel: 'kiosk:events:broadcast'
+        });
+      } else if (step === 'microservices' || step === 'voucher') {
+        flashPipelineNode('pipeNodeMicroservices');
+        const simulatedGrams = 420;
+        const additional = Math.max(0, simulatedGrams - 50);
+        const calcPct = Math.min(25, 5 + Math.floor(additional / 50));
+        const demoCode = `ECO-${calcPct.toString().padStart(2, '0')}-${Math.floor(Math.random()*0xFFFF).toString(16).toUpperCase().padStart(4, '0')}`;
+        appendServerConsoleLog('MICROSERVICES', 'FORMULA_ENGINE', 'calculateRewardAndMintToken()', 200, {
+          formula: "min(25%, 5% + floor((weight - 50g) / 50g))",
+          inputWeightGrams: simulatedGrams,
+          calculatedDiscount: `${calcPct}%`,
+          mintedVoucherToken: demoCode,
+          singleUseValidated: true
+        });
+      } else if (step === 'database' || step === 'load_cell') {
+        flashPipelineNode('pipeNodeDatabase');
         const simulatedGrams = Math.floor(Math.random() * 300 + 250);
         const additional = Math.max(0, simulatedGrams - 50);
         const calcPct = Math.min(25, 5 + Math.floor(additional / 50));
         const demoCode = `ECO-${calcPct.toString().padStart(2, '0')}-${Math.floor(Math.random()*0xFFFF).toString(16).toUpperCase().padStart(4, '0')}`;
 
-        appendServerConsoleLog('HX711', 'POST', '/api/v1/bin/disposal', 102, `[INTAKE] Diaper weight ${simulatedGrams}g detected on load cell...`);
-
+        appendServerConsoleLog('DATABASE', 'ACID_COMMIT', '/api/v1/bin/disposal', 102, `Writing atomic disposal transaction (${simulatedGrams}g)...`);
         try {
           const res = await fetch('/api/v1/bin/disposal', {
             method: 'POST',
@@ -8040,25 +8323,57 @@
             })
           });
           const json = await res.json();
-          appendServerConsoleLog('HX711_DISPOSAL', 'POST', '/api/v1/bin/disposal', res.status, json);
+          appendServerConsoleLog('DATABASE', 'TRANSACTION_COMMITTED', 'data/sdds-state.json', res.status, json);
         } catch (err) {
-          appendServerConsoleLog('HX711_DISPOSAL', 'POST', '/api/v1/bin/disposal', 500, err.message);
+          appendServerConsoleLog('DATABASE', 'TRANSACTION_COMMITTED', 'data/sdds-state.json', 500, err.message);
         }
-      } else if (step === 'voucher') {
-        flashPipelineNode('pipeNodeVoucher');
-        const weight = 420;
-        const additional = Math.max(0, weight - 50);
-        const pct = Math.min(25, 5 + Math.floor(additional / 50));
-        const token = `ECO-${pct.toString().padStart(2, '0')}-${Date.now().toString(36).toUpperCase().slice(-4)}`;
-        appendServerConsoleLog('VOUCHER_MINT', 'EXEC', 'mintEcoRewardToken()', 200, {
-          formula: "min(25%, 5% + floor((weight - 50g) / 50g))",
-          weightGrams: weight,
-          rewardDiscount: `${pct}%`,
-          generatedToken: token,
-          sha256Signature: 'c5d8a9e2f... (valid)'
+      } else if (step === 'payments' || step === 'razorpay') {
+        flashPipelineNode('pipeNodePayments');
+        const testOrderId = 'ORD-RZP-' + Math.floor(Math.random() * 89999 + 10000);
+        appendServerConsoleLog('PAYMENT_GATEWAY', 'POST', '/api/v1/payments/razorpay/create-order', 102, 'Initiating Razorpay dynamic UPI QR order for ₹220 (22000 paise)...');
+        try {
+          const res = await fetch('/api/v1/payments/razorpay/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amountInr: 220, orderId: testOrderId })
+          });
+          const json = await res.json();
+          appendServerConsoleLog('PAYMENT_GATEWAY', 'HMAC_VERIFIED', '/api/v1/payments/razorpay/webhook', res.status, json);
+        } catch (err) {
+          appendServerConsoleLog('PAYMENT_GATEWAY', 'POST', '/api/v1/payments/razorpay/create-order', 500, err.message);
+        }
+      } else if (step === 'cloud_s3' || step === 'storage_chunk') {
+        flashPipelineNode('pipeNodeCloud');
+        const demoChunkId = 'chunk_demo_' + Date.now().toString(36);
+        const demoFilename = `SESS-DEMO_${demoChunkId}_${new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 15)}.mp4`;
+        appendServerConsoleLog('CLOUD_S3', 'MULTIPART_UPLOAD', '/api/v1/recordings/chunk', 102, `Archiving 60s surveillance chunk into Cloud S3 (s3://sdds-kiosk-vault/${demoFilename})...`);
+        try {
+          const dummyBase64 = "GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQRChYECGFOAZwEAAAAAAA";
+          const res = await fetch('/api/v1/recordings/chunk', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sessionId: 'DEMO-S3',
+              chunkIndex: 1,
+              filename: demoFilename,
+              dataBase64: dummyBase64
+            })
+          });
+          const json = await res.json();
+          appendServerConsoleLog('CLOUD_S3', 'S3_PUT_OBJECT', 's3://sdds-kiosk-vault', res.status, json);
+        } catch (err) {
+          appendServerConsoleLog('CLOUD_S3', 'MULTIPART_UPLOAD', '/api/v1/recordings/chunk', 500, err.message);
+        }
+      } else if (step === 'observability') {
+        flashPipelineNode('pipeNodeObservability');
+        appendServerConsoleLog('OBSERVABILITY', 'TELEMETRY_SCRAPE', '/metrics & admin.html', 200, {
+          prometheusEndpoint: '/metrics',
+          auditLedgerSync: 'BroadcastChannel("sdds_admin_ledger")',
+          systemUptime: '99.98%',
+          kioskHealth: 'ALL_SYSTEMS_OPERATIONAL'
         });
       } else if (step === 'handover') {
-        flashPipelineNode('pipeNodeHandover');
+        flashPipelineNode('pipeNodeClientUI');
         const testCode = 'ECO-20-' + Math.floor(Math.random() * 8999 + 1000);
         appendServerConsoleLog('KIOSK_HANDOVER', 'BROADCAST', 'BroadcastChannel("sdds_realtime_sync")', 200, {
           action: 'TRANSFER_REWARD_TO_VENDING',
@@ -8067,23 +8382,8 @@
           vendingBasketState: 'DISCOUNT_AUTO_APPLIED',
           targetScreen: 'viewVendingPage3'
         });
-      } else if (step === 'razorpay') {
-        flashPipelineNode('pipeNodePayment');
-        const testOrderId = 'SIM-RZP-' + Math.floor(Math.random() * 89999 + 10000);
-        appendServerConsoleLog('RZP_GATEWAY', 'POST', '/api/v1/payments/razorpay/create-order', 102, `Initiating Razorpay UPI order for Rs. 250...`);
-        try {
-          const res = await fetch('/api/v1/payments/razorpay/create-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ amountInr: 250, orderId: testOrderId })
-          });
-          const json = await res.json();
-          appendServerConsoleLog('RZP_ORDER', 'POST', '/api/v1/payments/razorpay/create-order', res.status, json);
-        } catch (err) {
-          appendServerConsoleLog('RZP_ORDER', 'POST', '/api/v1/payments/razorpay/create-order', 500, err.message);
-        }
       } else if (step === 'coils') {
-        flashPipelineNode('pipeNodeCoils');
+        flashPipelineNode('pipeNodeDatabase');
         appendServerConsoleLog('GPIO_MOTORS', 'POST', '/api/v1/admin/diagnostics/dispense-test', 102, 'Actuating Stepper Helical Coils A1 and A2 sequentially...');
         try {
           const res = await fetch('/api/v1/admin/diagnostics/dispense-test', {
@@ -8095,30 +8395,6 @@
           appendServerConsoleLog('GPIO_MOTORS', 'POST', '/api/v1/admin/diagnostics/dispense-test', res.status, json);
         } catch (err) {
           appendServerConsoleLog('GPIO_MOTORS', 'POST', '/api/v1/admin/diagnostics/dispense-test', 500, err.message);
-        }
-      } else if (step === 'storage_chunk') {
-        flashPipelineNode('pipeNodeStorage');
-        const demoChunkId = 'chunk_demo_' + Date.now().toString(36);
-        const demoFilename = `SESS-DEMO_${demoChunkId}_${new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 15)}.mp4`;
-        appendServerConsoleLog('LOCAL_STORAGE', 'POST', '/api/v1/recordings/chunk', 102, `Ingesting 60s optical video chunk into local storage (recordings/${demoFilename})...`);
-
-        try {
-          // Minimal mock base64 video frame header to verify local storage write
-          const dummyBase64 = "GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQRChYECGFOAZwEAAAAAAA";
-          const res = await fetch('/api/v1/recordings/chunk', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              sessionId: 'SESS-DEMO',
-              filename: demoFilename,
-              videoChunk: dummyBase64,
-              chunkDurationSeconds: 60
-            })
-          });
-          const json = await res.json();
-          appendServerConsoleLog('LOCAL_STORAGE', 'POST', '/api/v1/recordings/chunk', res.status, json);
-        } catch (err) {
-          appendServerConsoleLog('LOCAL_STORAGE', 'POST', '/api/v1/recordings/chunk', 500, err.message);
         }
       } else if (step === 'inventory') {
         try {

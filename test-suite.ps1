@@ -387,13 +387,15 @@ Assert-Test "packages/vending-frontend/public/admin.html wires parent returnToPa
 # CHG-20261120-bin-qr-scanner-weight-admin-pipeline Assertions
 Assert-Test "run-all.html contains #binQrScannerModal with optical reticle and laser sweep" ($runAllContent -match 'id="binQrScannerModal"' -and $runAllContent -match 'scanner-laser-line')
 Assert-Test "run-all.html implements proceedToBinQrScanner and verifyBinQrTag" ($runAllContent -match 'function proceedToBinQrScanner\(\)' -and $runAllContent -match 'function verifyBinQrTag\(')
-Assert-Test "run-all.html viewServerProcessing contains 8-stage end-to-end pipeline" ($runAllContent -match 'pipeNodeTagGen' -and $runAllContent -match 'pipeNodeQrCv' -and $runAllContent -match 'pipeNodeTare')
+Assert-Test "run-all.html viewServerProcessing contains 8-stage pure software pipeline" ($runAllContent -match 'pipeNodeClientUI' -and $runAllContent -match 'pipeNodeGateway' -and $runAllContent -match 'pipeNodeRedis')
 Assert-Test "packages/vending-frontend/public/admin.html contains Unified Audit Ledger with filter chips" ($adminContent -match 'chipFilterAll' -and $adminContent -match 'chipFilterBin' -and $adminContent -match 'chipFilterVend')
 Assert-Test "start-server.ps1 provides unified /api/v1/admin/orders with disposals" (((curl.exe -s http://localhost:3000/api/v1/admin/orders) -join '') -match 'disposals')
 
 # CHG-20261120-dedicated-bin-qr-scan-page Assertions
 Assert-Test "run-all.html defines dedicated full-page #viewBinScanPage" ($runAllContent -match 'id="viewBinScanPage"' -and $runAllContent -match 'binScanCameraFeed')
 Assert-Test "run-all.html implements goToBinScanPage and simulateAcceptScanQr" ($runAllContent -match 'function goToBinScanPage\(\)' -and $runAllContent -match 'function simulateAcceptScanQr\(\)')
+Assert-Test "run-all.html defines dedicated full-page #viewBinWeightPage" ($runAllContent -match 'id="viewBinWeightPage"' -and $runAllContent -match 'pageLiveDepositWeight')
+Assert-Test "run-all.html implements goToBinWeightPage and registers in ALL_KIOSK_VIEW_IDS" ($runAllContent -match 'function goToBinWeightPage\(\)' -and $runAllContent -match "'viewBinWeightPage'")
 Assert-Test "architecture/PIPELINE.md exists with end-to-end specification" (Test-Path (Join-Path $PSScriptRoot "architecture\PIPELINE.md"))
 
 Assert-Test "index.html is synchronized with run-all.html" ($runAllContent.Length -eq $indexContent.Length)
