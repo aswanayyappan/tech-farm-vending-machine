@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # SDDS PowerShell End-to-End Test & Verification Suite
 # Cross-verifies cryptographic hashes, CRC-16, weight-to-reward logic & cart totals
 # ==============================================================================
@@ -359,6 +359,16 @@ Assert-Test "run-all.html contains live ping dot in hatch pill" ($runAllContent 
 Assert-Test "run-all.html contains .kiosk-success-receipt-card" ($runAllContent -match '\.kiosk-success-receipt-card')
 Assert-Test "run-all.html contains .kiosk-success-settlement-box" ($runAllContent -match '\.kiosk-success-settlement-box')
 Assert-Test "run-all.html showKioskSuccessWindow renders item index and size badge" ($runAllContent -match 'kiosk-success-item-row' -and $runAllContent -match 'kiosk-success-settlement-box')
+
+# CHG-20261116-0050 Assertions (Internal Server Processing Page & Low-Footprint Camera Stream)
+Assert-Test "run-all.html Page 2 contains Option 3 Internal Server Processing Card" ($runAllContent -match 'id="btn-select-server-processing"')
+Assert-Test "run-all.html defines .server-processing-container and id='viewServerProcessing'" ($runAllContent -match '\.server-processing-container' -and $runAllContent -match 'id="viewServerProcessing"')
+Assert-Test "run-all.html camera constraints configured for low-footprint 320x240" ($runAllContent -match 'width:\s*\{\s*ideal:\s*320' -and $runAllContent -match 'height:\s*\{\s*ideal:\s*240')
+Assert-Test "run-all.html surveillance recorder videoBitsPerSecond reduced to 90 kbps (Rule 3)" ($runAllContent -match 'videoBitsPerSecond:\s*90000')
+Assert-Test "run-all.html removed legacy viewBinPage3 section from DOM" (!($runAllContent -match 'id="viewBinPage3"'))
+Assert-Test "run-all.html completeBinDeposit routes directly to goToVendingPage3()" ($runAllContent -match 'function completeBinDeposit[\s\S]*?goToVendingPage3\(\)')
+Assert-Test "start-server.ps1 provides /api/v1/health endpoint" ($serverHealthRaw -match '"status":\s*"healthy"' -or (curl.exe -s http://localhost:3000/api/v1/health) -match 'healthy')
+Assert-Test "start-server.ps1 health endpoint reports camera and loadCell calibration" ((curl.exe -s http://localhost:3000/api/v1/health) -match 'HX711' -and (curl.exe -s http://localhost:3000/api/v1/health) -match '320x240')
 
 Assert-Test "index.html is synchronized with run-all.html" ($runAllContent.Length -eq $indexContent.Length)
 

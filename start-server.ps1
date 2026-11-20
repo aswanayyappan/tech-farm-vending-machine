@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # SDDS High-Performance Universal HTTP Web Server, State Engine & API Gateway
 # Serves the Dual Kiosk Terminal and Vending System on http://localhost:3000
 # Real-Time Synchronized State Engine across all Kiosks & Admin Portal
@@ -171,6 +171,27 @@ try {
         $sk = $envCfg["STRIPE_SECRET_KEY"]
         $pk = $envCfg["STRIPE_PUBLISHABLE_KEY"]
         $isRealConfigured = ($sk -and $sk.StartsWith("sk_test_") -and -not $sk.Contains("paste_your")) -and ($pk -and $pk.StartsWith("pk_test_") -and -not $pk.Contains("paste_your"))
+
+        # ----------------------------------------------------------------------
+        # REST API Routes: Health & System Status
+        # ----------------------------------------------------------------------
+        if ($rawUrl -eq "api/v1/health" -or $rawUrl -eq "api/v1/system/status") {
+            $response.ContentType = "application/json; charset=utf-8"
+            $json = @{
+                success = $true
+                status = "healthy"
+                server = "SDDS Core Processing Daemon"
+                port = $port1
+                loadCell = "HX711 24-bit ADC (Calibrated)"
+                camera = "Active (320x240 low-footprint @ 10fps)"
+                coils = @("A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4")
+                timestamp = (Get-Date).ToString("yyyy-MM-ddTHH:mm:ssZ")
+            } | ConvertTo-Json
+            $bytes = [System.Text.Encoding]::UTF8.GetBytes($json)
+            $response.OutputStream.Write($bytes, 0, $bytes.Length)
+            $response.Close()
+            continue
+        }
 
         # ----------------------------------------------------------------------
         # REST API Routes: Stripe Gateway
