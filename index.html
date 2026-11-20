@@ -3863,8 +3863,11 @@
               <span>GST Included (18%)</span>
               <span id="neonBtwText" style="font-family: monospace;">₹149 GST</span>
             </div>
-            <div id="neonVoucherRow" class="neon-totals-row" style="display: none; color: #059669; font-weight: 700;">
-              <span>SDDS Eco-Reward Discount</span>
+            <div id="neonVoucherRow" class="neon-totals-row" style="display: none; color: #059669; font-weight: 700; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span>SDDS Eco-Reward Discount</span>
+                <button type="button" onclick="removeNeonRedeemCode()" style="background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; border-radius: 6px; font-size: 10px; font-weight: 800; padding: 2px 8px; cursor: pointer; text-transform: uppercase; touch-action: manipulation;" title="Cancel Voucher">✕ Cancel</button>
+              </div>
               <span id="neonVoucherDiscountText" style="font-family: monospace;">-₹0</span>
             </div>
             <div class="neon-totals-divider">
@@ -3884,7 +3887,8 @@
             <div class="neon-voucher-box" style="display: flex; gap: 8px; align-items: center; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; padding: 6px 10px;">
               <i class="fa-solid fa-ticket" style="color: #64748b; font-size: 14px;"></i>
               <input type="text" id="neonRedeemCodeInput" placeholder="ENTER REDEEM CODE" style="flex: 1; border: none; background: transparent; font-size: 12.5px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: #0f172a; outline: none;" onkeydown="if(event.key==='Enter') applyNeonRedeemCode()" oninput="const fb=document.getElementById('neonVoucherFeedback'); if(fb) fb.style.display='none';">
-              <button type="button" onclick="applyNeonRedeemCode()" style="background: #0f172a; color: #ccff33; border: none; border-radius: 8px; font-weight: 800; font-size: 11px; padding: 7px 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; touch-action: manipulation;">APPLY</button>
+              <button type="button" id="btnNeonApplyVoucher" onclick="applyNeonRedeemCode()" style="background: #0f172a; color: #ccff33; border: none; border-radius: 8px; font-weight: 800; font-size: 11px; padding: 7px 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; touch-action: manipulation; min-height: 38px;">APPLY</button>
+              <button type="button" id="btnNeonRemoveVoucher" onclick="removeNeonRedeemCode()" style="display: none; background: #fee2e2; color: #b91c1c; border: 1.5px solid #fca5a5; border-radius: 8px; font-weight: 800; font-size: 11px; padding: 7px 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; touch-action: manipulation; min-height: 38px;"><i class="fa-solid fa-xmark"></i> REMOVE</button>
             </div>
             <!-- Dedicated Inline Voucher Feedback (Zero Native Popups - Rule 11) -->
             <div id="neonVoucherFeedback" style="display: none; font-size: 11.5px; font-weight: 700; border-radius: 10px; padding: 7px 12px; transition: all 0.25s ease;"></div>
@@ -4577,7 +4581,8 @@
           <!-- Promo Code Input with soft green border from vendingpage4.png -->
           <div class="vending-promo-input-wrap">
             <input type="text" id="vendingPage4PromoInput" class="vending-promo-input" placeholder="Enter Redeem Code" maxlength="20">
-            <button class="vending-btn-apply" onclick="applyPage4PromoCode()">APPLY</button>
+            <button id="btnVendingPage4ApplyPromo" class="vending-btn-apply" onclick="applyPage4PromoCode()">APPLY</button>
+            <button id="btnVendingPage4RemovePromo" class="vending-btn-apply" onclick="removePage4PromoCode()" style="display: none; background: #fee2e2; color: #b91c1c; border-color: #fca5a5;">✕ REMOVE</button>
           </div>
           <div style="display: flex; justify-content: flex-end; margin-top: -10px; margin-bottom: 12px;">
             <button class="btn-paste-code" onclick="pasteLatestBinCodeToPage4()">Paste Bin Voucher</button>
@@ -5755,6 +5760,14 @@
         if (neonVFb) neonVFb.style.display = 'none';
         const neonVRow = document.getElementById('neonVoucherRow');
         if (neonVRow) neonVRow.style.display = 'none';
+        const neonApply = document.getElementById('btnNeonApplyVoucher');
+        const neonRemove = document.getElementById('btnNeonRemoveVoucher');
+        if (neonApply) neonApply.style.display = 'block';
+        if (neonRemove) neonRemove.style.display = 'none';
+        const p4Apply = document.getElementById('btnVendingPage4ApplyPromo');
+        const p4Remove = document.getElementById('btnVendingPage4RemovePromo');
+        if (p4Apply) p4Apply.style.display = 'block';
+        if (p4Remove) p4Remove.style.display = 'none';
       } catch (err) {}
 
       // Clear embedded viewer iframe if active
@@ -6452,8 +6465,16 @@
         if (discountAmount > 0) {
           voucherRow.style.display = 'flex';
           voucherDiscountEl.innerText = `-${formatRupee(discountAmount)} (${window.binDepositVoucherPercent}% Eco-Reward)`;
+          const applyBtn = document.getElementById('btnNeonApplyVoucher');
+          const removeBtn = document.getElementById('btnNeonRemoveVoucher');
+          if (applyBtn) applyBtn.style.display = 'none';
+          if (removeBtn) removeBtn.style.display = 'block';
         } else {
           voucherRow.style.display = 'none';
+          const applyBtn = document.getElementById('btnNeonApplyVoucher');
+          const removeBtn = document.getElementById('btnNeonRemoveVoucher');
+          if (applyBtn) applyBtn.style.display = 'block';
+          if (removeBtn) removeBtn.style.display = 'none';
         }
       }
 
@@ -6731,8 +6752,47 @@
       const voucherRow = document.getElementById('neonVoucherRow');
       if (voucherRow) voucherRow.style.display = 'flex';
 
+      const applyBtn = document.getElementById('btnNeonApplyVoucher');
+      const removeBtn = document.getElementById('btnNeonRemoveVoucher');
+      if (applyBtn) applyBtn.style.display = 'none';
+      if (removeBtn) removeBtn.style.display = 'block';
+
       renderNeonBasket();
       showFeedback(`Voucher "${code}" Applied! ${discountPct}% SDDS Eco-Reward Discount.`, true);
+    }
+
+    function removeNeonRedeemCode() {
+      window.binDepositVoucherPercent = 0;
+      window.binDepositVoucherCode = null;
+      window.latestBinVoucherCode = null;
+
+      const inputEl = document.getElementById('neonRedeemCodeInput');
+      if (inputEl) inputEl.value = '';
+
+      const applyBtn = document.getElementById('btnNeonApplyVoucher');
+      const removeBtn = document.getElementById('btnNeonRemoveVoucher');
+      if (applyBtn) applyBtn.style.display = 'block';
+      if (removeBtn) removeBtn.style.display = 'none';
+
+      const voucherRow = document.getElementById('neonVoucherRow');
+      if (voucherRow) voucherRow.style.display = 'none';
+
+      renderNeonBasket();
+
+      const feedbackEl = document.getElementById('neonVoucherFeedback');
+      if (feedbackEl) {
+        feedbackEl.style.display = 'flex';
+        feedbackEl.style.alignItems = 'center';
+        feedbackEl.style.gap = '6px';
+        feedbackEl.style.background = '#f1f5f9';
+        feedbackEl.style.color = '#334155';
+        feedbackEl.style.border = '1.5px solid #cbd5e1';
+        feedbackEl.innerHTML = '<i class="fa-solid fa-circle-info"></i> <span>Voucher removed. Full price restored.</span>';
+        clearTimeout(window.neonVoucherFeedbackTimer);
+        window.neonVoucherFeedbackTimer = setTimeout(() => {
+          if (feedbackEl) feedbackEl.style.display = 'none';
+        }, 4000);
+      }
     }
 
     async function executeNeonCheckout(method = 'razorpay') {
@@ -7892,6 +7952,34 @@
       appliedVoucherCode = code;
       feedback.style.color = '#34d399';
       feedback.innerText = `Success! ${currentDiscountPct}% Eco-Reward discount applied.`;
+
+      const applyBtn = document.getElementById('btnVendingPage4ApplyPromo');
+      const removeBtn = document.getElementById('btnVendingPage4RemovePromo');
+      if (applyBtn) applyBtn.style.display = 'none';
+      if (removeBtn) removeBtn.style.display = 'block';
+
+      recalculatePage4Financials();
+    }
+
+    function removePage4PromoCode() {
+      currentDiscountPct = 0;
+      appliedVoucherCode = null;
+
+      const input = document.getElementById('vendingPage4PromoInput');
+      if (input) input.value = '';
+
+      const applyBtn = document.getElementById('btnVendingPage4ApplyPromo');
+      const removeBtn = document.getElementById('btnVendingPage4RemovePromo');
+      if (applyBtn) applyBtn.style.display = 'block';
+      if (removeBtn) removeBtn.style.display = 'none';
+
+      const feedback = document.getElementById('vendingPage4PromoFeedback');
+      if (feedback) {
+        feedback.style.display = 'block';
+        feedback.style.color = '#94a3b8';
+        feedback.innerText = 'Voucher removed. Standard pricing restored.';
+      }
+
       recalculatePage4Financials();
     }
 

@@ -410,6 +410,13 @@ Assert-Test "run-all.html viewBinScanPage contains manual confirmation button bt
 Assert-Test "run-all.html implements confirmAndVerifyBinQr without automatic scanner timeout" ($runAllContent -match 'function confirmAndVerifyBinQr\(\)' -and !($runAllContent -match 'setTimeout\(\(\)\s*=>\s*\{\s*verifyBinQrTag\(false\);\s*\}, 2400\)'))
 Assert-Test "functions/bin/confirmAndVerifyBinQr.md exists" (Test-Path (Join-Path $PSScriptRoot "functions\bin\confirmAndVerifyBinQr.md"))
 
+# CHG-20261120-add-voucher-cancel-remove-option Assertions
+Assert-Test "run-all.html contains #btnNeonRemoveVoucher and implements removeNeonRedeemCode" ($runAllContent -match 'id="btnNeonRemoveVoucher"' -and $runAllContent -match 'function removeNeonRedeemCode\(\)')
+Assert-Test "run-all.html contains #btnVendingPage4RemovePromo and implements removePage4PromoCode" ($runAllContent -match 'id="btnVendingPage4RemovePromo"' -and $runAllContent -match 'function removePage4PromoCode\(\)')
+Assert-Test "run-all.html contains inline Cancel button in neonVoucherRow" ($runAllContent -match 'removeNeonRedeemCode\(\)[^>]*>.*?Cancel')
+Assert-Test "functions/vending/removeNeonRedeemCode.md and removePage4PromoCode.md exist" ((Test-Path (Join-Path $PSScriptRoot "functions\vending\removeNeonRedeemCode.md")) -and (Test-Path (Join-Path $PSScriptRoot "functions\vending\removePage4PromoCode.md")))
+Assert-Test "changes/CHG-20261120-add-voucher-cancel-remove-option.md exists" (Test-Path (Join-Path $PSScriptRoot "changes\CHG-20261120-add-voucher-cancel-remove-option.md"))
+
 Assert-Test "index.html is synchronized with run-all.html" ($runAllContent.Length -eq $indexContent.Length)
 
 Write-Host ""

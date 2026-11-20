@@ -1,4 +1,4 @@
-﻿# ==============================================================================
+# ==============================================================================
 # SDDS High-Performance Universal HTTP Web Server, State Engine & API Gateway
 # Serves the Dual Kiosk Terminal and Vending System on http://localhost:3000
 # Real-Time Synchronized State Engine across all Kiosks & Admin Portal
