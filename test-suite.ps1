@@ -404,6 +404,12 @@ Assert-Test "run-all.html viewServerProcessing removed legacy raw text console l
 Assert-Test "run-all.html implements selectPipelineNode and runAutoPlayFlow" ($runAllContent -match 'function selectPipelineNode\(' -and $runAllContent -match 'function runAutoPlayFlow\(')
 Assert-Test "functions/shared/selectPipelineNode.md and runAutoPlayFlow.md exist" ((Test-Path (Join-Path $PSScriptRoot "functions\shared\selectPipelineNode.md")) -and (Test-Path (Join-Path $PSScriptRoot "functions\shared\runAutoPlayFlow.md")))
 
+# CHG-20261120-bin-qr-pictorial-manual-confirm Assertions
+Assert-Test "run-all.html viewBinScanPage contains pictorial scan guide with stick on the plastic image" ($runAllContent -match 'PICTORIAL SCAN GUIDE' -and $runAllContent -match 'PICS/stick on the plastic image\.png')
+Assert-Test "run-all.html viewBinScanPage contains manual confirmation button btnConfirmQrScan" ($runAllContent -match 'id="btnConfirmQrScan"' -and $runAllContent -match 'confirmAndVerifyBinQr\(\)')
+Assert-Test "run-all.html implements confirmAndVerifyBinQr without automatic scanner timeout" ($runAllContent -match 'function confirmAndVerifyBinQr\(\)' -and !($runAllContent -match 'setTimeout\(\(\)\s*=>\s*\{\s*verifyBinQrTag\(false\);\s*\}, 2400\)'))
+Assert-Test "functions/bin/confirmAndVerifyBinQr.md exists" (Test-Path (Join-Path $PSScriptRoot "functions\bin\confirmAndVerifyBinQr.md"))
+
 Assert-Test "index.html is synchronized with run-all.html" ($runAllContent.Length -eq $indexContent.Length)
 
 Write-Host ""
