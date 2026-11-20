@@ -1314,37 +1314,58 @@
 
     /* Bin Deposit Modal Styles */
     .bin-scale-display {
-      background: #022c22;
-      border: 1.5px solid #059669;
+      background: #0a170c;
+      border: 2px solid #153e28;
       border-radius: 16px;
       padding: 18px;
       text-align: center;
       margin: 16px 0;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
     }
 
     .bin-weight-val {
-      font-size: 42px;
+      font-size: 46px;
       font-weight: 900;
-      color: #34d399;
+      color: #9ef01a;
       font-family: monospace;
     }
 
     .voucher-display-box {
-      background: #1e293b;
-      border: 2px dashed #34d399;
+      background: #0a170c;
+      border: 2.5px dashed #9ef01a;
       border-radius: 14px;
       padding: 16px;
       text-align: center;
       margin-top: 14px;
+      box-shadow: 0 8px 24px rgba(158, 240, 26, 0.15);
     }
 
     .voucher-code-text {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 900;
       letter-spacing: 3px;
-      color: #ffffff;
+      color: #9ef01a;
       font-family: monospace;
       margin-top: 6px;
+      text-shadow: 0 0 12px rgba(158, 240, 26, 0.4);
+    }
+
+    @keyframes laserSweep {
+      0% { top: 12%; opacity: 0.85; }
+      50% { top: 82%; opacity: 1; }
+      100% { top: 12%; opacity: 0.85; }
+    }
+
+    .scanner-laser-line {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      height: 3px;
+      background: #9ef01a;
+      box-shadow: 0 0 14px #9ef01a, 0 0 28px #9ef01a;
+      border-radius: 2px;
+      animation: laserSweep 2s ease-in-out infinite;
+      z-index: 5;
     }
 
     /* ==========================================================================
@@ -3453,98 +3474,130 @@
             </span>
           </div>
 
-          <!-- Step 1: Input Sensor Layer -->
-          <div id="pipeNodeSensors" class="server-pipeline-node">
+          <!-- Step 1: Diaper Intake & Thermal QR Ticket Generation -->
+          <div id="pipeNodeTagGen" class="server-pipeline-node">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(14, 165, 233, 0.15); color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+              <i class="fa-solid fa-qrcode"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">1. Bin Waste Info &amp; Thermal Tag Print</span>
+                <span style="font-size: 11px; font-weight: 800; color: #0284c7;">ISO/IEC 18004</span>
+              </div>
+              <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
+                Customer inputs diaper size/type. Embedded thermal printer generates scannable adhesive ticket with Session ID, cryptographic token, and hold duration counter.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2: Optical QR & Computer Vision Verification -->
+          <div id="pipeNodeQrCv" class="server-pipeline-node">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); color: #059669; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+              <i class="fa-solid fa-camera"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">2. Optical QR &amp; Computer Vision Verification</span>
+                <span style="font-size: 11px; font-weight: 800; color: #059669;">Laser CV Stream</span>
+              </div>
+              <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
+                Optical camera / scanner sensor inspects adhesive QR tag (320x240 @ 10fps), verifies cryptographic token, and triggers solenoid latch to open bin intake door.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3: HX711 Load Cell Tare & Mass Weighing -->
+          <div id="pipeNodeTare" class="server-pipeline-node">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(234, 179, 8, 0.15); color: #ca8a04; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-scale-balanced"></i>
             </div>
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">1. Physical Sensor &amp; Optical Stream Layer</span>
-                <span style="font-size: 11px; font-weight: 800; color: #16a34a;">HX711 24-bit ADC</span>
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">3. HX711 24-bit ADC Tare &amp; Mass Weighing</span>
+                <span style="font-size: 11px; font-weight: 800; color: #ca8a04;">0g – 2500g</span>
               </div>
               <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Weighing load cell measures diaper mass (0–2500g). Camera operates at ultra-low 320x240 @ 10fps (90 kbps) for minimal memory/disk footprint. Pure-JS QR generator renders ISO/IEC 18004 scannable thermal tickets.
+                Calibrated load cell samples weight trajectory in real time, executes anti-jitter digital filter, settles diaper mass (e.g. 420g), and seals intake door.
               </p>
             </div>
           </div>
 
-          <!-- Step 2: REST API Daemon Layer -->
-          <div id="pipeNodeApi" class="server-pipeline-node">
-            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(34, 197, 94, 0.15); color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
-              <i class="fa-solid fa-network-wired"></i>
-            </div>
-            <div style="flex: 1;">
-              <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">2. Edge Server REST API Daemon (Port 3000)</span>
-                <span style="font-size: 11px; font-weight: 800; color: #0284c7;">Express / Core HTTP</span>
-              </div>
-              <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Endpoints process disposal events (<code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">POST /api/v1/bin/disposal</code>), session telemetry, real-time metrics, and synchronized state persistence in <code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">sdds-state.json</code>.
-              </p>
-            </div>
-          </div>
-
-          <!-- Step 3: Eco-Voucher Minting -->
+          <!-- Step 4: Dynamic Eco-Reward Discount Engine -->
           <div id="pipeNodeVoucher" class="server-pipeline-node">
-            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(234, 179, 8, 0.15); color: #ca8a04; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(168, 85, 247, 0.15); color: #9333ea; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-ticket"></i>
             </div>
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">3. Dynamic Eco-Reward Discount Engine</span>
-                <span style="font-size: 11px; font-weight: 800; color: #ca8a04;">min(25%, 5% + (w-50)/50)</span>
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">4. Dynamic Eco-Reward Discount Engine</span>
+                <span style="font-size: 11px; font-weight: 800; color: #9333ea;">min(25%, 5% + (w-50)/50)</span>
               </div>
               <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Calculates fair percentage rewards based on deposited diaper weight. Mints unique tamper-proof alphanumeric voucher tokens and auto-applies them seamlessly in the vending basket.
+                Calculates fair percentage incentive from diaper mass. Mints unique tamper-proof alphanumeric voucher token (<code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">POST /api/v1/bin/disposal</code>).
               </p>
             </div>
           </div>
 
-          <!-- Step 4: Razorpay UPI Payment -->
+          <!-- Step 5: Dual-Kiosk Secure Handover to Vending Machine -->
+          <div id="pipeNodeHandover" class="server-pipeline-node">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(59, 130, 246, 0.15); color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">5. Secure Handover to Vending Machine</span>
+                <span style="font-size: 11px; font-weight: 800; color: #2563eb;">Auto-Redemption</span>
+              </div>
+              <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
+                Customer taps handover CTA. System transitions to Neon Vending, injects voucher token, validates checksum, and instantly discounts payable amount in cart.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 6: Payment Gateway Webhook & Cryptographic Verification -->
           <div id="pipeNodePayment" class="server-pipeline-node">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(99, 102, 241, 0.15); color: #4f46e5; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-credit-card"></i>
             </div>
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">4. Payment Gateway Webhook &amp; Security</span>
-                <span style="font-size: 11px; font-weight: 800; color: #4f46e5;">Razorpay UPI / Card</span>
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">6. Razorpay UPI / Card Cryptographic Security</span>
+                <span style="font-size: 11px; font-weight: 800; color: #4f46e5;">HMAC SHA-256</span>
               </div>
               <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Handles order initialization (<code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">POST /api/v1/payments/razorpay/create-order</code>) and HMAC SHA-256 cryptographic signature validation before triggering dispensing actuators.
+                Handles dynamic UPI QR generation (<code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">POST /api/v1/payments/razorpay/create-order</code>) and verifies cryptographic signatures before authorizing product delivery.
               </p>
             </div>
           </div>
 
-          <!-- Step 5: Hardware Dispenser Coils -->
+          <!-- Step 7: Hardware Dispenser Coils & IR Drop Sensor -->
           <div id="pipeNodeCoils" class="server-pipeline-node">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); color: #059669; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-gears"></i>
             </div>
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">5. GPIO Dispenser Coils &amp; Solenoid Hatch</span>
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">7. GPIO Dispenser Coils &amp; IR Drop Sensor</span>
                 <span style="font-size: 11px; font-weight: 800; color: #059669;">Slots A1–B4</span>
               </div>
               <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Sequentially energizes helical dispenser stepper motors to drop selected diaper packs into the retrieval chamber, followed by instant audit snapshot and hatch lock release.
+                Sequentially energizes helical dispenser stepper motors to drop diaper packs into retrieval hopper. High-speed IR optical beam confirms physical drop before inventory decrement.
               </p>
             </div>
           </div>
 
-          <!-- Step 6: Local Storing & Edge Persistence Engine -->
+          <!-- Step 8: Local Storing & Central Admin Synchronization -->
           <div id="pipeNodeStorage" class="server-pipeline-node">
-            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(168, 85, 247, 0.15); color: #9333ea; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(15, 23, 42, 0.15); color: #0f172a; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-hard-drive"></i>
             </div>
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">6. Local Storing &amp; Edge Persistence Engine</span>
-                <span style="font-size: 11px; font-weight: 800; color: #9333ea;">recordings/ &amp; sdds-state.json</span>
+                <span style="font-weight: 900; font-size: 14px; color: #0f2c1c;">8. Local Storing &amp; Dual-Kiosk Admin Logging</span>
+                <span style="font-size: 11px; font-weight: 800; color: #0f172a;">sdds-state.json</span>
               </div>
               <p style="font-size: 12px; color: #475569; margin: 4px 0 0 0; line-height: 1.4;">
-                Video chunks flushed to disk (<code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">POST /api/v1/recordings/chunk</code>) with path traversal defenses. State committed atomically with file mutex and synchronized across dashboards via <code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">BroadcastChannel('sdds_realtime_sync')</code>.
+                Video chunks flushed to disk (<code style="background:#f1f5f9; padding:1px 4px; border-radius:4px;">POST /api/v1/recordings/chunk</code>). Atomic state updates broadcast to operator's Unified Admin Ledger in real time.
               </p>
             </div>
           </div>
@@ -3566,28 +3619,52 @@
             </button>
           </div>
 
-          <!-- Action Buttons -->
-          <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+          <!-- Action Buttons (Full 8 Stages) -->
+          <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px;">
+            <button class="server-sim-btn" onclick="simulateServerPipelineStep('bin_tag')">
+              <span style="display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-qrcode" style="color: #0284c7;"></i>
+                <span>1. Bin Waste Info &amp; Thermal Tag Print</span>
+              </span>
+              <span style="font-size: 11px; font-family: monospace; background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px;">POST /sessions/start</span>
+            </button>
+
+            <button class="server-sim-btn" onclick="simulateServerPipelineStep('bin_qr_scan')">
+              <span style="display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-camera" style="color: #059669;"></i>
+                <span>2. Optical QR Scanner &amp; CV Verification</span>
+              </span>
+              <span style="font-size: 11px; font-family: monospace; background: #dcfce7; color: #166534; padding: 3px 8px; border-radius: 6px;">TAG_VERIFIED</span>
+            </button>
+
             <button class="server-sim-btn" onclick="simulateServerPipelineStep('load_cell')">
               <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-scale-balanced" style="color: #0284c7;"></i>
-                <span>1. Simulate Diaper Deposit &amp; Tare (420g)</span>
+                <i class="fa-solid fa-scale-balanced" style="color: #ca8a04;"></i>
+                <span>3. HX711 Load Cell Tare &amp; Mass Weighing (420g)</span>
               </span>
-              <span style="font-size: 11px; font-family: monospace; background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px;">POST /bin/disposal</span>
+              <span style="font-size: 11px; font-family: monospace; background: #fef08a; color: #854d0e; padding: 3px 8px; border-radius: 6px;">ADC SAMPLING</span>
             </button>
 
             <button class="server-sim-btn" onclick="simulateServerPipelineStep('voucher')">
               <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-ticket" style="color: #ca8a04;"></i>
-                <span>2. Mint &amp; Validate Eco-Reward Voucher</span>
+                <i class="fa-solid fa-ticket" style="color: #9333ea;"></i>
+                <span>4. Mint Dynamic Eco-Reward Voucher (20%)</span>
               </span>
-              <span style="font-size: 11px; font-family: monospace; background: #fef08a; color: #854d0e; padding: 3px 8px; border-radius: 6px;">FORMULA CALC</span>
+              <span style="font-size: 11px; font-family: monospace; background: #f3e8ff; color: #6b21a8; padding: 3px 8px; border-radius: 6px;">POST /bin/disposal</span>
+            </button>
+
+            <button class="server-sim-btn" onclick="simulateServerPipelineStep('handover')">
+              <span style="display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-arrow-right-arrow-left" style="color: #2563eb;"></i>
+                <span>5. Dual-Kiosk Secure Voucher Handover</span>
+              </span>
+              <span style="font-size: 11px; font-family: monospace; background: #dbeafe; color: #1e40af; padding: 3px 8px; border-radius: 6px;">BROADCAST_SYNC</span>
             </button>
 
             <button class="server-sim-btn" onclick="simulateServerPipelineStep('razorpay')">
               <span style="display: flex; align-items: center; gap: 10px;">
                 <i class="fa-solid fa-credit-card" style="color: #4f46e5;"></i>
-                <span>3. Test Razorpay UPI Webhook Order</span>
+                <span>6. Razorpay UPI Order &amp; HMAC Webhook</span>
               </span>
               <span style="font-size: 11px; font-family: monospace; background: #e0e7ff; color: #3730a3; padding: 3px 8px; border-radius: 6px;">POST /create-order</span>
             </button>
@@ -3595,25 +3672,17 @@
             <button class="server-sim-btn" onclick="simulateServerPipelineStep('coils')">
               <span style="display: flex; align-items: center; gap: 10px;">
                 <i class="fa-solid fa-gears" style="color: #059669;"></i>
-                <span>4. Actuate Dispenser Stepper Motors (A1, A2)</span>
+                <span>7. Actuate Dispenser Stepper Motors (A1, A2)</span>
               </span>
               <span style="font-size: 11px; font-family: monospace; background: #dcfce7; color: #166534; padding: 3px 8px; border-radius: 6px;">GPIO SEQUENCER</span>
             </button>
 
             <button class="server-sim-btn" onclick="simulateServerPipelineStep('storage_chunk')">
               <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-hard-drive" style="color: #9333ea;"></i>
-                <span>5. Local Storing: Ingest Video Chunk</span>
+                <i class="fa-solid fa-hard-drive" style="color: #0f172a;"></i>
+                <span>8. Local Video Storing &amp; Admin Audit Sync</span>
               </span>
-              <span style="font-size: 11px; font-family: monospace; background: #f3e8ff; color: #6b21a8; padding: 3px 8px; border-radius: 6px;">POST /recordings/chunk</span>
-            </button>
-
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('inventory')">
-              <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-boxes-stacked" style="color: #0f172a;"></i>
-                <span>6. Query Real-Time Kiosk Inventory</span>
-              </span>
-              <span style="font-size: 11px; font-family: monospace; background: #f1f5f9; color: #334155; padding: 3px 8px; border-radius: 6px;">GET /inventory</span>
+              <span style="font-size: 11px; font-family: monospace; background: #f1f5f9; color: #0f172a; padding: 3px 8px; border-radius: 6px;">POST /recordings/chunk</span>
             </button>
           </div>
 
@@ -4001,8 +4070,8 @@
             <i class="fa-solid fa-scale-balanced" style="color: #9ef01a;"></i>
             <span>AUTO-SENSING HATCH ACTIVE</span>
           </span>
-          <button class="bin4-btn-done" onclick="completeBinDeposit()" type="button" aria-label="Complete deposit and proceed">
-            <span>DONE / GO TO VENDING</span>
+          <button class="bin4-btn-done" onclick="proceedToBinQrScanner()" type="button" aria-label="Verify QR and proceed to deposit scale">
+            <span>VERIFY QR &amp; DEPOSIT</span>
             <div style="width: 32px; height: 32px; border-radius: 50%; background: #0f2c1c; color: #9ef01a; display: flex; align-items: center; justify-content: center;">
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
                 <path d="M9 5l7 7-7 7"></path>
@@ -4140,43 +4209,120 @@
     </div>
 
     <!-- ======================================================================
+         INTEGRATED MODAL: OPTICAL QR SCANNER & COMPUTER VISION VERIFICATION
+         ====================================================================== -->
+    <div id="binQrScannerModal" class="integrated-modal-backdrop" style="display: none;">
+      <div class="integrated-modal-card" style="text-align: center; max-width: 480px; background: #faf3dd; color: #0f2c1c; border: 2.5px solid #153e28; box-shadow: 0 20px 50px rgba(15, 44, 28, 0.45); border-radius: 20px; padding: 24px;">
+        <div class="modal-card-header" style="border-bottom: 2px solid rgba(21, 62, 40, 0.15); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
+          <div style="text-align: left;">
+            <span style="font-size: 11px; font-weight: 900; background: #153e28; color: #9ef01a; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; display: inline-block;">
+              STAGE 2 OF 3: OPTICAL QR VERIFICATION
+            </span>
+            <h2 style="font-size: 20px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; color: #0f2c1c; margin: 6px 0 0 0;">
+              Verify Adhesive QR Tag
+            </h2>
+          </div>
+          <button class="integrated-modal-close" style="color: #0f2c1c; font-size: 22px; font-weight: 900; background: none; border: none; cursor: pointer;" onclick="closeBinQrScannerModal()">✕</button>
+        </div>
+
+        <p style="font-size: 13.5px; color: #153e28; margin: 14px 0 16px 0; font-weight: 700; line-height: 1.4;">
+          Hold your printed thermal ticket adhesive tag under the optical scanner / computer vision camera aperture.
+        </p>
+
+        <!-- Camera Viewfinder with Laser Scanline Animation -->
+        <div style="position: relative; width: 100%; max-width: 340px; height: 210px; margin: 0 auto; background: #0a170c; border-radius: 16px; border: 2.5px solid #153e28; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 25px rgba(0,0,0,0.7);">
+          <!-- Reticle Corner Markers -->
+          <div style="position: absolute; top: 10px; left: 10px; width: 22px; height: 22px; border-top: 3px solid #9ef01a; border-left: 3px solid #9ef01a; border-top-left-radius: 6px;"></div>
+          <div style="position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; border-top: 3px solid #9ef01a; border-right: 3px solid #9ef01a; border-top-right-radius: 6px;"></div>
+          <div style="position: absolute; bottom: 10px; left: 10px; width: 22px; height: 22px; border-bottom: 3px solid #9ef01a; border-left: 3px solid #9ef01a; border-bottom-left-radius: 6px;"></div>
+          <div style="position: absolute; bottom: 10px; right: 10px; width: 22px; height: 22px; border-bottom: 3px solid #9ef01a; border-right: 3px solid #9ef01a; border-bottom-right-radius: 6px;"></div>
+
+          <!-- Laser Scanline -->
+          <div id="binScannerLaserLine" class="scanner-laser-line"></div>
+
+          <!-- Inner Scan Target / QR Tag Preview -->
+          <div id="scannerTargetBox" style="width: 110px; height: 110px; border: 2px dashed rgba(158, 240, 26, 0.45); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; transition: all 0.3s ease;">
+            <i id="scannerTargetIcon" class="fa-solid fa-qrcode" style="font-size: 48px; color: #9ef01a;"></i>
+            <span id="scannerTargetLabel" style="font-family: monospace; font-size: 10.5px; font-weight: 800; color: #9ef01a; letter-spacing: 0.5px;">ALIGNING TAG...</span>
+          </div>
+
+          <!-- Telemetry Overlay -->
+          <div style="position: absolute; bottom: 6px; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0 12px; font-family: monospace; font-size: 9.5px; color: rgba(158, 240, 26, 0.75);">
+            <span>CAM: 320x240 @ 10FPS</span>
+            <span id="scannerFpsStatus">CV: ACTIVE</span>
+          </div>
+        </div>
+
+        <!-- Status & Telemetry Details -->
+        <div id="scannerFeedbackBox" style="margin-top: 14px; padding: 10px 14px; background: rgba(21, 62, 40, 0.08); border: 1.5px solid rgba(21, 62, 40, 0.15); border-radius: 10px; text-align: left;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; font-weight: 800; color: #0f2c1c;">OPTICAL SCANNER STATUS</span>
+            <span id="scannerTagMatchBadge" style="font-size: 11px; font-weight: 900; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 6px;">
+              DETECTING...
+            </span>
+          </div>
+          <div id="scannerLiveLog" style="font-family: monospace; font-size: 12px; font-weight: 700; color: #153e28; margin-top: 4px;">
+            Position printed adhesive ticket in front of optical scanner...
+          </div>
+        </div>
+
+        <!-- Touch Ergonomic Action Buttons -->
+        <div style="display: flex; gap: 10px; margin-top: 18px;">
+          <button type="button" class="btn-pay-action" style="background: #e2d9c0; color: #0f2c1c; font-weight: 800; border: 1.5px solid rgba(21, 62, 40, 0.2); flex: 1;" onclick="closeBinQrScannerModal()">
+            Cancel
+          </button>
+          <button id="btnTriggerScannerVerify" type="button" class="btn-pay-action" style="background: #0f2c1c; color: #9ef01a; font-weight: 900; border: 2px solid #9ef01a; flex: 2; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="verifyBinQrTag(true)">
+            <i class="fa-solid fa-barcode"></i> Verify Tag &amp; Unseal Hatch →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
          INTEGRATED MODAL: BIN DEPOSIT & SCALE WEIGHING
          ====================================================================== -->
     <div id="integratedBinDepositModal" class="integrated-modal-backdrop" style="display: none;">
-      <div class="integrated-modal-card" style="text-align: center;">
-        <div class="modal-card-header">
-          <h2 style="font-size: 22px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">Diaper Intake & Weighing</h2>
-          <button class="integrated-modal-close" onclick="closeIntegratedBinModal()">✕</button>
+      <div class="integrated-modal-card" style="text-align: center; max-width: 500px; background: #faf3dd; color: #0f2c1c; border: 2.5px solid #153e28; box-shadow: 0 20px 50px rgba(15, 44, 28, 0.45); border-radius: 20px; padding: 24px;">
+        <div class="modal-card-header" style="border-bottom: 2px solid rgba(21, 62, 40, 0.15); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
+          <div style="text-align: left;">
+            <span style="font-size: 11px; font-weight: 900; background: #059669; color: #ffffff; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; display: inline-block;">
+              STAGE 3 OF 3: LOAD CELL WEIGHING &amp; REWARD
+            </span>
+            <h2 style="font-size: 20px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; color: #0f2c1c; margin: 6px 0 0 0;">
+              Diaper Intake &amp; Weighing
+            </h2>
+          </div>
+          <button class="integrated-modal-close" style="color: #0f2c1c; font-size: 22px; font-weight: 900; background: none; border: none; cursor: pointer;" onclick="closeIntegratedBinModal()">✕</button>
         </div>
 
-        <p style="font-size: 15px; color: #cbd5e1; margin-bottom: 12px;" id="binHatchStatus">
-          Intake Hatch Unlocked. Place diapers on the tray.
+        <p style="font-size: 14px; color: #153e28; margin: 12px 0; font-weight: 800;" id="binHatchStatus">
+          ✓ Intake Hatch Unlocked. Place diapers on the tray.
         </p>
 
         <div class="bin-scale-display">
-          <div style="font-size: 12px; font-weight: 800; color: #a7f3d0; letter-spacing: 1px; text-transform: uppercase;">HX711 Calibrated Load Cell</div>
+          <div style="font-size: 12px; font-weight: 800; color: #9ef01a; letter-spacing: 1px; text-transform: uppercase;">HX711 24-bit ADC Calibrated Load Cell</div>
           <div class="bin-weight-val"><span id="liveDepositWeight">0</span> g</div>
-          <div style="font-size: 12px; color: #6ee7b7; margin-top: 4px;" id="binScaleSubtext">Settling weight...</div>
+          <div style="font-size: 12px; color: #a7f3d0; margin-top: 4px; font-weight: 700;" id="binScaleSubtext">Settling weight...</div>
         </div>
 
         <!-- Generated Voucher Box -->
         <div id="binVoucherResultBox" class="voucher-display-box" style="display: none;">
-          <div style="font-size: 13px; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 1px;">
-            Eco-Reward Voucher Issued!
+          <div style="font-size: 12px; font-weight: 800; color: #9ef01a; text-transform: uppercase; letter-spacing: 1.5px;">
+            🎉 Dynamic Eco-Reward Voucher Minted!
           </div>
-          <div id="binIssuedCodeText" class="voucher-code-text">ECO-XX-XXXX</div>
-          <div style="font-size: 12px; color: #94a3b8; margin-top: 6px;">
-            Discount: <strong id="binIssuedDiscountPct" style="color: #34d399;">0%</strong> off your next diaper purchase
+          <div id="binIssuedCodeText" class="voucher-code-text">ECO-20-XXXX</div>
+          <div style="font-size: 13px; color: #ffffff; margin-top: 6px; font-weight: 700;">
+            Discount: <strong id="binIssuedDiscountPct" style="color: #9ef01a; font-size: 15px;">20% OFF</strong> applied to your vending basket!
           </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div style="display: flex; gap: 12px; margin-top: 22px;">
-          <button class="btn-pay-action" style="background: #1e293b; color: #cbd5e1;" onclick="closeIntegratedBinModal()">
-            Done / Return
+        <!-- Action Buttons (Rule 11 Ergonomics) -->
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+          <button id="btnUseInVending" class="btn-pay-action" style="background: #0f2c1c; color: #9ef01a; border: 2.5px solid #9ef01a; font-size: 14.5px; font-weight: 900; padding: 14px; display: none; align-items: center; justify-content: center; gap: 8px;" onclick="transferVoucherToVending()">
+            <span>TRANSFER REWARD TO VENDING MACHINE (20% OFF) →</span>
           </button>
-          <button id="btnUseInVending" class="btn-pay-action" style="background: #059669; color: #ffffff; display: none;" onclick="transferVoucherToVending()">
-            Use in Vending Machine →
+          <button class="btn-pay-action" style="background: #e2d9c0; color: #0f2c1c; font-weight: 800; border: 1.5px solid rgba(21, 62, 40, 0.2);" onclick="closeIntegratedBinModal()">
+            Done / Exit Session
           </button>
         </div>
       </div>
@@ -5200,6 +5346,8 @@
       if (cartModal) cartModal.style.setProperty('display', 'none', 'important');
       const binModal = document.getElementById('integratedBinDepositModal');
       if (binModal) binModal.style.setProperty('display', 'none', 'important');
+      const qrModal = document.getElementById('binQrScannerModal');
+      if (qrModal) qrModal.style.setProperty('display', 'none', 'important');
       const win = document.getElementById('kioskSuccessWindow');
       if (win) win.style.setProperty('display', 'none', 'important');
     }
@@ -6308,33 +6456,88 @@
       goToBinPage4();
     }
 
-    // Bin Page 4: Done -> Directly route to Vending with Auto-Applied Eco-Reward Voucher (Zero Popups)
-    function completeBinDeposit() {
-      const targetWeight = 420;
-      const pct = 20; // 20% Eco-Reward voucher
-      const randHex = Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
-      const code = `ECO-${pct.toString().padStart(2, '0')}-${randHex}`;
+    let binScannerTimeout = null;
 
-      window.binDepositVoucherCode = code;
-      window.binDepositVoucherPercent = pct;
-      window.latestBinVoucherCode = code;
-
-      // Report disposal event to backend in background
-      fetch('/api/v1/bin/disposal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ weightGrams: targetWeight, rewardPercentage: pct, redeemCode: code })
-      }).catch(() => {});
-
-      // Direct transition straight to Neon Vending Page 3 (Rule 11 Zero Popups)
-      goToVendingPage3();
-
-      // Pre-fill and auto-apply voucher in Neon Vending Screen
-      const inputEl = document.getElementById('neonRedeemCodeInput');
-      if (inputEl) {
-        inputEl.value = code;
+    // Proceed from Bin Page 4 to Stage 2: Optical QR & Computer Vision Scanner Verification
+    function proceedToBinQrScanner() {
+      const modal = document.getElementById('binQrScannerModal');
+      if (!modal) {
+        openIntegratedBinModal();
+        return;
       }
-      applyNeonRedeemCode();
+
+      modal.style.display = 'flex';
+      const badge = document.getElementById('scannerTagMatchBadge');
+      const log = document.getElementById('scannerLiveLog');
+      const targetBox = document.getElementById('scannerTargetBox');
+      const targetIcon = document.getElementById('scannerTargetIcon');
+      const targetLabel = document.getElementById('scannerTargetLabel');
+
+      if (badge) {
+        badge.innerText = 'DETECTING...';
+        badge.style.background = '#e0f2fe';
+        badge.style.color = '#0369a1';
+      }
+      if (log) log.innerText = 'Positioning camera frame: scanning for printed adhesive QR tag...';
+      if (targetBox) targetBox.style.borderColor = 'rgba(158, 240, 26, 0.45)';
+      if (targetIcon) {
+        targetIcon.className = 'fa-solid fa-qrcode';
+        targetIcon.style.color = '#9ef01a';
+      }
+      if (targetLabel) targetLabel.innerText = 'ALIGNING TAG...';
+
+      // Auto-trigger optical verification after 1.5s simulating computer vision tag match
+      if (binScannerTimeout) clearTimeout(binScannerTimeout);
+      binScannerTimeout = setTimeout(() => {
+        verifyBinQrTag(false);
+      }, 1500);
+    }
+
+    function closeBinQrScannerModal() {
+      if (binScannerTimeout) clearTimeout(binScannerTimeout);
+      const modal = document.getElementById('binQrScannerModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    // Verify QR Tag -> Unseal Hatch Solenoid -> Transition to Stage 3 Weighing Modal
+    function verifyBinQrTag(manualOverride = false) {
+      if (binScannerTimeout) clearTimeout(binScannerTimeout);
+
+      const badge = document.getElementById('scannerTagMatchBadge');
+      const log = document.getElementById('scannerLiveLog');
+      const targetBox = document.getElementById('scannerTargetBox');
+      const targetIcon = document.getElementById('scannerTargetIcon');
+      const targetLabel = document.getElementById('scannerTargetLabel');
+
+      const sessId = (window.binSessionTracking && window.binSessionTracking.sessionId) 
+        ? window.binSessionTracking.sessionId 
+        : ('SESS-' + Date.now().toString(36).toUpperCase().slice(-4));
+
+      if (badge) {
+        badge.innerText = 'MATCH VERIFIED';
+        badge.style.background = '#dcfce7';
+        badge.style.color = '#166534';
+      }
+      if (log) {
+        log.innerHTML = `<span style="color:#059669; font-weight:900;">✓ VALIDATED:</span> TAG #${sessId} MATCHED • UNSEALING INTAKE HATCH...`;
+      }
+      if (targetBox) targetBox.style.borderColor = '#9ef01a';
+      if (targetIcon) {
+        targetIcon.className = 'fa-solid fa-circle-check';
+        targetIcon.style.color = '#9ef01a';
+      }
+      if (targetLabel) targetLabel.innerText = 'QR VERIFIED!';
+
+      // Seamless transition to Stage 3: HX711 Load Cell Mass Weighing Modal
+      setTimeout(() => {
+        closeBinQrScannerModal();
+        openIntegratedBinModal();
+      }, 650);
+    }
+
+    // Bin Page 4 Done fallback alias
+    function completeBinDeposit() {
+      proceedToBinQrScanner();
     }
 
     // Vending Page 3: Calculate Subtotal
@@ -7373,6 +7576,8 @@
           const code = `ECO-${pct.toString().padStart(2, '0')}-${randHex}`;
           
           window.latestBinVoucherCode = code;
+          window.binDepositVoucherCode = code;
+          window.binDepositVoucherPercent = pct;
           document.getElementById('binIssuedCodeText').innerText = code;
           document.getElementById('binIssuedDiscountPct').innerText = pct + '%';
           resultBox.style.display = 'block';
@@ -7536,9 +7741,29 @@
     }
 
     async function simulateServerPipelineStep(step) {
-      if (step === 'load_cell') {
-        flashPipelineNode('pipeNodeSensors');
-        flashPipelineNode('pipeNodeApi');
+      if (step === 'bin_tag') {
+        flashPipelineNode('pipeNodeTagGen');
+        const sessId = 'SESS-' + Date.now().toString(36).toUpperCase().slice(-4);
+        const ticketToken = 'TKN-' + Math.floor(Math.random() * 8999 + 1000);
+        appendServerConsoleLog('THERMAL_PRINTER', 'EXEC', 'generateBinThermalTicket()', 200, {
+          sessionId: sessId,
+          cryptographicToken: ticketToken,
+          encodingFormat: 'ISO/IEC 18004 QR',
+          paperState: 'EMERGED_SUCCESS',
+          heldTimerRunning: true
+        });
+      } else if (step === 'bin_qr_scan') {
+        flashPipelineNode('pipeNodeQrCv');
+        const scanToken = 'TKN-' + Math.floor(Math.random() * 8999 + 1000);
+        appendServerConsoleLog('CV_SCANNER', 'OPTICAL_MATCH', '/api/v1/bin/verify-qr', 200, {
+          cameraSensor: '320x240 @ 10fps',
+          scannedToken: scanToken,
+          verificationResult: 'TOKEN_VALIDATED',
+          solenoidAction: 'INTAKE_HATCH_UNSEALED',
+          hatchState: 'OPEN'
+        });
+      } else if (step === 'load_cell') {
+        flashPipelineNode('pipeNodeTare');
         const simulatedGrams = Math.floor(Math.random() * 300 + 250);
         const additional = Math.max(0, simulatedGrams - 50);
         const calcPct = Math.min(25, 5 + Math.floor(additional / 50));
@@ -7574,6 +7799,16 @@
           generatedToken: token,
           sha256Signature: 'c5d8a9e2f... (valid)'
         });
+      } else if (step === 'handover') {
+        flashPipelineNode('pipeNodeHandover');
+        const testCode = 'ECO-20-' + Math.floor(Math.random() * 8999 + 1000);
+        appendServerConsoleLog('KIOSK_HANDOVER', 'BROADCAST', 'BroadcastChannel("sdds_realtime_sync")', 200, {
+          action: 'TRANSFER_REWARD_TO_VENDING',
+          transferredVoucher: testCode,
+          appliedDiscount: '20% OFF',
+          vendingBasketState: 'DISCOUNT_AUTO_APPLIED',
+          targetScreen: 'viewVendingPage3'
+        });
       } else if (step === 'razorpay') {
         flashPipelineNode('pipeNodePayment');
         const testOrderId = 'SIM-RZP-' + Math.floor(Math.random() * 89999 + 10000);
@@ -7605,7 +7840,6 @@
         }
       } else if (step === 'storage_chunk') {
         flashPipelineNode('pipeNodeStorage');
-        flashPipelineNode('pipeNodeApi');
         const demoChunkId = 'chunk_demo_' + Date.now().toString(36);
         const demoFilename = `SESS-DEMO_${demoChunkId}_${new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 15)}.mp4`;
         appendServerConsoleLog('LOCAL_STORAGE', 'POST', '/api/v1/recordings/chunk', 102, `Ingesting 60s optical video chunk into local storage (recordings/${demoFilename})...`);
@@ -7629,7 +7863,6 @@
           appendServerConsoleLog('LOCAL_STORAGE', 'POST', '/api/v1/recordings/chunk', 500, err.message);
         }
       } else if (step === 'inventory') {
-        flashPipelineNode('pipeNodeApi');
         try {
           const res = await fetch('/api/v1/inventory');
           const json = await res.json();

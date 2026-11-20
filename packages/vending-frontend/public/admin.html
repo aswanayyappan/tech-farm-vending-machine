@@ -465,6 +465,45 @@
       border: 1px solid #6366f1;
     }
 
+    .badge-status.bin {
+      background: rgba(16, 185, 129, 0.18);
+      color: #065f46;
+      border: 1px solid #10b981;
+    }
+
+    .badge-status.vending {
+      background: rgba(14, 165, 233, 0.18);
+      color: #0369a1;
+      border: 1px solid #0284c7;
+    }
+
+    /* Filter Chips */
+    .btn-filter-chip {
+      background: #f4ede0;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-filter-chip:hover {
+      background: #eadecc;
+      border-color: #0f2c1c;
+    }
+
+    .btn-filter-chip.active {
+      background: #0f2c1c;
+      color: #9ef01a;
+      border-color: #0f2c1c;
+    }
+
     /* Telemetry Diagnostics Grid */
     .telemetry-grid {
       display: grid;
@@ -703,33 +742,51 @@
       </div>
     </div>
 
-    <!-- TAB 3: AUDIT & ORDERS LEDGER -->
+    <!-- TAB 3: UNIFIED AUDIT LEDGER (SMART BIN & VENDING MACHINE) -->
     <div id="tabOrders" style="display: none;">
       <div class="panel">
-        <div class="panel-header">
-          <h2 class="panel-title">Transaction &amp; Dispense Audit Ledger</h2>
-          <div style="display: flex; gap: 10px;">
-            <input type="text" id="orderSearch" placeholder="Search Order ID..." style="height: 38px; background: #ffffff; border: 1.5px solid var(--border); border-radius: 8px; color: var(--text-main); padding: 0 12px; font-size: 13px; font-weight: 600;" oninput="filterOrders()">
+        <div class="panel-header" style="flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h2 class="panel-title">Unified System Audit Ledger</h2>
+            <p style="font-size: 12.5px; color: var(--text-muted); font-weight: 600; margin-top: 3px;">
+              Dual-terminal synchronized ledger tracking Smart Bin deposits, load cell weights, QR tags &amp; Vending machine orders.
+            </p>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <input type="text" id="orderSearch" placeholder="Search ID, Code, Product..." style="height: 38px; background: #ffffff; border: 1.5px solid var(--border); border-radius: 8px; color: var(--text-main); padding: 0 12px; font-size: 13px; font-weight: 600;" oninput="filterOrders()">
             <button class="btn-action" onclick="loadOrders()">Reload Ledger</button>
           </div>
+        </div>
+
+        <!-- Filter Chips (Rule 11 Ergonomics) -->
+        <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+          <button class="btn-filter-chip active" id="chipFilterAll" onclick="setAuditModuleFilter('ALL')">
+            <i class="fa-solid fa-list-check"></i> All System Events
+          </button>
+          <button class="btn-filter-chip" id="chipFilterBin" onclick="setAuditModuleFilter('BIN')">
+            <i class="fa-solid fa-trash-can-arrow-up" style="color: #10b981;"></i> Smart Bin Deposits &amp; QR Scans
+          </button>
+          <button class="btn-filter-chip" id="chipFilterVend" onclick="setAuditModuleFilter('VENDING')">
+            <i class="fa-solid fa-box-open" style="color: #0284c7;"></i> Vending Machine Orders
+          </button>
         </div>
 
         <div class="table-responsive">
           <table>
             <thead>
               <tr>
-                <th>Order ID</th>
+                <th>Module</th>
+                <th>Event / Order ID</th>
                 <th>Timestamp</th>
-                <th>Product Description</th>
-                <th>Gross (₹)</th>
-                <th>Discount</th>
-                <th>Net Paid (₹)</th>
-                <th>Payment Method</th>
-                <th>Status</th>
+                <th>Description / Detail</th>
+                <th>Gross / Mass</th>
+                <th>Discount / Voucher</th>
+                <th>Net / Action</th>
+                <th>Audit Status</th>
               </tr>
             </thead>
             <tbody id="ordersTableBody">
-              <!-- Dynamically populated orders -->
+              <!-- Dynamically populated unified events -->
             </tbody>
           </table>
         </div>
@@ -841,6 +898,27 @@
       { id: 'ORD-20261114-0088', time: '09:55 AM', item: 'Huggies Wonder Pants (L)', gross: 340, discount: '15% (ECO-15-7C33)', net: 289, method: 'UPI_QR', status: 'COMPLETED' },
       { id: 'ORD-20261114-0087', time: '09:20 AM', item: 'Lifree Extra Absorb Pants (L)', gross: 490, discount: 'None', net: 490, method: 'UPI_QR', status: 'COMPLETED' }
     ];
+
+    // Master Bin Disposal Ledger (Synchronized with Smart Bin deposits)
+    let binDisposals = [
+      { id: 'DISP-20261120-1035', time: '10:35 AM', weightGrams: 420, discountPct: 20, code: 'ECO-20-4A91', status: 'VERIFIED' },
+      { id: 'DISP-20261120-0940', time: '09:40 AM', weightGrams: 280, discountPct: 9, code: 'ECO-09-A4F2', status: 'VERIFIED' },
+      { id: 'DISP-20261120-0855', time: '08:55 AM', weightGrams: 350, discountPct: 15, code: 'ECO-15-7C33', status: 'VERIFIED' }
+    ];
+
+    let currentAuditFilter = 'ALL';
+
+    function setAuditModuleFilter(filter) {
+      currentAuditFilter = filter;
+      const chipAll = document.getElementById('chipFilterAll');
+      const chipBin = document.getElementById('chipFilterBin');
+      const chipVend = document.getElementById('chipFilterVend');
+      if (chipAll) chipAll.classList.toggle('active', filter === 'ALL');
+      if (chipBin) chipBin.classList.toggle('active', filter === 'BIN');
+      if (chipVend) chipVend.classList.toggle('active', filter === 'VENDING');
+      const q = document.getElementById('orderSearch') ? document.getElementById('orderSearch').value.trim() : '';
+      renderOrders(q);
+    }
 
     // Real-Time Cross-Dashboard Sync Channel
     const sddsSyncChannel = new BroadcastChannel('sdds_realtime_sync');
@@ -1024,10 +1102,11 @@
 
     async function loadDataFromBackend() {
       try {
-        const [resOverview, resSlots, resOrders] = await Promise.all([
+        const [resOverview, resSlots, resOrders, resBin] = await Promise.all([
           fetch(`${API_BASE}/api/v1/admin/overview`),
           fetch(`${API_BASE}/api/v1/admin/inventory/slots`),
-          fetch(`${API_BASE}/api/v1/admin/orders`)
+          fetch(`${API_BASE}/api/v1/admin/orders`),
+          fetch(`${API_BASE}/api/v1/bin/metrics`).catch(() => null)
         ]);
 
         if (resOverview.ok) {
@@ -1060,9 +1139,20 @@
           const json = await resOrders.json();
           if (json.data && Array.isArray(json.data)) {
             orders = json.data;
-            renderOrders();
+          }
+          if (json.disposals && Array.isArray(json.disposals)) {
+            binDisposals = json.disposals;
           }
         }
+
+        if (resBin && resBin.ok) {
+          const bJson = await resBin.json();
+          if (bJson.data && Array.isArray(bJson.data.disposals)) {
+            binDisposals = bJson.data.disposals;
+          }
+        }
+
+        renderOrders();
       } catch (err) {
         console.warn('Backend loadData error (using local cache):', err);
         renderSlots();
@@ -1070,26 +1160,84 @@
       }
     }
 
-    // Render Orders
+    // Render Unified System Audit Ledger (Smart Bin & Vending Machine)
     function renderOrders(filter = '') {
       const tbody = document.getElementById('ordersTableBody');
       tbody.innerHTML = '';
 
-      const filtered = filter
-        ? orders.filter(o => o.id.toLowerCase().includes(filter.toLowerCase()) || o.item.toLowerCase().includes(filter.toLowerCase()))
-        : orders;
+      let combinedEvents = [];
 
-      filtered.forEach(o => {
+      // 1. Map Vending Orders
+      if (currentAuditFilter === 'ALL' || currentAuditFilter === 'VENDING') {
+        orders.forEach(o => {
+          combinedEvents.push({
+            module: 'VENDING',
+            id: o.id,
+            time: o.time || '10:00 AM',
+            desc: o.item || 'Diaper Pack',
+            grossOrMass: `₹${o.gross}`,
+            discount: o.discount || 'None',
+            netOrAction: `₹${o.net} (${o.method || 'UPI_QR'})`,
+            status: o.status || 'COMPLETED',
+            isBin: false
+          });
+        });
+      }
+
+      // 2. Map Smart Bin Disposals & QR Scans
+      if (currentAuditFilter === 'ALL' || currentAuditFilter === 'BIN') {
+        binDisposals.forEach(d => {
+          combinedEvents.push({
+            module: 'SMART BIN',
+            id: d.id,
+            time: d.time || '10:00 AM',
+            desc: `Diaper Intake verified (QR Scanned & HX711 Weighed)`,
+            grossOrMass: `${d.weightGrams} g`,
+            discount: `${d.discountPct}% (${d.code})`,
+            netOrAction: `Voucher Minted`,
+            status: 'VERIFIED',
+            isBin: true
+          });
+        });
+      }
+
+      // 3. Apply Search Filter
+      const q = filter.toLowerCase().trim();
+      const filtered = q
+        ? combinedEvents.filter(e => 
+            e.id.toLowerCase().includes(q) || 
+            e.desc.toLowerCase().includes(q) || 
+            e.discount.toLowerCase().includes(q) ||
+            e.grossOrMass.toLowerCase().includes(q)
+          )
+        : combinedEvents;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 28px; color: var(--text-muted); font-weight: 700;">
+              No matching audit events found for "${filter}".
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.forEach(e => {
         const row = document.createElement('tr');
+        const modBadge = e.isBin 
+          ? `<span class="badge-status bin"><i class="fa-solid fa-trash-can-arrow-up"></i> BIN</span>`
+          : `<span class="badge-status vending"><i class="fa-solid fa-box-open"></i> VEND</span>`;
+        
         row.innerHTML = `
-          <td><strong>${o.id}</strong></td>
-          <td style="color: var(--text-muted);">${o.time}</td>
-          <td>${o.item}</td>
-          <td>₹${o.gross}</td>
-          <td style="color: #059669; font-weight: 700;">${o.discount}</td>
-          <td><strong style="color: var(--primary);">₹${o.net}</strong></td>
-          <td><span class="badge-status ${o.method.includes('STRIPE') ? 'stripe' : 'success'}">${o.method}</span></td>
-          <td><span class="badge-status success">${o.status}</span></td>
+          <td>${modBadge}</td>
+          <td><strong>${e.id}</strong></td>
+          <td style="color: var(--text-muted); font-size: 12.5px;">${e.time}</td>
+          <td style="font-weight: 700;">${e.desc}</td>
+          <td style="font-weight: 800; color: ${e.isBin ? '#059669' : 'var(--text-main)'};">${e.grossOrMass}</td>
+          <td style="color: #059669; font-weight: 800;">${e.discount}</td>
+          <td><strong style="color: var(--primary);">${e.netOrAction}</strong></td>
+          <td><span class="badge-status success">${e.status}</span></td>
         `;
         tbody.appendChild(row);
       });

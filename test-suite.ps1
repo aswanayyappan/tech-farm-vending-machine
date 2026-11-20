@@ -371,7 +371,7 @@ Assert-Test "run-all.html defines .server-processing-container and id='viewServe
 Assert-Test "run-all.html camera constraints configured for low-footprint 320x240" ($runAllContent -match 'width:\s*\{\s*ideal:\s*320' -and $runAllContent -match 'height:\s*\{\s*ideal:\s*240')
 Assert-Test "run-all.html surveillance recorder videoBitsPerSecond reduced to 90 kbps (Rule 3)" ($runAllContent -match 'videoBitsPerSecond:\s*90000')
 Assert-Test "run-all.html removed legacy viewBinPage3 section from DOM" (!($runAllContent -match 'id="viewBinPage3"'))
-Assert-Test "run-all.html completeBinDeposit routes directly to goToVendingPage3()" ($runAllContent -match 'function completeBinDeposit[\s\S]*?goToVendingPage3\(\)')
+Assert-Test "run-all.html completeBinDeposit invokes proceedToBinQrScanner" ($runAllContent -match 'function completeBinDeposit\(\)\s*\{\s*proceedToBinQrScanner\(\);')
 Assert-Test "start-server.ps1 provides /api/v1/health endpoint" ($serverHealthRaw -match '"status":\s*"healthy"' -or (curl.exe -s http://localhost:3000/api/v1/health) -match 'healthy')
 Assert-Test "start-server.ps1 health endpoint reports camera and loadCell calibration" ((curl.exe -s http://localhost:3000/api/v1/health) -match 'HX711' -and (curl.exe -s http://localhost:3000/api/v1/health) -match '320x240')
 
@@ -383,6 +383,13 @@ Assert-Test "run-all.html Bin Page 4 Step 1 links to 'stick on the plastic image
 Assert-Test "run-all.html viewTerminalStage contains End Session touch button" ($runAllContent -match 'id="viewTerminalStage"[\s\S]*?endUserSession\(''USER_ABORTED''\)')
 Assert-Test "packages/vending-frontend/public/admin.html adopts Cream and Neon design tokens" ($adminContent -match '--bg-main:\s*#faf3dd' -and $adminContent -match '--secondary:\s*#9ef01a')
 Assert-Test "packages/vending-frontend/public/admin.html wires parent returnToPage2 and endUserSession" ($adminContent -match 'handleReturnToKiosk' -and $adminContent -match 'handleEndSession')
+
+# CHG-20261120-bin-qr-scanner-weight-admin-pipeline Assertions
+Assert-Test "run-all.html contains #binQrScannerModal with optical reticle and laser sweep" ($runAllContent -match 'id="binQrScannerModal"' -and $runAllContent -match 'scanner-laser-line')
+Assert-Test "run-all.html implements proceedToBinQrScanner and verifyBinQrTag" ($runAllContent -match 'function proceedToBinQrScanner\(\)' -and $runAllContent -match 'function verifyBinQrTag\(')
+Assert-Test "run-all.html viewServerProcessing contains 8-stage end-to-end pipeline" ($runAllContent -match 'pipeNodeTagGen' -and $runAllContent -match 'pipeNodeQrCv' -and $runAllContent -match 'pipeNodeTare')
+Assert-Test "packages/vending-frontend/public/admin.html contains Unified Audit Ledger with filter chips" ($adminContent -match 'chipFilterAll' -and $adminContent -match 'chipFilterBin' -and $adminContent -match 'chipFilterVend')
+Assert-Test "start-server.ps1 provides unified /api/v1/admin/orders with disposals" (((curl.exe -s http://localhost:3000/api/v1/admin/orders) -join '') -match 'disposals')
 
 Assert-Test "index.html is synchronized with run-all.html" ($runAllContent.Length -eq $indexContent.Length)
 

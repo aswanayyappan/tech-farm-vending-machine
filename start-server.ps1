@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # SDDS High-Performance Universal HTTP Web Server, State Engine & API Gateway
 # Serves the Dual Kiosk Terminal and Vending System on http://localhost:3000
 # Real-Time Synchronized State Engine across all Kiosks & Admin Portal
@@ -806,12 +806,14 @@ try {
         }
 
 
-        if ($rawUrl -eq "api/v1/admin/orders" -and $request.HttpMethod -eq "GET") {
+        if (($rawUrl -eq "api/v1/admin/orders" -or $rawUrl -eq "api/v1/admin/logs") -and $request.HttpMethod -eq "GET") {
             $state = Get-SddsState
             $response.ContentType = "application/json; charset=utf-8"
             $json = @{
                 success = $true
                 data = $state.orders
+                orders = $state.orders
+                disposals = $state.disposals
             } | ConvertTo-Json -Depth 4
             $bytes = [System.Text.Encoding]::UTF8.GetBytes($json)
             $response.OutputStream.Write($bytes, 0, $bytes.Length)
