@@ -2721,6 +2721,7 @@
       line-height: 1.25;
       display: -webkit-box;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
       margin-bottom: 2px;
@@ -3162,7 +3163,7 @@
         <section class="flex flex-col items-center justify-center text-center relative z-20" data-purpose="center-touch-hero" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; z-index: 20; margin: auto 0; padding: 0 16px;">
           <div class="absolute -top-10 w-[720px] h-[480px] rounded-full bg-gradient-to-b from-[#9ef01a]/20 via-[#ccff33]/15 to-transparent blur-[110px] pointer-events-none -z-10" style="position: absolute; top: -40px; width: 720px; height: 480px; border-radius: 50%; background: radial-gradient(circle, rgba(158,240,26,0.2) 0%, rgba(204,255,51,0.15) 50%, transparent 70%); filter: blur(110px); pointer-events: none; z-index: -10;"></div>
           
-          <h2 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight uppercase leading-none drop-shadow-sm select-none" style="font-size: clamp(36px, 5.2vw, 72px); font-weight: 900; letter-spacing: -0.01em; text-transform: uppercase; line-height: 1; margin-bottom: 12px; background: linear-gradient(135deg, rgb(9, 26, 18) 0%, rgb(21, 60, 41) 45%, rgb(42, 99, 68) 75%, rgb(15, 36, 25) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: rgba(158, 240, 26, 0.18) 0px 4px 24px; user-select: none;">
+          <h2 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight uppercase leading-none drop-shadow-sm select-none" style="font-size: clamp(36px, 5.2vw, 72px); font-weight: 900; letter-spacing: -0.01em; text-transform: uppercase; line-height: 1; margin-bottom: 12px; background: linear-gradient(135deg, rgb(9, 26, 18) 0%, rgb(21, 60, 41) 45%, rgb(42, 99, 68) 75%, rgb(15, 36, 25) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: rgba(158, 240, 26, 0.18) 0px 4px 24px; user-select: none;">
             TOUCH THE DISPLAY
           </h2>
 
@@ -3297,7 +3298,7 @@
             </div>
 
             <!-- Footer Action Button -->
-            <div style="width: 100%; pt-2; border-top: 1px solid rgba(15, 36, 21, 0.1); display: flex; align-items: center; justify-content: space-between; padding-top: 12px; margin-top: 8px;">
+            <div style="width: 100%; border-top: 1px solid rgba(15, 36, 21, 0.1); display: flex; align-items: center; justify-content: space-between; padding-top: 12px; margin-top: 8px;">
               <span style="font-size: 11.5px; font-weight: 700; color: #234d31;">Earn Eco Rewards</span>
               <div class="p2-card-btn-cta" style="background: linear-gradient(135deg, #9ef01a 0%, #ccff33 100%); color: #132209;">
                 <span>Touch to Open</span>
@@ -3360,7 +3361,7 @@
             </div>
 
             <!-- Footer Action Button -->
-            <div style="width: 100%; pt-2; border-top: 1px solid rgba(15, 36, 21, 0.1); display: flex; align-items: center; justify-content: space-between; padding-top: 12px; margin-top: 8px;">
+            <div style="width: 100%; border-top: 1px solid rgba(15, 36, 21, 0.1); display: flex; align-items: center; justify-content: space-between; padding-top: 12px; margin-top: 8px;">
               <span style="font-size: 11.5px; font-weight: 700; color: #234d31;">UPI / Card / Voucher</span>
               <div class="p2-card-btn-cta" style="background: linear-gradient(135deg, #ccff33 0%, #9ef01a 100%); color: #132209;">
                 <span>Shop &amp; Dispense</span>
@@ -3403,7 +3404,7 @@
             </div>
 
             <!-- Footer Action Button -->
-            <div style="width: 100%; pt-2; border-top: 1px solid rgba(15, 36, 21, 0.1); display: flex; align-items: center; justify-content: space-between; padding-top: 12px; margin-top: 8px;">
+            <div style="width: 100%; border-top: 1px solid rgba(15, 36, 21, 0.1); display: flex; align-items: center; justify-content: space-between; padding-top: 12px; margin-top: 8px;">
               <span style="font-size: 11.5px; font-weight: 700; color: #0369a1;">System Diagnostics</span>
               <div class="p2-card-btn-cta" style="background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%); color: #ffffff;">
                 <span>View Processing</span>
@@ -7053,7 +7054,6 @@
           progressBar.style.width = Math.min(100, Math.round((curr / targetWeight) * 100)) + '%';
         }
       }, 50);
-    }
     }
 
     // Bin Page 4 Done fallback alias
