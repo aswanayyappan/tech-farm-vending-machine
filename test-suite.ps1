@@ -391,6 +391,11 @@ Assert-Test "run-all.html viewServerProcessing contains 8-stage end-to-end pipel
 Assert-Test "packages/vending-frontend/public/admin.html contains Unified Audit Ledger with filter chips" ($adminContent -match 'chipFilterAll' -and $adminContent -match 'chipFilterBin' -and $adminContent -match 'chipFilterVend')
 Assert-Test "start-server.ps1 provides unified /api/v1/admin/orders with disposals" (((curl.exe -s http://localhost:3000/api/v1/admin/orders) -join '') -match 'disposals')
 
+# CHG-20261120-dedicated-bin-qr-scan-page Assertions
+Assert-Test "run-all.html defines dedicated full-page #viewBinScanPage" ($runAllContent -match 'id="viewBinScanPage"' -and $runAllContent -match 'binScanCameraFeed')
+Assert-Test "run-all.html implements goToBinScanPage and simulateAcceptScanQr" ($runAllContent -match 'function goToBinScanPage\(\)' -and $runAllContent -match 'function simulateAcceptScanQr\(\)')
+Assert-Test "architecture/PIPELINE.md exists with end-to-end specification" (Test-Path (Join-Path $PSScriptRoot "architecture\PIPELINE.md"))
+
 Assert-Test "index.html is synchronized with run-all.html" ($runAllContent.Length -eq $indexContent.Length)
 
 Write-Host ""

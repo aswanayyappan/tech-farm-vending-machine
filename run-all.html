@@ -4070,8 +4070,211 @@
             <i class="fa-solid fa-scale-balanced" style="color: #9ef01a;"></i>
             <span>AUTO-SENSING HATCH ACTIVE</span>
           </span>
-          <button class="bin4-btn-done" onclick="proceedToBinQrScanner()" type="button" aria-label="Verify QR and proceed to deposit scale">
-            <span>VERIFY QR &amp; DEPOSIT</span>
+          <button class="bin4-btn-done" onclick="goToBinScanPage()" type="button" aria-label="Scan the QR Code">
+            <span>SCAN THE QR CODE</span>
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: #0f2c1c; color: #9ef01a; display: flex; align-items: center; justify-content: center;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
+                <path d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </button>
+        </div>
+      </footer>
+    </section>
+
+    <!-- ======================================================================
+         PAGE 5: DEDICATED OPTICAL QR SCANNER & COMPUTER VISION VERIFICATION
+         ====================================================================== -->
+    <section id="viewBinScanPage" class="bin4-container" style="display: none;">
+      <!-- Grounding Ambient Wave Artwork -->
+      <div style="position: absolute; inset: auto 0 0 0; width: 100vw; height: clamp(260px, 42vh, 460px); pointer-events: none; z-index: 0; overflow: hidden;">
+        <img src="PICS/intoimage.png" alt="Organic Green Wave Graphic" style="width: 100%; height: 100%; object-fit: cover; object-position: bottom center; mix-blend-mode: multiply; opacity: 0.35; mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%); transform: scale(1.05);">
+      </div>
+
+      <!-- Kiosk Header -->
+      <header class="bin4-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 44px; height: 44px; border-radius: 16px; background: #153e28; display: flex; align-items: center; justify-content: center; color: #ccff33; box-shadow: 0 4px 12px rgba(15, 44, 28, 0.2);">
+            <i class="fa-solid fa-camera-viewfinder" style="font-size: 22px;"></i>
+          </div>
+          <div>
+            <div style="font-weight: 900; font-size: 18px; letter-spacing: 1.5px; color: #0f2c1c;">ECOTOUCH</div>
+            <div style="font-size: 11px; font-weight: 700; color: #153e28; opacity: 0.8; letter-spacing: 0.5px;">STAGE 2 OF 3: OPTICAL QR VERIFICATION</div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button onclick="goToBinPage4()" class="bin4-btn-back" type="button" style="padding: 8px 14px; font-size: 13px; font-weight: 800; border-radius: 12px; background: #ffffff; border: 1.5px solid rgba(21, 62, 40, 0.2); color: #0f2c1c; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>BACK TO TICKET</span>
+          </button>
+          <button onclick="endUserSession('USER_ABORTED')" class="bin4-btn-session-end" title="Cancel and Return to Welcome Screen" style="padding: 8px 16px; border-radius: 12px; background: #fee2e2; border: 1.5px solid #fca5a5; color: #b91c1c; font-size: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; touch-action: manipulation;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>END SESSION</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="bin4-main" style="max-width: 1180px; margin: 0 auto; width: 100%; z-index: 1;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="font-size: clamp(24px, 3.2vw, 36px); font-weight: 900; color: #0f2c1c; letter-spacing: -0.5px; margin: 0;">
+            SCAN ADHESIVE QR TAG
+          </h1>
+          <p style="font-size: 14.5px; color: rgba(21, 62, 40, 0.85); font-weight: 700; margin-top: 4px;">
+            Hold the plastic bag with your printed adhesive QR tag in front of the optical scanner camera.
+          </p>
+        </div>
+
+        <!-- Cards Dual Container -->
+        <div class="bin4-grid" style="grid-template-columns: 1.2fr 1fr; gap: 24px;">
+          <!-- Left Card: Live Optical Camera Viewfinder on Display -->
+          <section class="bin4-card" style="display: flex; flex-direction: column; justify-content: space-between; padding: 22px;">
+            <div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid rgba(21, 62, 40, 0.1);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 11px; font-weight: 900; background: #153e28; color: #9ef01a; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;">
+                    LIVE CAMERA APERTURE
+                  </span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.15); padding: 4px 10px; border-radius: 20px; border: 1px solid #10b981;">
+                  <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981; animation: pulse 1.5s infinite;"></span>
+                  <span id="scanPageCamFps" style="font-size: 10.5px; font-weight: 800; color: #065f46; letter-spacing: 0.5px;">CAM 320x240 @ 10FPS ACTIVE</span>
+                </div>
+              </div>
+
+              <!-- High-Visibility Camera Viewfinder Box -->
+              <div style="position: relative; width: 100%; height: 280px; margin-top: 14px; background: #0a170c; border-radius: 18px; border: 3px solid #153e28; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 35px rgba(0,0,0,0.85);">
+                <!-- Active Mirrored Video Stream -->
+                <video id="binScanCameraFeed" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); opacity: 0.85;"></video>
+
+                <!-- Corner Targeting Reticles -->
+                <div style="position: absolute; top: 16px; left: 16px; width: 32px; height: 32px; border-top: 4px solid #9ef01a; border-left: 4px solid #9ef01a; border-top-left-radius: 8px; z-index: 6;"></div>
+                <div style="position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-top: 4px solid #9ef01a; border-right: 4px solid #9ef01a; border-top-right-radius: 8px; z-index: 6;"></div>
+                <div style="position: absolute; bottom: 16px; left: 16px; width: 32px; height: 32px; border-bottom: 4px solid #9ef01a; border-left: 4px solid #9ef01a; border-bottom-left-radius: 8px; z-index: 6;"></div>
+                <div style="position: absolute; bottom: 16px; right: 16px; width: 32px; height: 32px; border-bottom: 4px solid #9ef01a; border-right: 4px solid #9ef01a; border-bottom-right-radius: 8px; z-index: 6;"></div>
+
+                <!-- Laser Scanline Animation -->
+                <div id="scanPageLaserLine" class="scanner-laser-line" style="z-index: 7;"></div>
+
+                <!-- Center Targeting Boundary Reticle -->
+                <div id="scanPageTargetFrame" style="position: absolute; width: 160px; height: 160px; border: 2.5px dashed rgba(158, 240, 26, 0.6); border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; z-index: 6; pointer-events: none; transition: all 0.3s ease;">
+                  <i id="scanPageTargetIcon" class="fa-solid fa-qrcode" style="font-size: 52px; color: #9ef01a; text-shadow: 0 0 14px rgba(158, 240, 26, 0.5);"></i>
+                  <span id="scanPageTargetLabel" style="font-family: monospace; font-size: 11px; font-weight: 900; color: #9ef01a; letter-spacing: 1px; background: rgba(15, 44, 28, 0.85); padding: 2px 8px; border-radius: 4px;">
+                    ALIGN QR IN FRAME
+                  </span>
+                </div>
+
+                <!-- Bottom Telemetry Strip -->
+                <div style="position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0 16px; font-family: monospace; font-size: 11px; color: #9ef01a; z-index: 8; text-shadow: 0 1px 4px rgba(0,0,0,0.8);">
+                  <span>SENSOR: OPTICAL CV</span>
+                  <span id="scanPageTokenDetected">TOKEN: SEARCHING...</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fast Client Demonstration / Testing Action -->
+            <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 10px;">
+              <button id="btnFakeAcceptScan" type="button" onclick="simulateAcceptScanQr()" style="width: 100%; min-height: 52px; border-radius: 14px; background: #0f2c1c; color: #9ef01a; border: 2.5px solid #9ef01a; font-size: 15px; font-weight: 900; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 6px 16px rgba(15, 44, 28, 0.25); touch-action: manipulation; transition: transform 0.15s ease;">
+                <i class="fa-solid fa-bolt" style="font-size: 17px; color: #9ef01a;"></i>
+                <span>⚡ FAKE ACCEPT / SIMULATE SCAN QR</span>
+              </button>
+              <p style="font-size: 11.5px; color: #64748b; font-weight: 700; text-align: center; margin: 0;">
+                Tap above to instantly accept and unseal the intake hatch for fast verification.
+              </p>
+            </div>
+          </section>
+
+          <!-- Right Card: Step-by-Step Instructions & Hatch Unsealing State -->
+          <section class="bin4-card" style="display: flex; flex-direction: column; justify-content: space-between; padding: 22px;">
+            <div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid rgba(21, 62, 40, 0.1);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 11px; font-weight: 900; background: #059669; color: #ffffff; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;">
+                    SCAN GUIDELINES
+                  </span>
+                </div>
+                <span id="scanPageHatchPill" style="font-size: 11px; font-weight: 900; background: #fef3c7; color: #92400e; padding: 3px 10px; border-radius: 20px;">
+                  HATCH SEALED
+                </span>
+              </div>
+
+              <!-- Steps List -->
+              <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 18px;">
+                <div style="display: flex; gap: 12px; align-items: flex-start;">
+                  <div style="width: 28px; height: 28px; border-radius: 8px; background: #153e28; color: #9ef01a; font-weight: 900; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    1
+                  </div>
+                  <div>
+                    <h3 style="font-size: 14px; font-weight: 900; color: #0f2c1c; margin: 0;">Attach Printed QR Tag</h3>
+                    <p style="font-size: 12.5px; color: #475569; font-weight: 600; margin: 2px 0 0 0; line-height: 1.4;">
+                      Peel the adhesive backing from your thermal ticket and stick it visibly onto the diaper plastic bag.
+                    </p>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; align-items: flex-start;">
+                  <div style="width: 28px; height: 28px; border-radius: 8px; background: #153e28; color: #9ef01a; font-weight: 900; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    2
+                  </div>
+                  <div>
+                    <h3 style="font-size: 14px; font-weight: 900; color: #0f2c1c; margin: 0;">Hold Towards Camera</h3>
+                    <p style="font-size: 12.5px; color: #475569; font-weight: 600; margin: 2px 0 0 0; line-height: 1.4;">
+                      Present the QR tag 15–20 cm away from the camera lens located above the intake hatch.
+                    </p>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; align-items: flex-start;">
+                  <div style="width: 28px; height: 28px; border-radius: 8px; background: #153e28; color: #9ef01a; font-weight: 900; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    3
+                  </div>
+                  <div>
+                    <h3 style="font-size: 14px; font-weight: 900; color: #0f2c1c; margin: 0;">Auto-Unsealing &amp; Tare</h3>
+                    <p style="font-size: 12.5px; color: #475569; font-weight: 600; margin: 2px 0 0 0; line-height: 1.4;">
+                      Once verified, the solenoid unseals the intake hatch automatically and initializes the HX711 scale.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Live Verification Feedback Container -->
+              <div id="scanPageLiveNotice" style="margin-top: 18px; padding: 14px; background: rgba(21, 62, 40, 0.06); border: 2px dashed rgba(21, 62, 40, 0.2); border-radius: 14px; text-align: center;">
+                <div style="font-size: 12px; font-weight: 800; color: #153e28; text-transform: uppercase; letter-spacing: 0.5px;">
+                  Current Verification State
+                </div>
+                <div id="scanPageLiveNoticeText" style="font-size: 14.5px; font-weight: 900; color: #0f2c1c; margin-top: 4px;">
+                  🔍 Scanning for QR Tag...
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Action: Direct manual verify -->
+            <div style="margin-top: 18px;">
+              <button type="button" onclick="verifyBinQrTag(true)" style="width: 100%; min-height: 50px; border-radius: 14px; background: #153e28; color: #fefcf6; border: none; font-size: 14.5px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span>VERIFY &amp; PROCEED TO SCALE →</span>
+              </button>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- Bottom Action Bar -->
+      <footer class="bin4-footer">
+        <button class="bin4-btn-back" onclick="goToBinPage4()" type="button" aria-label="Return to Ticket Page">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6"></path>
+          </svg>
+          <span>BACK TO TICKET</span>
+        </button>
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span style="font-size: 13px; font-weight: 800; color: #153e28; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-camera" style="color: #9ef01a;"></i>
+            <span id="scanPageFooterStatus">SCANNING ACTIVE</span>
+          </span>
+          <button class="bin4-btn-done" onclick="simulateAcceptScanQr()" type="button" aria-label="Accept and proceed to scale">
+            <span>ACCEPT &amp; WEIGH</span>
             <div style="width: 32px; height: 32px; border-radius: 50%; background: #0f2c1c; color: #9ef01a; display: flex; align-items: center; justify-content: center;">
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
                 <path d="M9 5l7 7-7 7"></path>
@@ -5325,7 +5528,7 @@
 
     const ALL_KIOSK_VIEW_IDS = [
       'viewPage1', 'viewPage2', 'viewVendingPage3',
-      'viewBinPage4', 'viewVendingPage4', 'viewTerminalStage', 'viewServerProcessing'
+      'viewBinPage4', 'viewBinScanPage', 'viewVendingPage4', 'viewTerminalStage', 'viewServerProcessing'
     ];
 
     function hideAllViews() {
@@ -6458,39 +6661,67 @@
 
     let binScannerTimeout = null;
 
-    // Proceed from Bin Page 4 to Stage 2: Optical QR & Computer Vision Scanner Verification
-    function proceedToBinQrScanner() {
-      const modal = document.getElementById('binQrScannerModal');
-      if (!modal) {
-        openIntegratedBinModal();
-        return;
+    // Dedicated Page 5: Optical QR Scanner & Computer Vision Verification Screen
+    function goToBinScanPage() {
+      showView('viewBinScanPage');
+      currentTerminalMode = 'bin_scan';
+
+      // Mirror live camera stream directly to binScanCameraFeed
+      const scanFeed = document.getElementById('binScanCameraFeed');
+      const mainCam = document.getElementById('kioskCameraVideo');
+      if (scanFeed && mainCam && mainCam.srcObject) {
+        scanFeed.srcObject = mainCam.srcObject;
+        scanFeed.play().catch(() => {});
+      } else if (scanFeed && !isPhysicalWebcamActive) {
+        requestPhysicalWebcam(false).then(() => {
+          const updatedCam = document.getElementById('kioskCameraVideo');
+          if (scanFeed && updatedCam && updatedCam.srcObject) {
+            scanFeed.srcObject = updatedCam.srcObject;
+            scanFeed.play().catch(() => {});
+          }
+        });
       }
 
-      modal.style.display = 'flex';
-      const badge = document.getElementById('scannerTagMatchBadge');
-      const log = document.getElementById('scannerLiveLog');
-      const targetBox = document.getElementById('scannerTargetBox');
-      const targetIcon = document.getElementById('scannerTargetIcon');
-      const targetLabel = document.getElementById('scannerTargetLabel');
+      // Reset Scanner UI elements
+      const notice = document.getElementById('scanPageLiveNoticeText');
+      const tokenDetected = document.getElementById('scanPageTokenDetected');
+      const hatchPill = document.getElementById('scanPageHatchPill');
+      const targetFrame = document.getElementById('scanPageTargetFrame');
+      const targetIcon = document.getElementById('scanPageTargetIcon');
+      const targetLabel = document.getElementById('scanPageTargetLabel');
+      const footerStatus = document.getElementById('scanPageFooterStatus');
 
-      if (badge) {
-        badge.innerText = 'DETECTING...';
-        badge.style.background = '#e0f2fe';
-        badge.style.color = '#0369a1';
+      if (notice) notice.innerText = '🔍 Scanning for QR Tag...';
+      if (tokenDetected) tokenDetected.innerText = 'TOKEN: SEARCHING...';
+      if (hatchPill) {
+        hatchPill.innerText = 'HATCH SEALED';
+        hatchPill.style.background = '#fef3c7';
+        hatchPill.style.color = '#92400e';
       }
-      if (log) log.innerText = 'Positioning camera frame: scanning for printed adhesive QR tag...';
-      if (targetBox) targetBox.style.borderColor = 'rgba(158, 240, 26, 0.45)';
+      if (targetFrame) targetFrame.style.borderColor = 'rgba(158, 240, 26, 0.6)';
       if (targetIcon) {
         targetIcon.className = 'fa-solid fa-qrcode';
         targetIcon.style.color = '#9ef01a';
       }
-      if (targetLabel) targetLabel.innerText = 'ALIGNING TAG...';
+      if (targetLabel) targetLabel.innerText = 'ALIGN QR IN FRAME';
+      if (footerStatus) footerStatus.innerText = 'SCANNING ACTIVE';
 
-      // Auto-trigger optical verification after 1.5s simulating computer vision tag match
+      // Auto-trigger verification after 2.4s simulating CV recognition
       if (binScannerTimeout) clearTimeout(binScannerTimeout);
       binScannerTimeout = setTimeout(() => {
         verifyBinQrTag(false);
-      }, 1500);
+      }, 2400);
+    }
+
+    // Fast Fake Accept / Simulate Scan QR for client demo & testing
+    function simulateAcceptScanQr() {
+      if (binScannerTimeout) clearTimeout(binScannerTimeout);
+      verifyBinQrTag(true);
+    }
+
+    // Backward-compatible alias for modal / script triggers
+    function proceedToBinQrScanner() {
+      goToBinScanPage();
     }
 
     function closeBinQrScannerModal() {
@@ -6503,15 +6734,42 @@
     function verifyBinQrTag(manualOverride = false) {
       if (binScannerTimeout) clearTimeout(binScannerTimeout);
 
-      const badge = document.getElementById('scannerTagMatchBadge');
-      const log = document.getElementById('scannerLiveLog');
-      const targetBox = document.getElementById('scannerTargetBox');
-      const targetIcon = document.getElementById('scannerTargetIcon');
-      const targetLabel = document.getElementById('scannerTargetLabel');
-
       const sessId = (window.binSessionTracking && window.binSessionTracking.sessionId) 
         ? window.binSessionTracking.sessionId 
         : ('SESS-' + Date.now().toString(36).toUpperCase().slice(-4));
+
+      // 1. Update Dedicated Scan Page elements if visible
+      const notice = document.getElementById('scanPageLiveNoticeText');
+      const tokenDetected = document.getElementById('scanPageTokenDetected');
+      const hatchPill = document.getElementById('scanPageHatchPill');
+      const targetFrame = document.getElementById('scanPageTargetFrame');
+      const targetIcon = document.getElementById('scanPageTargetIcon');
+      const targetLabel = document.getElementById('scanPageTargetLabel');
+      const footerStatus = document.getElementById('scanPageFooterStatus');
+
+      if (notice) {
+        notice.innerHTML = `<span style="color:#059669; font-weight:900;">✓ VALIDATED:</span> TAG #${sessId} MATCHED • UNSEALING HATCH...`;
+      }
+      if (tokenDetected) tokenDetected.innerText = `TOKEN: #${sessId} MATCHED`;
+      if (hatchPill) {
+        hatchPill.innerText = '✓ HATCH UNLOCKED';
+        hatchPill.style.background = '#dcfce7';
+        hatchPill.style.color = '#166534';
+      }
+      if (targetFrame) targetFrame.style.borderColor = '#9ef01a';
+      if (targetIcon) {
+        targetIcon.className = 'fa-solid fa-circle-check';
+        targetIcon.style.color = '#9ef01a';
+      }
+      if (targetLabel) targetLabel.innerText = 'QR VERIFIED!';
+      if (footerStatus) footerStatus.innerText = 'HATCH UNLOCKED';
+
+      // 2. Update Modal elements if modal is active
+      const badge = document.getElementById('scannerTagMatchBadge');
+      const log = document.getElementById('scannerLiveLog');
+      const targetBox = document.getElementById('scannerTargetBox');
+      const modalTargetIcon = document.getElementById('scannerTargetIcon');
+      const modalTargetLabel = document.getElementById('scannerTargetLabel');
 
       if (badge) {
         badge.innerText = 'MATCH VERIFIED';
@@ -6522,17 +6780,17 @@
         log.innerHTML = `<span style="color:#059669; font-weight:900;">✓ VALIDATED:</span> TAG #${sessId} MATCHED • UNSEALING INTAKE HATCH...`;
       }
       if (targetBox) targetBox.style.borderColor = '#9ef01a';
-      if (targetIcon) {
-        targetIcon.className = 'fa-solid fa-circle-check';
-        targetIcon.style.color = '#9ef01a';
+      if (modalTargetIcon) {
+        modalTargetIcon.className = 'fa-solid fa-circle-check';
+        modalTargetIcon.style.color = '#9ef01a';
       }
-      if (targetLabel) targetLabel.innerText = 'QR VERIFIED!';
+      if (modalTargetLabel) modalTargetLabel.innerText = 'QR VERIFIED!';
 
       // Seamless transition to Stage 3: HX711 Load Cell Mass Weighing Modal
       setTimeout(() => {
         closeBinQrScannerModal();
         openIntegratedBinModal();
-      }, 650);
+      }, 700);
     }
 
     // Bin Page 4 Done fallback alias
