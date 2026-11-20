@@ -1035,6 +1035,20 @@
                  ],
     "videoRecordings":  [
                             {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  75,
+                                "filename":  "SURV_STANDBY_1MIN_20261120154640..mp4",
+                                "bytes":  3605,
+                                "timestamp":  "2026-11-20T21:16:40.0345076+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  3,
+                                "filename":  "SURV_STANDBY_1MIN_20261120154606..mp4",
+                                "bytes":  120516,
+                                "timestamp":  "2026-11-20T21:16:06.2281276+05:30"
+                            },
+                            {
                                 "sessionId":  "SESS-AUTOTEST-99",
                                 "chunkIndex":  1,
                                 "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
@@ -1719,20 +1733,6 @@
                                 "filename":  "SESS-TEST-CHUNK_chunk_0001_20261120_203057.webm",
                                 "bytes":  25,
                                 "timestamp":  "2026-11-20T20:30:57.7318814+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  47,
-                                "filename":  "SURV_STANDBY_1MIN_20261120150029..mp4",
-                                "bytes":  127711,
-                                "timestamp":  "2026-11-20T20:30:29.0839990+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-AUTOTEST-99",
-                                "chunkIndex":  1,
-                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
-                                "bytes":  1032,
-                                "timestamp":  "2026-11-20T20:30:22.2358456+05:30"
                             }
                         ]
 }
