@@ -398,6 +398,12 @@ Assert-Test "run-all.html defines dedicated full-page #viewBinWeightPage" ($runA
 Assert-Test "run-all.html implements goToBinWeightPage and registers in ALL_KIOSK_VIEW_IDS" ($runAllContent -match 'function goToBinWeightPage\(\)' -and $runAllContent -match "'viewBinWeightPage'")
 Assert-Test "architecture/PIPELINE.md exists with end-to-end specification" (Test-Path (Join-Path $PSScriptRoot "architecture\PIPELINE.md"))
 
+# CHG-20261120-pictorial-flowchart-and-remove-log Assertions
+Assert-Test "run-all.html viewServerProcessing contains pictorial flowchart topology" ($runAllContent -match 'diagNodeClientUI' -and $runAllContent -match 'diagNodeGateway' -and $runAllContent -match 'diagNodeRedis')
+Assert-Test "run-all.html viewServerProcessing removed legacy raw text console log box" (!($runAllContent -match 'id="serverConsoleBox"'))
+Assert-Test "run-all.html implements selectPipelineNode and runAutoPlayFlow" ($runAllContent -match 'function selectPipelineNode\(' -and $runAllContent -match 'function runAutoPlayFlow\(')
+Assert-Test "functions/shared/selectPipelineNode.md and runAutoPlayFlow.md exist" ((Test-Path (Join-Path $PSScriptRoot "functions\shared\selectPipelineNode.md")) -and (Test-Path (Join-Path $PSScriptRoot "functions\shared\runAutoPlayFlow.md")))
+
 Assert-Test "index.html is synchronized with run-all.html" ($runAllContent.Length -eq $indexContent.Length)
 
 Write-Host ""

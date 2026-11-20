@@ -598,11 +598,49 @@
       border: 1px solid rgba(15, 36, 21, 0.08);
       margin-bottom: 10px;
       transition: all 0.25s ease;
+      cursor: pointer;
+    }
+    .server-pipeline-node:hover {
+      background: #f0fdf4;
+      border-color: #22c55e;
+      transform: translateY(-1px);
     }
     .server-pipeline-node.active-flash {
       background: #ecfdf5;
       border-color: #34d399;
       box-shadow: 0 0 16px rgba(52, 211, 153, 0.4);
+    }
+    .flowchart-box {
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .flowchart-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+    .flowchart-box.active {
+      border-color: #9ef01a !important;
+      background: rgba(158, 240, 26, 0.18) !important;
+      box-shadow: 0 0 16px rgba(158, 240, 26, 0.4) !important;
+    }
+    .flowchart-tab-btn {
+      padding: 10px 8px;
+      font-size: 11.5px;
+      font-weight: 800;
+      border-radius: 10px;
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+      text-align: center;
+    }
+    .flowchart-tab-btn:hover, .flowchart-tab-btn.active {
+      background: #0f2c1c;
+      color: #9ef01a;
+      border-color: #9ef01a;
     }
     .server-sim-btn {
       width: 100%;
@@ -3433,15 +3471,19 @@
       <header class="server-proc-header">
         <div style="display: flex; align-items: center; gap: 12px;">
           <div style="width: 44px; height: 44px; border-radius: 16px; background: #0f172a; display: flex; align-items: center; justify-content: center; color: #38bdf8; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);">
-            <i class="fa-solid fa-server" style="font-size: 20px;"></i>
+            <i class="fa-solid fa-network-wired" style="font-size: 20px;"></i>
           </div>
           <div>
-            <div style="font-weight: 900; font-size: 18px; letter-spacing: 1.5px; color: #0f2c1c;">SDDS CORE SYSTEM ENGINE</div>
-            <div style="font-size: 11px; font-weight: 700; color: #0369a1; letter-spacing: 0.5px;">LIVE INTERNAL PROCESSING &amp; HARDWARE PIPELINE</div>
+            <div style="font-weight: 900; font-size: 18px; letter-spacing: 1.5px; color: #0f2c1c;">SDDS ENTERPRISE ARCHITECTURE</div>
+            <div style="font-size: 11px; font-weight: 700; color: #0369a1; letter-spacing: 0.5px;">PICTORIAL SOFTWARE FLOWCHART &amp; MICROSERVICES TOPOLOGY</div>
           </div>
         </div>
 
         <div style="display: flex; align-items: center; gap: 12px;">
+          <button id="btnAutoPlayFlow" onclick="runAutoPlayFlow()" class="server-btn-menu-back" type="button" style="background: #0f172a; color: #38bdf8; border: 1.5px solid #0284c7; gap: 8px;">
+            <i class="fa-solid fa-play"></i>
+            <span>AUTO-PLAY LIVE FLOW</span>
+          </button>
           <div class="server-status-pill">
             <span class="server-status-ping"></span>
             <span id="serverDaemonHealthText">HTTP 200 • PORT 3000 ONLINE</span>
@@ -3467,7 +3509,7 @@
                 End-to-End System Pipeline
               </h2>
               <p style="font-size: 12px; color: #64748b; font-weight: 600; margin: 2px 0 0 0;">
-                Upstream Sensors $\rightarrow$ Edge Server Runtime $\rightarrow$ Hardware Actuators
+                Kiosk Frontend → Edge API Gateway → Redis → Microservices → Persistence &amp; Cloud
               </p>
             </div>
             <span style="font-size: 11px; font-weight: 800; background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 8px;">
@@ -3476,7 +3518,7 @@
           </div>
 
           <!-- Step 1: Client Kiosk UI & WebRTC Stream Capture -->
-          <div id="pipeNodeClientUI" class="server-pipeline-node">
+          <div id="pipeNodeClientUI" class="server-pipeline-node" onclick="selectPipelineNode('client_ui')">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(14, 165, 233, 0.15); color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-desktop"></i>
             </div>
@@ -3492,7 +3534,7 @@
           </div>
 
           <!-- Step 2: Edge API Gateway & Reverse Proxy -->
-          <div id="pipeNodeGateway" class="server-pipeline-node">
+          <div id="pipeNodeGateway" class="server-pipeline-node" onclick="selectPipelineNode('api_gateway')">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(34, 197, 94, 0.15); color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-network-wired"></i>
             </div>
@@ -3508,7 +3550,7 @@
           </div>
 
           <!-- Step 3: Redis In-Memory Cache & Pub/Sub -->
-          <div id="pipeNodeRedis" class="server-pipeline-node">
+          <div id="pipeNodeRedis" class="server-pipeline-node" onclick="selectPipelineNode('redis_cache')">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(239, 68, 68, 0.15); color: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-bolt"></i>
             </div>
@@ -3524,7 +3566,7 @@
           </div>
 
           <!-- Step 4: Core Application Microservices -->
-          <div id="pipeNodeMicroservices" class="server-pipeline-node">
+          <div id="pipeNodeMicroservices" class="server-pipeline-node" onclick="selectPipelineNode('microservices')">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(234, 179, 8, 0.15); color: #ca8a04; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-cubes"></i>
             </div>
@@ -3540,7 +3582,7 @@
           </div>
 
           <!-- Step 5: Database & Persistence Layer -->
-          <div id="pipeNodeDatabase" class="server-pipeline-node">
+          <div id="pipeNodeDatabase" class="server-pipeline-node" onclick="selectPipelineNode('database')">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(168, 85, 247, 0.15); color: #9333ea; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-database"></i>
             </div>
@@ -3556,7 +3598,7 @@
           </div>
 
           <!-- Step 6: Payment Gateway Integration -->
-          <div id="pipeNodePayments" class="server-pipeline-node">
+          <div id="pipeNodePayments" class="server-pipeline-node" onclick="selectPipelineNode('payments')">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(99, 102, 241, 0.15); color: #4f46e5; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-credit-card"></i>
             </div>
@@ -3572,7 +3614,7 @@
           </div>
 
           <!-- Step 7: Cloud Storage & Surveillance Ingestion -->
-          <div id="pipeNodeCloud" class="server-pipeline-node">
+          <div id="pipeNodeCloud" class="server-pipeline-node" onclick="selectPipelineNode('cloud_s3')">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(59, 130, 246, 0.15); color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-cloud-arrow-up"></i>
             </div>
@@ -3588,7 +3630,7 @@
           </div>
 
           <!-- Step 8: Observability & Central Admin Portal -->
-          <div id="pipeNodeObservability" class="server-pipeline-node">
+          <div id="pipeNodeObservability" class="server-pipeline-node" onclick="selectPipelineNode('observability')">
             <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(15, 23, 42, 0.15); color: #0f172a; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
               <i class="fa-solid fa-chart-line"></i>
             </div>
@@ -3604,102 +3646,137 @@
           </div>
         </div>
 
-        <!-- Right: Interactive Client Simulator & Live Console Terminal -->
-        <div class="server-card">
+        <!-- Right: Pictorial Software Architecture Flowchart & Live Stage Inspector -->
+        <div class="server-card" style="display: flex; flex-direction: column; gap: 14px;">
           <div class="server-card-head">
             <div>
               <h2 style="font-size: 16px; font-weight: 900; color: #0f2c1c; text-transform: uppercase; margin: 0; letter-spacing: 0.5px;">
-                Client Demonstration Terminal
+                Pictorial Architecture Flowchart
               </h2>
               <p style="font-size: 12px; color: #64748b; font-weight: 600; margin: 2px 0 0 0;">
-                Trigger live server processing routines in real time
+                Visual Microservices Topology &amp; Live Data Flow (Touch Any Block)
               </p>
             </div>
-            <button onclick="clearServerConsole()" style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 700; color: #475569; cursor: pointer;">
-              Clear Console
+            <button id="btnPlayDiagramFlow" onclick="runAutoPlayFlow()" style="background: #0f2c1c; border: 1.5px solid #9ef01a; border-radius: 10px; padding: 6px 12px; font-size: 12px; font-weight: 800; color: #9ef01a; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-play"></i>
+              <span>Auto-Play Flow</span>
             </button>
           </div>
 
-          <!-- Action Buttons (Pure Software Pipeline Stages) -->
-          <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px;">
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('client_ui')">
-              <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-desktop" style="color: #0284c7;"></i>
-                <span>1. Client Kiosk UI &amp; WebRTC Stream</span>
-              </span>
-              <span style="font-size: 11px; font-family: monospace; background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px;">DOM_STATE</span>
-            </button>
+          <!-- Graphical Visual Flowchart Diagram Canvas -->
+          <div style="background: #0a1711; border: 1.5px solid rgba(158, 240, 26, 0.25); border-radius: 16px; padding: 16px; position: relative; overflow: hidden; box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);">
+            <!-- Background Grid Pattern -->
+            <div style="position: absolute; inset: 0; background-image: radial-gradient(rgba(158, 240, 26, 0.08) 1px, transparent 1px); background-size: 16px 16px; pointer-events: none;"></div>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('api_gateway')">
-              <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-network-wired" style="color: #16a34a;"></i>
-                <span>2. API Gateway Routing &amp; Reverse Proxy</span>
-              </span>
-              <span style="font-size: 11px; font-family: monospace; background: #dcfce7; color: #166534; padding: 3px 8px; border-radius: 6px;">PORT 3000</span>
-            </button>
+            <!-- Visual Flowchart Grid -->
+            <div style="position: relative; z-index: 1; display: flex; flex-direction: column; gap: 10px;">
+              
+              <!-- Top Row: Tier 1 Client UI -> Tier 2 API Gateway -->
+              <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px;">
+                <div id="diagNodeClientUI" onclick="selectPipelineNode('client_ui')" class="flowchart-box active" style="background: rgba(14, 165, 233, 0.15); border: 1.5px solid #0284c7; border-radius: 12px; padding: 10px; cursor: pointer; transition: all 0.2s ease;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-desktop" style="color: #38bdf8; font-size: 16px;"></i>
+                    <span style="font-size: 12.5px; font-weight: 900; color: #f0f9ff;">1. Client Kiosk UI</span>
+                  </div>
+                  <div style="font-size: 10.5px; color: #7dd3fc; margin-top: 4px; font-weight: 700;">WebRTC 320x240 @ 10fps • SPA</div>
+                </div>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('redis_cache')">
-              <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-bolt" style="color: #dc2626;"></i>
-                <span>3. Redis Cache Store &amp; Pub/Sub Broadcast</span>
-              </span>
-              <span style="font-size: 11px; font-family: monospace; background: #fee2e2; color: #b91c1c; padding: 3px 8px; border-radius: 6px;">IN_MEMORY</span>
-            </button>
+                <div style="color: #38bdf8; font-size: 16px; display: flex; align-items: center; justify-content: center;">
+                  <i class="fa-solid fa-arrow-right animate-pulse"></i>
+                </div>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('microservices')">
-              <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-cubes" style="color: #ca8a04;"></i>
-                <span>4. Microservice Disposal &amp; Reward Logic</span>
-              </span>
-              <span style="font-size: 11px; font-family: monospace; background: #fef08a; color: #854d0e; padding: 3px 8px; border-radius: 6px;">FORMULA_MINT</span>
-            </button>
+                <div id="diagNodeGateway" onclick="selectPipelineNode('api_gateway')" class="flowchart-box" style="background: rgba(34, 197, 94, 0.12); border: 1.5px solid rgba(34, 197, 94, 0.4); border-radius: 12px; padding: 10px; cursor: pointer; transition: all 0.2s ease;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-network-wired" style="color: #4ade80; font-size: 16px;"></i>
+                    <span style="font-size: 12.5px; font-weight: 900; color: #f0fdf4;">2. API Gateway</span>
+                  </div>
+                  <div style="font-size: 10.5px; color: #86efac; margin-top: 4px; font-weight: 700;">Express Port 3000 • 100 req/min</div>
+                </div>
+              </div>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('database')">
-              <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-database" style="color: #9333ea;"></i>
-                <span>5. Database ACID Transaction Commit</span>
-              </span>
-              <span style="font-size: 11px; font-family: monospace; background: #f3e8ff; color: #6b21a8; padding: 3px 8px; border-radius: 6px;">ACID_STORE</span>
-            </button>
+              <!-- Connector Row Downward -->
+              <div style="display: flex; justify-content: flex-end; padding-right: 22%; color: #4ade80; font-size: 14px;">
+                <i class="fa-solid fa-arrow-down animate-pulse"></i>
+              </div>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('payments')">
-              <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-credit-card" style="color: #4f46e5;"></i>
-                <span>6. Razorpay UPI Payment &amp; HMAC Webhook</span>
-              </span>
-              <span style="font-size: 11px; font-family: monospace; background: #e0e7ff; color: #3730a3; padding: 3px 8px; border-radius: 6px;">POST /create-order</span>
-            </button>
+              <!-- Middle Row: Tier 3 Redis Cache -> Tier 4 Core Microservices -->
+              <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px;">
+                <div id="diagNodeRedis" onclick="selectPipelineNode('redis_cache')" class="flowchart-box" style="background: rgba(239, 68, 68, 0.12); border: 1.5px solid rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 10px; cursor: pointer; transition: all 0.2s ease;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-bolt" style="color: #f87171; font-size: 16px;"></i>
+                    <span style="font-size: 12.5px; font-weight: 900; color: #fef2f2;">3. Redis Cache</span>
+                  </div>
+                  <div style="font-size: 10.5px; color: #fca5a5; margin-top: 4px; font-weight: 700;">Hot Sessions • Pub/Sub • Locks</div>
+                </div>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('cloud_s3')">
-              <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-cloud-arrow-up" style="color: #2563eb;"></i>
-                <span>7. Cloud S3 Video Chunk Archival</span>
-              </span>
-              <span style="font-size: 11px; font-family: monospace; background: #dbeafe; color: #1e40af; padding: 3px 8px; border-radius: 6px;">S3_MULTIPART</span>
-            </button>
+                <div style="color: #f87171; font-size: 16px; display: flex; align-items: center; justify-content: center;">
+                  <i class="fa-solid fa-arrow-left animate-pulse"></i>
+                </div>
 
-            <button class="server-sim-btn" onclick="simulateServerPipelineStep('observability')">
-              <span style="display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-chart-line" style="color: #0f172a;"></i>
-                <span>8. Prometheus Metrics &amp; Admin Audit Sync</span>
-              </span>
-              <span style="font-size: 11px; font-family: monospace; background: #f1f5f9; color: #0f172a; padding: 3px 8px; border-radius: 6px;">GET /metrics</span>
-            </button>
+                <div id="diagNodeMicroservices" onclick="selectPipelineNode('microservices')" class="flowchart-box" style="background: rgba(234, 179, 8, 0.12); border: 1.5px solid rgba(234, 179, 8, 0.4); border-radius: 12px; padding: 10px; cursor: pointer; transition: all 0.2s ease;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-cubes" style="color: #facc15; font-size: 16px;"></i>
+                    <span style="font-size: 12.5px; font-weight: 900; color: #fefce8;">4. Microservices</span>
+                  </div>
+                  <div style="font-size: 10.5px; color: #fde047; margin-top: 4px; font-weight: 700;">Reward Formula • Orders</div>
+                </div>
+              </div>
+
+              <!-- Connector Row Fan-Out -->
+              <div style="display: flex; align-items: center; justify-content: space-around; color: #facc15; font-size: 14px; margin-top: 2px;">
+                <i class="fa-solid fa-arrow-down animate-pulse"></i>
+                <i class="fa-solid fa-arrow-down animate-pulse"></i>
+                <i class="fa-solid fa-arrow-down animate-pulse"></i>
+                <i class="fa-solid fa-arrow-down animate-pulse"></i>
+              </div>
+
+              <!-- Bottom Row: 4 Parallel Microservice Destinations -->
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+                <div id="diagNodeDatabase" onclick="selectPipelineNode('database')" class="flowchart-box" style="background: rgba(168, 85, 247, 0.12); border: 1.5px solid rgba(168, 85, 247, 0.4); border-radius: 10px; padding: 8px 6px; cursor: pointer; text-align: center; transition: all 0.2s ease;">
+                  <i class="fa-solid fa-database" style="color: #c084fc; font-size: 15px;"></i>
+                  <div style="font-size: 11px; font-weight: 900; color: #f3e8ff; margin-top: 3px;">5. Database</div>
+                  <div style="font-size: 9.5px; color: #d8b4fe; font-weight: 700;">ACID Store</div>
+                </div>
+
+                <div id="diagNodePayments" onclick="selectPipelineNode('payments')" class="flowchart-box" style="background: rgba(99, 102, 241, 0.12); border: 1.5px solid rgba(99, 102, 241, 0.4); border-radius: 10px; padding: 8px 6px; cursor: pointer; text-align: center; transition: all 0.2s ease;">
+                  <i class="fa-solid fa-credit-card" style="color: #818cf8; font-size: 15px;"></i>
+                  <div style="font-size: 11px; font-weight: 900; color: #e0e7ff; margin-top: 3px;">6. Razorpay</div>
+                  <div style="font-size: 9.5px; color: #a5b4fc; font-weight: 700;">UPI &amp; Webhook</div>
+                </div>
+
+                <div id="diagNodeCloud" onclick="selectPipelineNode('cloud_s3')" class="flowchart-box" style="background: rgba(59, 130, 246, 0.12); border: 1.5px solid rgba(59, 130, 246, 0.4); border-radius: 10px; padding: 8px 6px; cursor: pointer; text-align: center; transition: all 0.2s ease;">
+                  <i class="fa-solid fa-cloud-arrow-up" style="color: #60a5fa; font-size: 15px;"></i>
+                  <div style="font-size: 11px; font-weight: 900; color: #eff6ff; margin-top: 3px;">7. Cloud S3</div>
+                  <div style="font-size: 9.5px; color: #93c5fd; font-weight: 700;">Chunk Slices</div>
+                </div>
+
+                <div id="diagNodeObservability" onclick="selectPipelineNode('observability')" class="flowchart-box" style="background: rgba(15, 23, 42, 0.4); border: 1.5px solid rgba(148, 163, 184, 0.4); border-radius: 10px; padding: 8px 6px; cursor: pointer; text-align: center; transition: all 0.2s ease;">
+                  <i class="fa-solid fa-chart-line" style="color: #94a3b8; font-size: 15px;"></i>
+                  <div style="font-size: 11px; font-weight: 900; color: #f8fafc; margin-top: 3px;">8. Admin Telemetry</div>
+                  <div style="font-size: 9.5px; color: #cbd5e1; font-weight: 700;">/metrics Ledger</div>
+                </div>
+              </div>
+
+            </div>
           </div>
 
-          <!-- Live Terminal Output -->
-          <div style="font-size: 12px; font-weight: 800; color: #0f2c1c; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
-            <span><i class="fa-solid fa-terminal" style="margin-right: 6px;"></i> Live Daemon Output Log</span>
-            <span id="serverConsoleStatus" style="color: #16a34a; font-size: 11px;">Listening on Port 3000...</span>
+          <!-- Middle Section: Selected Subsystem Pictorial Stage Inspector -->
+          <div id="pictorialDetailCard" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 16px; padding: 18px;">
+            <!-- Dynamically populated pictorial breakdown -->
           </div>
-          <div id="serverConsoleBox" class="server-console-box">
-            <div><span style="color: #64748b;">[SYS_INIT]</span> SDDS Core Server Engine Initialized. Listening on HTTP Port 3000.</div>
-            <div><span style="color: #64748b;">[CAM_CFG]</span> Video stream constraints locked to ultra-low 320x240 @ 10fps (90 kbps).</div>
-            <div><span style="color: #64748b;">[HX711]</span> Load cell calibrated. Tare baseline 0g ready for intake.</div>
-            <div><span style="color: #38bdf8;">[READY]</span> Tap any demonstration button above to see internal server processing.</div>
+
+          <!-- Bottom: Interactive Step Switcher Tabs -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+            <button class="flowchart-tab-btn active" onclick="selectPipelineNode('client_ui')">1. UI</button>
+            <button class="flowchart-tab-btn" onclick="selectPipelineNode('api_gateway')">2. Gateway</button>
+            <button class="flowchart-tab-btn" onclick="selectPipelineNode('redis_cache')">3. Redis</button>
+            <button class="flowchart-tab-btn" onclick="selectPipelineNode('microservices')">4. Services</button>
+            <button class="flowchart-tab-btn" onclick="selectPipelineNode('database')">5. Database</button>
+            <button class="flowchart-tab-btn" onclick="selectPipelineNode('payments')">6. Payments</button>
+            <button class="flowchart-tab-btn" onclick="selectPipelineNode('cloud_s3')">7. Cloud S3</button>
+            <button class="flowchart-tab-btn" onclick="selectPipelineNode('observability')">8. Metrics</button>
           </div>
         </div>
-      </main>
     </section>
 
     <!-- ======================================================================
@@ -5812,6 +5889,9 @@
       showView('viewServerProcessing');
       currentTerminalMode = 'server_processing';
       pollServerProcessingMetrics();
+      if (typeof selectPipelineNode === 'function') {
+        selectPipelineNode('client_ui', false);
+      }
     }
 
     // Go to Bin Page 3 (deprecated -> routes directly to Bin Page 4)
@@ -8210,34 +8290,336 @@
     }
 
     // ==========================================================================
-    // INTERNAL SERVER PROCESSING & PIPELINE DEMONSTRATION CONTROLLER (Rule 11)
+    // INTERNAL SERVER PROCESSING & PICTORIAL FLOWCHART CONTROLLER (Rule 11)
     // ==========================================================================
-    function clearServerConsole() {
-      const box = document.getElementById('serverConsoleBox');
-      if (box) box.innerHTML = `<div><span style="color: #64748b;">[CLEARED]</span> Console log cleared at ${new Date().toLocaleTimeString()}.</div>`;
+    const PIPELINE_SUBSYSTEMS_META = {
+      client_ui: {
+        id: 'client_ui',
+        leftNodeId: 'pipeNodeClientUI',
+        diagNodeId: 'diagNodeClientUI',
+        title: '1. Client Kiosk Touch UI & WebRTC Stream Capture',
+        icon: 'fa-desktop',
+        badge: 'FRONTEND RUNTIME • PORT 3000',
+        badgeColor: '#0284c7',
+        upstream: 'Touch Display Interactivity & Surveillance Camera Lens',
+        logic: 'Encodes 320×240 @ 10fps (90 kbps) surveillance stream. Manages deterministic kiosk state machine with BroadcastChannel cross-tab bus.',
+        downstream: 'Edge API Gateway (Port 3000) & Operator Admin Bus',
+        specs: [
+          { label: 'RESOLUTION', val: '320×240' },
+          { label: 'BITRATE', val: '90 kbps (Rule 3)' },
+          { label: 'STATE ENGINE', val: 'Deterministic SPA' },
+          { label: 'BUS', val: 'BroadcastChannel' }
+        ],
+        talkingPoints: [
+          'Deterministic kiosk state machine eliminates overlapping popups and memory leaks.',
+          'Surveillance video stream constrained to 320×240 @ 10fps for minimal edge CPU footprint.',
+          'Cross-tab event bus synchronizes cart, weight, and voucher redemptions in real time.'
+        ]
+      },
+      api_gateway: {
+        id: 'api_gateway',
+        leftNodeId: 'pipeNodeGateway',
+        diagNodeId: 'diagNodeGateway',
+        title: '2. Edge API Gateway & Reverse Proxy',
+        icon: 'fa-network-wired',
+        badge: 'EXPRESS / PORT 3000 • SECURITY',
+        badgeColor: '#16a34a',
+        upstream: 'Client Kiosk HTTPS Requests & Webhook Callbacks',
+        logic: 'Enforces token-bucket rate limiting (100 req/min), CORS headers, path-traversal sanitization, TLS termination, and route dispatch.',
+        downstream: 'Internal Microservice Routers (/bin, /orders, /payments, /admin)',
+        specs: [
+          { label: 'PORT', val: '3000' },
+          { label: 'RATE LIMIT', val: '100 req/min' },
+          { label: 'THROTTLING', val: 'Token Bucket' },
+          { label: 'SANITATION', val: 'Zod Runtime' }
+        ],
+        talkingPoints: [
+          'Unified entry point acts as reverse proxy protecting microservices from edge bursts.',
+          'Path traversal defense strips unauthorized traversal attacks from file chunk uploads.',
+          'Constant-time token validation secures administrative control endpoints.'
+        ]
+      },
+      redis_cache: {
+        id: 'redis_cache',
+        leftNodeId: 'pipeNodeRedis',
+        diagNodeId: 'diagNodeRedis',
+        title: '3. Redis In-Memory Cache & Distributed Pub/Sub',
+        icon: 'fa-bolt',
+        badge: 'SUB-MILLISECOND IN-MEMORY',
+        badgeColor: '#dc2626',
+        upstream: 'Edge API Gateway Dispatched Requests',
+        logic: 'Maintains hot customer session tokens with 60s TTL, single-use QR token verification, Redlock concurrency locks, and real-time Pub/Sub broadcast.',
+        downstream: 'Core Business Microservices & Real-Time Subscribers',
+        specs: [
+          { label: 'LATENCY', val: '< 1ms' },
+          { label: 'SESSION TTL', val: '60 Seconds' },
+          { label: 'LOCKING', val: 'Redlock Mutex' },
+          { label: 'PUBSUB', val: 'kiosk:events' }
+        ],
+        talkingPoints: [
+          'Ultra-fast in-memory lookup provides instant response for kiosk touch operations.',
+          'Single-use QR voucher tokens are atomically invalidated upon first redemption.',
+          'Distributed Redlock prevents concurrent double-dispensing during simultaneous requests.'
+        ]
+      },
+      microservices: {
+        id: 'microservices',
+        leftNodeId: 'pipeNodeMicroservices',
+        diagNodeId: 'diagNodeMicroservices',
+        title: '4. Core Application Microservices Tier',
+        icon: 'fa-cubes',
+        badge: 'REWARD & ORDER ENGINES',
+        badgeColor: '#ca8a04',
+        upstream: 'Sanitized Inbound Requests & Redis Session Tokens',
+        logic: 'Executes dynamic eco-reward formula min(25%, 5% + floor((w-50)/50)), mints cryptographic voucher tokens, and manages order lifecycle.',
+        downstream: 'ACID Database, Razorpay Payment Gateway & GPIO Actuators',
+        specs: [
+          { label: 'FORMULA', val: 'min(25%, 5% + (w-50)/50)' },
+          { label: 'BASE WEIGHT', val: '50g Min Filter' },
+          { label: 'MAX DISCOUNT', val: '25% Capped' },
+          { label: 'TOKEN', val: 'ECO-20-XXXX' }
+        ],
+        talkingPoints: [
+          'Dynamic incentive engine rewards diaper deposits according to verified weight.',
+          'Autonomous microservice architecture decouples deposit logic from vending checkout.',
+          'Mints cryptographically signed voucher codes that bind directly to active sessions.'
+        ]
+      },
+      database: {
+        id: 'database',
+        leftNodeId: 'pipeNodeDatabase',
+        diagNodeId: 'diagNodeDatabase',
+        title: '5. Database & ACID Persistence Tier',
+        icon: 'fa-database',
+        badge: 'ACID TRANSACTIONAL STORE',
+        badgeColor: '#9333ea',
+        upstream: 'Microservice Transaction Commits',
+        logic: 'Performs ACID transaction commits with atomic file mutex locking on data/sdds-state.json, guaranteeing edge resilience.',
+        downstream: 'Unified Audit Ledger & Central Reporting History',
+        specs: [
+          { label: 'FILE STATE', val: 'data/sdds-state.json' },
+          { label: 'GUARANTEE', val: 'ACID Atomic Mutex' },
+          { label: 'PERSISTENCE', val: 'Edge Resilient' },
+          { label: 'OFFLINE', val: '100% Operational' }
+        ],
+        talkingPoints: [
+          'Atomic file mutex locking prevents database write collisions on local edge storage.',
+          'Full offline capability ensures the kiosk functions even when the internet is disconnected.',
+          'Maintains immutable historical logs of all diaper weight entries and purchases.'
+        ]
+      },
+      payments: {
+        id: 'payments',
+        leftNodeId: 'pipeNodePayments',
+        diagNodeId: 'diagNodePayments',
+        title: '6. Razorpay UPI Payment Gateway',
+        icon: 'fa-credit-card',
+        badge: 'TOUCHLESS UPI & WEBHOOKS',
+        badgeColor: '#4f46e5',
+        upstream: 'Customer Vending Cart & Applied Voucher Discount',
+        logic: 'Generates dynamic Razorpay UPI QR codes with paise conversion; validates incoming HMAC SHA-256 webhook signatures before motor authorization.',
+        downstream: 'Order Fulfillment & Stepper Motor Dispersion',
+        specs: [
+          { label: 'GATEWAY', val: 'Razorpay / Stripe' },
+          { label: 'CURRENCY', val: 'Rupees (₹) / Paise' },
+          { label: 'SECURITY', val: 'HMAC SHA-256' },
+          { label: 'FULFILLMENT', val: 'Idempotent' }
+        ],
+        talkingPoints: [
+          'Generates real-time dynamic UPI QR codes so customers can pay with any UPI app.',
+          'HMAC SHA-256 cryptographic verification guarantees payment webhook integrity.',
+          'Idempotent payment handler guarantees each payment dispenses diapers exactly once.'
+        ]
+      },
+      cloud_s3: {
+        id: 'cloud_s3',
+        leftNodeId: 'pipeNodeCloud',
+        diagNodeId: 'diagNodeCloud',
+        title: '7. Cloud Storage & Video Chunk Ingestion',
+        icon: 'fa-cloud-arrow-up',
+        badge: 'AWS S3 / CLOUD BLOB',
+        badgeColor: '#2563eb',
+        upstream: '60-Second Surveillance Video Slices',
+        logic: 'Streams multipart video slices to s3://sdds-kiosk-vault with automated 30-day lifecycle expiration rules.',
+        downstream: 'Cloud Archive & Compliance Audit Vault',
+        specs: [
+          { label: 'BUCKET', val: 's3://sdds-kiosk-vault' },
+          { label: 'CHUNK SLICE', val: '60 Seconds' },
+          { label: 'EXPIRATION', val: '30-Day Auto Prune' },
+          { label: 'FORMAT', val: 'WebM / MP4' }
+        ],
+        talkingPoints: [
+          'Automated multipart upload ingests surveillance clips without filling local edge disk.',
+          'Lifecycle policies automatically prune clips older than 30 days to optimize cloud storage cost.',
+          'Maintains video records for auditing diaper intake integrity and dispute resolution.'
+        ]
+      },
+      observability: {
+        id: 'observability',
+        leftNodeId: 'pipeNodeObservability',
+        diagNodeId: 'diagNodeObservability',
+        title: '8. Central Admin & Observability Tier',
+        icon: 'fa-chart-line',
+        badge: 'PROMETHEUS & AUDIT LEDGER',
+        badgeColor: '#0f172a',
+        upstream: 'Microservice Metrics, Gateway Logs & Hardware Health',
+        logic: 'Exposes Prometheus scrape target (/metrics) and streams real-time audit ledger events to admin.html operator dashboard.',
+        downstream: 'Operator Dashboards & Central Monitoring Cluster',
+        specs: [
+          { label: 'TELEMETRY', val: '/metrics' },
+          { label: 'DASHBOARD', val: 'admin.html' },
+          { label: 'LEDGER SYNC', val: 'Live Broadcast' },
+          { label: 'UPTIME', val: '99.98% High-Avail' }
+        ],
+        talkingPoints: [
+          'Prometheus metrics endpoint monitors live memory, camera FPS, and load cell tare in real time.',
+          'Unified audit ledger streams all deposits, discounts, and purchases directly to admin.html.',
+          'Provides operator controls for remote motor diagnostics and inventory restocking.'
+        ]
+      }
+    };
+
+    let currentSelectedNode = 'client_ui';
+    let autoPlayTimer = null;
+    let isAutoPlaying = false;
+
+    function selectPipelineNode(nodeKey, autoTrigger = true) {
+      const meta = PIPELINE_SUBSYSTEMS_META[nodeKey];
+      if (!meta) return;
+      currentSelectedNode = nodeKey;
+
+      // 1. Highlight left cards & flowchart diagram blocks
+      Object.values(PIPELINE_SUBSYSTEMS_META).forEach(m => {
+        const leftEl = document.getElementById(m.leftNodeId);
+        if (leftEl) leftEl.classList.remove('active-flash');
+        const diagEl = document.getElementById(m.diagNodeId);
+        if (diagEl) diagEl.classList.remove('active');
+      });
+
+      const currentLeft = document.getElementById(meta.leftNodeId);
+      if (currentLeft) currentLeft.classList.add('active-flash');
+
+      const currentDiag = document.getElementById(meta.diagNodeId);
+      if (currentDiag) currentDiag.classList.add('active');
+
+      // 2. Render Pictorial Detail Card (Zero Raw Console Logs)
+      const card = document.getElementById('pictorialDetailCard');
+      if (card) {
+        card.innerHTML = `
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(15, 36, 21, 0.1); padding-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(15, 23, 42, 0.08); display: flex; align-items: center; justify-content: center; font-size: 18px; color: ${meta.badgeColor};">
+                  <i class="fa-solid ${meta.icon}"></i>
+                </div>
+                <div>
+                  <h3 style="font-size: 15px; font-weight: 900; color: #0f2c1c; margin: 0;">${meta.title}</h3>
+                  <div style="font-size: 11px; font-weight: 800; color: ${meta.badgeColor}; letter-spacing: 0.5px;">${meta.badge}</div>
+                </div>
+              </div>
+              <span style="font-size: 11px; font-weight: 900; background: #dcfce7; color: #166534; padding: 3px 10px; border-radius: 20px;">
+                ACTIVE NODE
+              </span>
+            </div>
+
+            <!-- Pictorial Flow Box -->
+            <div style="margin-top: 14px; background: #ffffff; border: 1.5px solid rgba(15, 36, 21, 0.1); border-radius: 12px; padding: 12px;">
+              <div style="font-size: 10.5px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+                PICTORIAL DATA FLOW TRANSFORMATION
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <div style="background: #f1f5f9; padding: 6px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 800; color: #0f2c1c;">
+                  ${meta.upstream}
+                </div>
+                <i class="fa-solid fa-arrow-right" style="color: ${meta.badgeColor}; font-size: 13px;"></i>
+                <div style="background: rgba(158, 240, 26, 0.15); border: 1px solid rgba(158, 240, 26, 0.4); padding: 6px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 800; color: #0f2c1c;">
+                  ${meta.logic}
+                </div>
+                <i class="fa-solid fa-arrow-right" style="color: ${meta.badgeColor}; font-size: 13px;"></i>
+                <div style="background: #f1f5f9; padding: 6px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 800; color: #0f2c1c;">
+                  ${meta.downstream}
+                </div>
+              </div>
+            </div>
+
+            <!-- Specification Badges -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-top: 12px;">
+              ${meta.specs.map(s => `
+                <div style="background: #ffffff; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(15, 36, 21, 0.08);">
+                  <div style="font-size: 9.5px; font-weight: 800; color: #64748b;">${s.label}</div>
+                  <div style="font-size: 12px; font-weight: 900; color: #0f2c1c; margin-top: 2px;">${s.val}</div>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Client Talking Points -->
+            <div style="margin-top: 14px; background: rgba(15, 23, 42, 0.03); border-radius: 12px; padding: 12px;">
+              <div style="font-size: 11px; font-weight: 900; color: #0f2c1c; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+                Client Presentation Highlights
+              </div>
+              <ul style="margin: 0; padding-left: 18px; font-size: 12px; color: #334155; font-weight: 600; line-height: 1.5;">
+                ${meta.talkingPoints.map(tp => `<li style="margin-bottom: 4px;">${tp}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        `;
+      }
+
+      // 3. Highlight bottom tab buttons
+      document.querySelectorAll('.flowchart-tab-btn').forEach(btn => btn.classList.remove('active'));
+      const activeTabBtn = document.querySelector(`.flowchart-tab-btn[onclick*="${nodeKey}"]`);
+      if (activeTabBtn) activeTabBtn.classList.add('active');
+
+      // 4. Trigger simulated edge dispatch in background
+      if (autoTrigger) {
+        if (nodeKey === 'database' || nodeKey === 'microservices') {
+          fetch('/api/v1/bin/disposal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ weightGrams: 420, rewardPercentage: 20, redeemCode: 'ECO-20-DEMO' })
+          }).catch(() => {});
+        } else if (nodeKey === 'payments') {
+          fetch('/api/v1/payments/razorpay/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amountInr: 220, orderId: 'ORD-DEMO-' + Date.now().toString(36) })
+          }).catch(() => {});
+        }
+      }
     }
 
-    function appendServerConsoleLog(source, method, url, status, data) {
-      const box = document.getElementById('serverConsoleBox');
-      if (!box) return;
-      const timeStr = new Date().toLocaleTimeString();
-      const statusColor = (status >= 200 && status < 300) ? '#34d399' : '#f87171';
-      const logEntry = document.createElement('div');
-      logEntry.style.borderLeft = `3px solid ${statusColor}`;
-      logEntry.style.paddingLeft = '8px';
-      logEntry.style.marginTop = '4px';
-      logEntry.innerHTML = `
-        <div>
-          <span style="color: #94a3b8;">[${timeStr}]</span>
-          <span style="color: #38bdf8; font-weight: 800;">[${source}]</span>
-          <span style="color: #fbbf24; font-weight: 700;">${method} ${url}</span>
-          <span style="color: ${statusColor}; font-weight: 800;">→ ${status}</span>
-        </div>
-        <div style="color: #cbd5e1; font-size: 11px; white-space: pre-wrap; word-break: break-all; margin-top: 2px;">${typeof data === 'string' ? data : JSON.stringify(data, null, 2)}</div>
-      `;
-      box.appendChild(logEntry);
-      box.scrollTop = box.scrollHeight;
+    function runAutoPlayFlow() {
+      if (isAutoPlaying) {
+        stopAutoPlayFlow();
+        return;
+      }
+      isAutoPlaying = true;
+      const btn1 = document.getElementById('btnAutoPlayFlow');
+      const btn2 = document.getElementById('btnPlayDiagramFlow');
+      if (btn1) btn1.innerHTML = '<i class="fa-solid fa-pause"></i><span>PAUSE AUTO-PLAY</span>';
+      if (btn2) btn2.innerHTML = '<i class="fa-solid fa-pause"></i><span>Pause Flow</span>';
+
+      const sequence = ['client_ui', 'api_gateway', 'redis_cache', 'microservices', 'database', 'payments', 'cloud_s3', 'observability'];
+      let idx = sequence.indexOf(currentSelectedNode);
+      if (idx === -1) idx = 0;
+
+      autoPlayTimer = setInterval(() => {
+        idx = (idx + 1) % sequence.length;
+        selectPipelineNode(sequence[idx], true);
+      }, 1800);
     }
+
+    function stopAutoPlayFlow() {
+      isAutoPlaying = false;
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
+      const btn1 = document.getElementById('btnAutoPlayFlow');
+      const btn2 = document.getElementById('btnPlayDiagramFlow');
+      if (btn1) btn1.innerHTML = '<i class="fa-solid fa-play"></i><span>AUTO-PLAY LIVE FLOW</span>';
+      if (btn2) btn2.innerHTML = '<i class="fa-solid fa-play"></i><span>Auto-Play Flow</span>';
+    }
+
+    function clearServerConsole() {}
+    function appendServerConsoleLog() {}
 
     function flashPipelineNode(nodeId) {
       const node = document.getElementById(nodeId);
@@ -8254,7 +8636,6 @@
         if (res.ok) {
           const data = await res.json();
           if (healthEl) healthEl.innerText = `HTTP 200 • PORT ${data.port || 3000} ONLINE`;
-          appendServerConsoleLog('HEALTH', 'GET', '/api/v1/health', 200, data);
         }
       } catch (e) {
         if (healthEl) healthEl.innerText = 'OFFLINE / RECONNECTING';
@@ -8262,149 +8643,18 @@
     }
 
     async function simulateServerPipelineStep(step) {
-      if (step === 'client_ui' || step === 'bin_tag') {
-        flashPipelineNode('pipeNodeClientUI');
-        const sessId = (window.binSessionTracking && window.binSessionTracking.sessionId) || ('SESS-' + Date.now().toString(36).toUpperCase().slice(-4));
-        appendServerConsoleLog('CLIENT_UI', 'WEBRTC_CAPTURE', 'navigator.mediaDevices.getUserMedia()', 200, {
-          streamResolution: '320x240 @ 10fps',
-          bitrateBudget: '90 kbps (Rule 3)',
-          localStateBus: 'BroadcastChannel("sdds_realtime_sync")',
-          activeSessionId: sessId,
-          kioskState: 'ACTIVE_INTERACTION'
-        });
-      } else if (step === 'api_gateway' || step === 'bin_qr_scan') {
-        flashPipelineNode('pipeNodeGateway');
-        appendServerConsoleLog('API_GATEWAY', 'REVERSE_PROXY', 'http://localhost:3000/api/v1/*', 200, {
-          gatewayPort: 3000,
-          rateLimitAllowance: '100 req/min (Token Bucket)',
-          corsOrigin: 'ALLOW_LOCAL_KIOSK',
-          tlsTermination: 'EDGE_OFFLOAD',
-          pathTraversalSanitized: true
-        });
-      } else if (step === 'redis_cache') {
-        flashPipelineNode('pipeNodeRedis');
-        const sessKey = 'sess:' + Date.now().toString(36).slice(-4);
-        appendServerConsoleLog('REDIS_CACHE', 'EXEC', 'redisClient.set(key, val, EX, 60)', 200, {
-          operation: 'SET_HOT_SESSION',
-          cacheKey: sessKey,
-          ttlSeconds: 60,
-          concurrencyLock: 'Redlock::ACQUIRED',
-          pubsubChannel: 'kiosk:events:broadcast'
-        });
-      } else if (step === 'microservices' || step === 'voucher') {
-        flashPipelineNode('pipeNodeMicroservices');
-        const simulatedGrams = 420;
-        const additional = Math.max(0, simulatedGrams - 50);
-        const calcPct = Math.min(25, 5 + Math.floor(additional / 50));
-        const demoCode = `ECO-${calcPct.toString().padStart(2, '0')}-${Math.floor(Math.random()*0xFFFF).toString(16).toUpperCase().padStart(4, '0')}`;
-        appendServerConsoleLog('MICROSERVICES', 'FORMULA_ENGINE', 'calculateRewardAndMintToken()', 200, {
-          formula: "min(25%, 5% + floor((weight - 50g) / 50g))",
-          inputWeightGrams: simulatedGrams,
-          calculatedDiscount: `${calcPct}%`,
-          mintedVoucherToken: demoCode,
-          singleUseValidated: true
-        });
-      } else if (step === 'database' || step === 'load_cell') {
-        flashPipelineNode('pipeNodeDatabase');
-        const simulatedGrams = Math.floor(Math.random() * 300 + 250);
-        const additional = Math.max(0, simulatedGrams - 50);
-        const calcPct = Math.min(25, 5 + Math.floor(additional / 50));
-        const demoCode = `ECO-${calcPct.toString().padStart(2, '0')}-${Math.floor(Math.random()*0xFFFF).toString(16).toUpperCase().padStart(4, '0')}`;
-
-        appendServerConsoleLog('DATABASE', 'ACID_COMMIT', '/api/v1/bin/disposal', 102, `Writing atomic disposal transaction (${simulatedGrams}g)...`);
-        try {
-          const res = await fetch('/api/v1/bin/disposal', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              weightGrams: simulatedGrams,
-              rewardPercentage: calcPct,
-              redeemCode: demoCode
-            })
-          });
-          const json = await res.json();
-          appendServerConsoleLog('DATABASE', 'TRANSACTION_COMMITTED', 'data/sdds-state.json', res.status, json);
-        } catch (err) {
-          appendServerConsoleLog('DATABASE', 'TRANSACTION_COMMITTED', 'data/sdds-state.json', 500, err.message);
-        }
-      } else if (step === 'payments' || step === 'razorpay') {
-        flashPipelineNode('pipeNodePayments');
-        const testOrderId = 'ORD-RZP-' + Math.floor(Math.random() * 89999 + 10000);
-        appendServerConsoleLog('PAYMENT_GATEWAY', 'POST', '/api/v1/payments/razorpay/create-order', 102, 'Initiating Razorpay dynamic UPI QR order for ₹220 (22000 paise)...');
-        try {
-          const res = await fetch('/api/v1/payments/razorpay/create-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ amountInr: 220, orderId: testOrderId })
-          });
-          const json = await res.json();
-          appendServerConsoleLog('PAYMENT_GATEWAY', 'HMAC_VERIFIED', '/api/v1/payments/razorpay/webhook', res.status, json);
-        } catch (err) {
-          appendServerConsoleLog('PAYMENT_GATEWAY', 'POST', '/api/v1/payments/razorpay/create-order', 500, err.message);
-        }
-      } else if (step === 'cloud_s3' || step === 'storage_chunk') {
-        flashPipelineNode('pipeNodeCloud');
-        const demoChunkId = 'chunk_demo_' + Date.now().toString(36);
-        const demoFilename = `SESS-DEMO_${demoChunkId}_${new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 15)}.mp4`;
-        appendServerConsoleLog('CLOUD_S3', 'MULTIPART_UPLOAD', '/api/v1/recordings/chunk', 102, `Archiving 60s surveillance chunk into Cloud S3 (s3://sdds-kiosk-vault/${demoFilename})...`);
-        try {
-          const dummyBase64 = "GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQRChYECGFOAZwEAAAAAAA";
-          const res = await fetch('/api/v1/recordings/chunk', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              sessionId: 'DEMO-S3',
-              chunkIndex: 1,
-              filename: demoFilename,
-              dataBase64: dummyBase64
-            })
-          });
-          const json = await res.json();
-          appendServerConsoleLog('CLOUD_S3', 'S3_PUT_OBJECT', 's3://sdds-kiosk-vault', res.status, json);
-        } catch (err) {
-          appendServerConsoleLog('CLOUD_S3', 'MULTIPART_UPLOAD', '/api/v1/recordings/chunk', 500, err.message);
-        }
-      } else if (step === 'observability') {
-        flashPipelineNode('pipeNodeObservability');
-        appendServerConsoleLog('OBSERVABILITY', 'TELEMETRY_SCRAPE', '/metrics & admin.html', 200, {
-          prometheusEndpoint: '/metrics',
-          auditLedgerSync: 'BroadcastChannel("sdds_admin_ledger")',
-          systemUptime: '99.98%',
-          kioskHealth: 'ALL_SYSTEMS_OPERATIONAL'
-        });
-      } else if (step === 'handover') {
-        flashPipelineNode('pipeNodeClientUI');
-        const testCode = 'ECO-20-' + Math.floor(Math.random() * 8999 + 1000);
-        appendServerConsoleLog('KIOSK_HANDOVER', 'BROADCAST', 'BroadcastChannel("sdds_realtime_sync")', 200, {
-          action: 'TRANSFER_REWARD_TO_VENDING',
-          transferredVoucher: testCode,
-          appliedDiscount: '20% OFF',
-          vendingBasketState: 'DISCOUNT_AUTO_APPLIED',
-          targetScreen: 'viewVendingPage3'
-        });
-      } else if (step === 'coils') {
-        flashPipelineNode('pipeNodeDatabase');
-        appendServerConsoleLog('GPIO_MOTORS', 'POST', '/api/v1/admin/diagnostics/dispense-test', 102, 'Actuating Stepper Helical Coils A1 and A2 sequentially...');
-        try {
-          const res = await fetch('/api/v1/admin/diagnostics/dispense-test', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ slotId: 'A1', pulses: 200 })
-          });
-          const json = await res.json();
-          appendServerConsoleLog('GPIO_MOTORS', 'POST', '/api/v1/admin/diagnostics/dispense-test', res.status, json);
-        } catch (err) {
-          appendServerConsoleLog('GPIO_MOTORS', 'POST', '/api/v1/admin/diagnostics/dispense-test', 500, err.message);
-        }
-      } else if (step === 'inventory') {
-        try {
-          const res = await fetch('/api/v1/inventory');
-          const json = await res.json();
-          appendServerConsoleLog('INVENTORY', 'GET', '/api/v1/inventory', res.status, json);
-        } catch (err) {
-          appendServerConsoleLog('INVENTORY', 'GET', '/api/v1/inventory', 500, err.message);
-        }
-      }
+      const stepMap = {
+        bin_tag: 'client_ui',
+        bin_qr_scan: 'api_gateway',
+        load_cell: 'database',
+        voucher: 'microservices',
+        handover: 'client_ui',
+        razorpay: 'payments',
+        coils: 'database',
+        storage_chunk: 'cloud_s3'
+      };
+      const mapped = stepMap[step] || step;
+      selectPipelineNode(mapped, true);
     }
 
     // Quick Demo Automation

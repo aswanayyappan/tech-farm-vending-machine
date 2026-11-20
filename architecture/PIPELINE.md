@@ -10,7 +10,66 @@
 
 The SDDS platform is architected as an event-driven, distributed kiosk software architecture designed for sub-millisecond edge response, high availability, zero memory leaks, and seamless cloud synchronization.
 
-```mermaid
+### Pictorial Software System Architecture Flowchart
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                    1. CLIENT KIOSK TOUCH UI TIER                                       │
+│  ┌──────────────────────────────┐  ┌──────────────────────────────┐  ┌──────────────────────────────┐  │
+│  │ Dual-Kiosk SPA (Next.js/TS)  │  │ WebRTC 320x240 @ 10fps Stream│  │ BroadcastChannel Sync Bus    │  │
+│  │ Zero-Popup Deterministic DOM │  │ 90 kbps Surveillance Budget  │  │ Real-time Cross-Window Event │  │
+│  └──────────────┬───────────────┘  └──────────────┬───────────────┘  └──────────────┬───────────────┘  │
+└─────────────────┼─────────────────────────────────┼─────────────────────────────────┼──────────────────┘
+                  │ HTTPS / WSS Requests            │ Video Chunks                    │ UI State
+                  ▼                                 ▼                                 ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 2. EDGE API GATEWAY & REVERSE PROXY                                    │
+│  ┌──────────────────────────────┐  ┌──────────────────────────────┐  ┌──────────────────────────────┐  │
+│  │ Express Reverse Proxy :3000  │  │ Token-Bucket Rate Limiter    │  │ Zod Runtime Schema Validator │  │
+│  │ SSL/TLS 1.3 Termination      │  │ 100 req/min Anti-DDoS        │  │ Directory Traversal Defense  │  │
+│  └──────────────┬───────────────┘  └──────────────┬───────────────┘  └──────────────┬───────────────┘  │
+└─────────────────┼─────────────────────────────────┼─────────────────────────────────┼──────────────────┘
+                  │ Sub-millisecond TCP             │ Fast Session Tokens             │ Concurrency
+                  ▼                                 ▼                                 ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 3. REDIS IN-MEMORY CACHE & PUB/SUB TIER                                │
+│  ┌──────────────────────────────┐  ┌──────────────────────────────┐  ┌──────────────────────────────┐  │
+│  │ Hot Session Store (TTL: 60s) │  │ Single-Use QR Voucher Tokens │  │ Distributed Redlock Mutex    │  │
+│  │ Sub-millisecond Key-Value    │  │ Atomic Invalidation on Claim │  │ Concurrency Double-Spend Lock│  │
+│  └──────────────┬───────────────┘  └──────────────┬───────────────┘  └──────────────┬───────────────┘  │
+└─────────────────┼─────────────────────────────────┼─────────────────────────────────┼──────────────────┘
+                  │ Verified Context & Atomic Mutex
+                  ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                4. CORE APPLICATION MICROSERVICES TIER                                  │
+│  ┌──────────────────────────────┐  ┌──────────────────────────────┐  ┌──────────────────────────────┐  │
+│  │ Dynamic Reward Formula Engine│  │ Slot Inventory Orchestrator  │  │ Order & Dispensing State Mch │  │
+│  │ min(25%, 5% + (w-50)/50)     │  │ Real-time Slot Stock Checks  │  │ Idempotent Dispensing Engine │  │
+│  └──────┬───────────────────────┘  └──────────────┬───────────────┘  └──────────────┬───────────────┘  │
+└─────────┼─────────────────────────────────────────┼─────────────────────────────────┼──────────────────┘
+          │                                         │                                 │
+          ▼ Branch A: ACID Commits                  ▼ Branch B: UPI & Cards           ▼ Branch C: Chunks
+┌───────────────────────────────┐         ┌───────────────────────────────┐ ┌──────────────────────────┐
+│   5. DATABASE & PERSISTENCE   │         │  6. PAYMENT GATEWAY (RZP/STR) │ │  7. CLOUD OBJECT STORAGE │
+│ ┌───────────────────────────┐ │         │ ┌───────────────────────────┐ │ │ ┌──────────────────────┐ │
+│ │ PostgreSQL / MongoDB ACID │ │         │ │ Dynamic Razorpay UPI QR   │ │ │ │ AWS S3 / Cloud Blob    │ │
+│ │ data/sdds-state.json Mutex│ │         │ │ HMAC SHA-256 Webhook Sig  │ │ │ │ 30-Day Auto Expiration │ │
+│ └───────────────────────────┘ │         │ └───────────────────────────┘ │ │ └──────────────────────┘ │
+└──────────────┬────────────────┘         └───────────────┬───────────────┘ └────────────┬─────────────┘
+               │                                          │                              │
+               └──────────────────────────────────────────┼──────────────────────────────┘
+                                                          │ Telemetry Scrapes & Ledgers
+                                                          ▼
+                                          ┌──────────────────────────────────────────────┐
+                                          │     8. OBSERVABILITY & CENTRAL ADMIN PORTAL  │
+                                          │ ┌──────────────────────────────────────────┐ │
+                                          │ │ Prometheus Telemetry Scrape (/metrics)   │ │
+                                          │ │ admin.html Real-Time Unified Audit Ledger│ │
+                                          │ └──────────────────────────────────────────┘ │
+                                          └──────────────────────────────────────────────┘
+```
+
+### End-to-End Mermaid Integration Topology
 flowchart TD
     subgraph CLIENT_TIER ["1. Client Kiosk UI Tier (Touchscreen Web Runtime)"]
         UI_MAIN["Dual-Kiosk Single Page Application (HTML5 / Next.js / TypeScript)"]

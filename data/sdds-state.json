@@ -192,9 +192,30 @@
     "grossSalesTodayInr":  5827,
     "ordersCountToday":  42,
     "totalPacksDispensed":  45,
-    "totalWeightCollectedGrams":  17587,
-    "totalVouchersIssued":  42,
+    "totalWeightCollectedGrams":  18847,
+    "totalVouchersIssued":  45,
     "disposals":  [
+                      {
+                          "id":  "DISP-20261120-201538",
+                          "weightGrams":  420,
+                          "discountPct":  12,
+                          "code":  "ECO-12-BD85",
+                          "time":  "08:15 PM"
+                      },
+                      {
+                          "id":  "DISP-20261120-201520",
+                          "weightGrams":  420,
+                          "discountPct":  12,
+                          "code":  "ECO-12-28D6",
+                          "time":  "08:15 PM"
+                      },
+                      {
+                          "id":  "DISP-20261120-201511",
+                          "weightGrams":  420,
+                          "discountPct":  12,
+                          "code":  "ECO-12-9653",
+                          "time":  "08:15 PM"
+                      },
                       {
                           "id":  "DISP-20261120-193706",
                           "weightGrams":  420,
@@ -407,6 +428,63 @@
                       }
                   ],
     "sessions":  [
+                     {
+                         "id":  "SESS-MWP3N9CG",
+                         "startTime":  "2026-11-20T14:53:43.312Z",
+                         "cameraMonitoring":  true,
+                         "status":  "ACTIVE"
+                     },
+                     {
+                         "id":  "SESS-MWP3MYFM",
+                         "startTime":  "2026-11-20T14:53:29.170Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "USER_ABORTED",
+                         "endTime":  "2026-11-20T14:53:36.158Z",
+                         "durationSeconds":  6
+                     },
+                     {
+                         "id":  "SESS-MWP3MU5O",
+                         "startTime":  "2026-11-20T14:53:23.628Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "USER_ABORTED",
+                         "endTime":  "2026-11-20T14:53:26.521Z",
+                         "durationSeconds":  2
+                     },
+                     {
+                         "id":  "SESS-MWP3CNRK",
+                         "startTime":  "2026-11-20T14:45:28.784Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-20T14:46:51.003Z",
+                         "durationSeconds":  82
+                     },
+                     {
+                         "id":  "SESS-MWP3C3KQ",
+                         "startTime":  "2026-11-20T14:45:02.618Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "USER_ABORTED",
+                         "endTime":  "2026-11-20T14:45:27.473Z",
+                         "durationSeconds":  24
+                     },
+                     {
+                         "id":  "SESS-MWP39990",
+                         "startTime":  "2026-11-20T14:42:50.004Z",
+                         "cameraMonitoring":  true,
+                         "status":  "TERMINATED",
+                         "reason":  "TIMEOUT",
+                         "endTime":  "2026-11-20T14:44:10.005Z",
+                         "durationSeconds":  80
+                     },
+                     {
+                         "id":  "SESS-MWP33FLG",
+                         "startTime":  "2026-11-20T14:38:18.292Z",
+                         "cameraMonitoring":  true,
+                         "status":  "ACTIVE"
+                     },
                      {
                          "id":  "SESS-MWP2KVW0",
                          "startTime":  "2026-11-20T14:23:52.944Z",
@@ -890,6 +968,314 @@
                  ],
     "videoRecordings":  [
                             {
+                                "sessionId":  "SESS-AUTOTEST-99",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
+                                "bytes":  1032,
+                                "timestamp":  "2026-11-20T20:24:40.5121350+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-MP4",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-TEST-MP4_chunk_0002_20261120_202439.mp4",
+                                "bytes":  24,
+                                "timestamp":  "2026-11-20T20:24:39.8475884+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-CHUNK",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261120_202439.webm",
+                                "bytes":  25,
+                                "timestamp":  "2026-11-20T20:24:39.7146560+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  41,
+                                "filename":  "SURV_STANDBY_1MIN_20261120145427..mp4",
+                                "bytes":  121570,
+                                "timestamp":  "2026-11-20T20:24:27.2224911+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  16,
+                                "filename":  "SURV_STANDBY_1MIN_20261120145406..mp4",
+                                "bytes":  111141,
+                                "timestamp":  "2026-11-20T20:24:07.0150091+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWP3MYFM",
+                                "chunkIndex":  15,
+                                "filename":  "SESS-MWP3MYFM_INTERACTION_0s_20261120145336..mp4",
+                                "bytes":  9280,
+                                "timestamp":  "2026-11-20T20:23:36.2671378+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  40,
+                                "filename":  "SURV_STANDBY_1MIN_20261120145326..mp4",
+                                "bytes":  149899,
+                                "timestamp":  "2026-11-20T20:23:26.9146172+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWP3MU5O",
+                                "chunkIndex":  14,
+                                "filename":  "SESS-MWP3MU5O_INTERACTION_0s_20261120145326..mp4",
+                                "bytes":  8347,
+                                "timestamp":  "2026-11-20T20:23:26.5996544+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  13,
+                                "filename":  "SURV_STANDBY_1MIN_20261120145306..mp4",
+                                "bytes":  3575,
+                                "timestamp":  "2026-11-20T20:23:06.7573764+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  39,
+                                "filename":  "SURV_STANDBY_1MIN_20261120145226..mp4",
+                                "bytes":  143150,
+                                "timestamp":  "2026-11-20T20:22:26.5935936+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  12,
+                                "filename":  "SURV_STANDBY_1MIN_20261120145204..mp4",
+                                "bytes":  3575,
+                                "timestamp":  "2026-11-20T20:22:05.0223352+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  38,
+                                "filename":  "SURV_STANDBY_1MIN_20261120145126..mp4",
+                                "bytes":  143086,
+                                "timestamp":  "2026-11-20T20:21:26.2654388+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  11,
+                                "filename":  "SURV_STANDBY_1MIN_20261120145102..mp4",
+                                "bytes":  3575,
+                                "timestamp":  "2026-11-20T20:21:03.0125041+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  37,
+                                "filename":  "SURV_STANDBY_1MIN_20261120145025..mp4",
+                                "bytes":  124393,
+                                "timestamp":  "2026-11-20T20:20:25.9404135+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  10,
+                                "filename":  "SURV_STANDBY_1MIN_20261120145001..mp4",
+                                "bytes":  3575,
+                                "timestamp":  "2026-11-20T20:20:01.0305852+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  36,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144925..mp4",
+                                "bytes":  218935,
+                                "timestamp":  "2026-11-20T20:19:25.6379250+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  9,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144858..mp4",
+                                "bytes":  3575,
+                                "timestamp":  "2026-11-20T20:18:59.0218078+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  35,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144825..mp4",
+                                "bytes":  138813,
+                                "timestamp":  "2026-11-20T20:18:25.2978994+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  8,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144757..mp4",
+                                "bytes":  28424,
+                                "timestamp":  "2026-11-20T20:17:57.0389563+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  34,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144724..mp4",
+                                "bytes":  124779,
+                                "timestamp":  "2026-11-20T20:17:24.9982074+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  7,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144655..mp4",
+                                "bytes":  3661,
+                                "timestamp":  "2026-11-20T20:16:55.0351198+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWP3CNRK",
+                                "chunkIndex":  6,
+                                "filename":  "SESS-MWP3CNRK_INTERACTION_0s_20261120144651..mp4",
+                                "bytes":  50383,
+                                "timestamp":  "2026-11-20T20:16:51.0977255+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  33,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144624..mp4",
+                                "bytes":  118730,
+                                "timestamp":  "2026-11-20T20:16:24.6681729+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  5,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144552..mp4",
+                                "bytes":  99660,
+                                "timestamp":  "2026-11-20T20:15:53.0434314+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWP3C3KQ",
+                                "chunkIndex":  4,
+                                "filename":  "SESS-MWP3C3KQ_INTERACTION_0s_20261120144527..mp4",
+                                "bytes":  55005,
+                                "timestamp":  "2026-11-20T20:15:27.5710946+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  32,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144524..mp4",
+                                "bytes":  118490,
+                                "timestamp":  "2026-11-20T20:15:24.3481434+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  3,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144450..mp4",
+                                "bytes":  3601,
+                                "timestamp":  "2026-11-20T20:14:51.0114621+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  31,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144423..mp4",
+                                "bytes":  118924,
+                                "timestamp":  "2026-11-20T20:14:24.0235826+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWP39990",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-MWP39990_INTERACTION_0s_20261120144410..mp4",
+                                "bytes":  61433,
+                                "timestamp":  "2026-11-20T20:14:10.0565389+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  1,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144349..mp4",
+                                "bytes":  59085,
+                                "timestamp":  "2026-11-20T20:13:49.0311888+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  30,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144323..mp4",
+                                "bytes":  122973,
+                                "timestamp":  "2026-11-20T20:13:23.7330570+05:30"
+                            },
+                            {
+                                "sessionId":  "DEMO-S3",
+                                "chunkIndex":  1,
+                                "filename":  "DEMO-S3_chunk_0001_20261120_201255.webm",
+                                "bytes":  0,
+                                "timestamp":  "2026-11-20T20:12:55.7021709+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  29,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144223..mp4",
+                                "bytes":  121163,
+                                "timestamp":  "2026-11-20T20:12:23.4085164+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-AUTOTEST-99",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
+                                "bytes":  1032,
+                                "timestamp":  "2026-11-20T20:12:08.7963450+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-MP4",
+                                "chunkIndex":  2,
+                                "filename":  "SESS-TEST-MP4_chunk_0002_20261120_201208.mp4",
+                                "bytes":  24,
+                                "timestamp":  "2026-11-20T20:12:08.3796449+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-TEST-CHUNK",
+                                "chunkIndex":  1,
+                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261120_201208.webm",
+                                "bytes":  25,
+                                "timestamp":  "2026-11-20T20:12:08.2613116+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  28,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144123..mp4",
+                                "bytes":  118835,
+                                "timestamp":  "2026-11-20T20:11:23.0804652+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  27,
+                                "filename":  "SURV_STANDBY_1MIN_20261120144022..mp4",
+                                "bytes":  118440,
+                                "timestamp":  "2026-11-20T20:10:22.7540010+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  26,
+                                "filename":  "SURV_STANDBY_1MIN_20261120143922..mp4",
+                                "bytes":  120431,
+                                "timestamp":  "2026-11-20T20:09:22.4817820+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  26,
+                                "filename":  "SURV_STANDBY_1MIN_20261120143822..mp4",
+                                "bytes":  5264,
+                                "timestamp":  "2026-11-20T20:08:22.4421326+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWP33FLG",
+                                "chunkIndex":  25,
+                                "filename":  "SESS-MWP33FLG_INTERACTION_4s_20261120143822..mp4",
+                                "bytes":  20929,
+                                "timestamp":  "2026-11-20T20:08:22.3745604+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  25,
+                                "filename":  "SURV_STANDBY_1MIN_20261120143822..mp4",
+                                "bytes":  121966,
+                                "timestamp":  "2026-11-20T20:08:22.1760820+05:30"
+                            },
+                            {
+                                "sessionId":  "SURV_STANDBY",
+                                "chunkIndex":  24,
+                                "filename":  "SURV_STANDBY_1MIN_20261120143821..mp4",
+                                "bytes":  11124,
+                                "timestamp":  "2026-11-20T20:08:21.0403246+05:30"
+                            },
+                            {
+                                "sessionId":  "SESS-MWP2KVW0",
+                                "chunkIndex":  23,
+                                "filename":  "SESS-MWP2KVW0_INTERACTION_0s_20261120143818..mp4",
+                                "bytes":  10223,
+                                "timestamp":  "2026-11-20T20:08:18.4022433+05:30"
+                            },
+                            {
                                 "sessionId":  "SURV_STANDBY",
                                 "chunkIndex":  24,
                                 "filename":  "SURV_STANDBY_1MIN_20261120143721..mp4",
@@ -1280,314 +1666,6 @@
                                 "filename":  "SURV_STANDBY_1MIN_20261120141514..mp4",
                                 "bytes":  119324,
                                 "timestamp":  "2026-11-20T19:45:15.0269454+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  6,
-                                "filename":  "SURV_STANDBY_1MIN_20261120141421..mp4",
-                                "bytes":  3569,
-                                "timestamp":  "2026-11-20T19:44:22.0253529+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  1,
-                                "filename":  "SURV_STANDBY_1MIN_20261120141414..mp4",
-                                "bytes":  120748,
-                                "timestamp":  "2026-11-20T19:44:14.7066113+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  5,
-                                "filename":  "SURV_STANDBY_1MIN_20261120141319..mp4",
-                                "bytes":  3569,
-                                "timestamp":  "2026-11-20T19:43:20.0194708+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-AUTOTEST-99",
-                                "chunkIndex":  1,
-                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
-                                "bytes":  1032,
-                                "timestamp":  "2026-11-20T19:43:19.9257309+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-TEST-MP4",
-                                "chunkIndex":  2,
-                                "filename":  "SESS-TEST-MP4_chunk_0002_20261120_194319.mp4",
-                                "bytes":  24,
-                                "timestamp":  "2026-11-20T19:43:19.4681627+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-TEST-CHUNK",
-                                "chunkIndex":  1,
-                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261120_194319.webm",
-                                "bytes":  25,
-                                "timestamp":  "2026-11-20T19:43:19.2767541+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  53,
-                                "filename":  "SURV_STANDBY_1MIN_20261120141248..mp4",
-                                "bytes":  128000,
-                                "timestamp":  "2026-11-20T19:42:48.3562023+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-AUTOTEST-99",
-                                "chunkIndex":  1,
-                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
-                                "bytes":  1032,
-                                "timestamp":  "2026-11-20T19:42:46.1235245+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-TEST-MP4",
-                                "chunkIndex":  2,
-                                "filename":  "SESS-TEST-MP4_chunk_0002_20261120_194245.mp4",
-                                "bytes":  24,
-                                "timestamp":  "2026-11-20T19:42:45.8534879+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-TEST-CHUNK",
-                                "chunkIndex":  1,
-                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261120_194245.webm",
-                                "bytes":  25,
-                                "timestamp":  "2026-11-20T19:42:45.7554993+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-AUTOTEST-99",
-                                "chunkIndex":  1,
-                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
-                                "bytes":  1032,
-                                "timestamp":  "2026-11-20T19:42:32.7345450+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-TEST-MP4",
-                                "chunkIndex":  2,
-                                "filename":  "SESS-TEST-MP4_chunk_0002_20261120_194232.mp4",
-                                "bytes":  24,
-                                "timestamp":  "2026-11-20T19:42:32.4688930+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-TEST-CHUNK",
-                                "chunkIndex":  1,
-                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261120_194232.webm",
-                                "bytes":  25,
-                                "timestamp":  "2026-11-20T19:42:32.3687911+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  4,
-                                "filename":  "SURV_STANDBY_1MIN_20261120141218..mp4",
-                                "bytes":  3569,
-                                "timestamp":  "2026-11-20T19:42:18.0269431+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  52,
-                                "filename":  "SURV_STANDBY_1MIN_20261120141148..mp4",
-                                "bytes":  133511,
-                                "timestamp":  "2026-11-20T19:41:48.0727575+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-AUTOTEST-99",
-                                "chunkIndex":  1,
-                                "filename":  "SESS-AUTOTEST-99_INTERACTION_15s_TEST.mp4",
-                                "bytes":  1032,
-                                "timestamp":  "2026-11-20T19:41:47.2822084+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-TEST-MP4",
-                                "chunkIndex":  2,
-                                "filename":  "SESS-TEST-MP4_chunk_0002_20261120_194146.mp4",
-                                "bytes":  24,
-                                "timestamp":  "2026-11-20T19:41:46.9053194+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-TEST-CHUNK",
-                                "chunkIndex":  1,
-                                "filename":  "SESS-TEST-CHUNK_chunk_0001_20261120_194146.webm",
-                                "bytes":  25,
-                                "timestamp":  "2026-11-20T19:41:46.8108864+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  3,
-                                "filename":  "SURV_STANDBY_1MIN_20261120141116..mp4",
-                                "bytes":  3569,
-                                "timestamp":  "2026-11-20T19:41:16.0243436+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  51,
-                                "filename":  "SURV_STANDBY_1MIN_20261120141047..mp4",
-                                "bytes":  119228,
-                                "timestamp":  "2026-11-20T19:40:47.7449767+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-MWP222HH",
-                                "chunkIndex":  2,
-                                "filename":  "SESS-MWP222HH_INTERACTION_0s_20261120141020..mp4",
-                                "bytes":  21919,
-                                "timestamp":  "2026-11-20T19:40:20.0664674+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  1,
-                                "filename":  "SURV_STANDBY_1MIN_20261120141014..mp4",
-                                "bytes":  24298,
-                                "timestamp":  "2026-11-20T19:40:14.0448793+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  50,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140947..mp4",
-                                "bytes":  135014,
-                                "timestamp":  "2026-11-20T19:39:47.4481868+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  3,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140913..mp4",
-                                "bytes":  67068,
-                                "timestamp":  "2026-11-20T19:39:13.1430168+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  49,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140847..mp4",
-                                "bytes":  19001,
-                                "timestamp":  "2026-11-20T19:38:47.1187417+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  1,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140839..mp4",
-                                "bytes":  107899,
-                                "timestamp":  "2026-11-20T19:38:39.6256104+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  48,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140746..mp4",
-                                "bytes":  19001,
-                                "timestamp":  "2026-11-20T19:37:46.8172601+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  3,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140739..mp4",
-                                "bytes":  44537,
-                                "timestamp":  "2026-11-20T19:37:39.3706840+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-MWP1ZSL3",
-                                "chunkIndex":  2,
-                                "filename":  "SESS-MWP1ZSL3_INTERACTION_10s_20261120140739..mp4",
-                                "bytes":  25205,
-                                "timestamp":  "2026-11-20T19:37:39.3232094+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-MWP1ZM8S",
-                                "chunkIndex":  1,
-                                "filename":  "SESS-MWP1ZM8S_INTERACTION_0s_20261120140725..mp4",
-                                "bytes":  11848,
-                                "timestamp":  "2026-11-20T19:37:25.8015330+05:30"
-                            },
-                            {
-                                "sessionId":  "SESS-MWP1YSGR",
-                                "chunkIndex":  1,
-                                "filename":  "SESS-MWP1YSGR_INTERACTION_35s_20261120140717..mp4",
-                                "bytes":  77438,
-                                "timestamp":  "2026-11-20T19:37:17.5437924+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  47,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140646..mp4",
-                                "bytes":  19001,
-                                "timestamp":  "2026-11-20T19:36:46.4727821+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  19,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140618..mp4",
-                                "bytes":  24523,
-                                "timestamp":  "2026-11-20T19:36:18.9230924+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  18,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140555..mp4",
-                                "bytes":  3571,
-                                "timestamp":  "2026-11-20T19:35:55.0288296+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  46,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140546..mp4",
-                                "bytes":  19001,
-                                "timestamp":  "2026-11-20T19:35:46.1548166+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  17,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140453..mp4",
-                                "bytes":  3571,
-                                "timestamp":  "2026-11-20T19:34:53.0182278+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  45,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140445..mp4",
-                                "bytes":  19022,
-                                "timestamp":  "2026-11-20T19:34:45.8378765+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  16,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140350..mp4",
-                                "bytes":  3571,
-                                "timestamp":  "2026-11-20T19:33:51.0156152+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  44,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140345..mp4",
-                                "bytes":  19001,
-                                "timestamp":  "2026-11-20T19:33:45.5311970+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  15,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140249..mp4",
-                                "bytes":  3571,
-                                "timestamp":  "2026-11-20T19:32:49.0274676+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  43,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140245..mp4",
-                                "bytes":  19001,
-                                "timestamp":  "2026-11-20T19:32:45.2252482+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  14,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140147..mp4",
-                                "bytes":  3571,
-                                "timestamp":  "2026-11-20T19:31:47.0218625+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  42,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140144..mp4",
-                                "bytes":  19022,
-                                "timestamp":  "2026-11-20T19:31:44.9335769+05:30"
-                            },
-                            {
-                                "sessionId":  "SURV_STANDBY",
-                                "chunkIndex":  13,
-                                "filename":  "SURV_STANDBY_1MIN_20261120140044..mp4",
-                                "bytes":  3571,
-                                "timestamp":  "2026-11-20T19:30:45.0084593+05:30"
                             }
                         ]
 }
